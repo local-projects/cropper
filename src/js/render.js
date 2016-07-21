@@ -10,6 +10,15 @@
       }
     },
 
+    renderNewCropBox: function (cropOptions) {
+      /*this.initCropBox(cropOptions);*/
+      this.initNewCropBox(cropOptions);
+
+      if (this.isCropped) {
+        this.renderCropBox((this.cropBoxes.length - 1));
+      }
+    },
+
     initContainer: function () {
       var options = this.options;
       var $this = this.$element;
@@ -325,6 +334,43 @@
       }
 
       this.cropBox = cropBox;
+      this.cropBoxes.push(this.cropBox);
+      this.limitCropBox(true, true);
+
+      // Initialize auto crop area
+      cropBox.width = min(max(cropBox.width, cropBox.minWidth), cropBox.maxWidth);
+      cropBox.height = min(max(cropBox.height, cropBox.minHeight), cropBox.maxHeight);
+
+      // The width of auto crop area must large than "minWidth", and the height too. (#164)
+      cropBox.width = max(cropBox.minWidth, cropBox.width * autoCropArea);
+      cropBox.height = max(cropBox.minHeight, cropBox.height * autoCropArea);
+      cropBox.oldLeft = cropBox.left = canvas.left + (canvas.width - cropBox.width) / 2;
+      cropBox.oldTop = cropBox.top = canvas.top + (canvas.height - cropBox.height) / 2;
+
+      this.initialCropBox = $.extend({}, cropBox);
+    },
+
+    initNewCropBox: function (cropOptions) {
+      var options = this.options;
+      var canvas = this.canvas;
+      var aspectRatio = options.aspectRatio;
+      var autoCropArea = num(options.autoCropArea) || 0.8;
+      var cropBox = {
+            width: cropOptions.width,
+            height: cropOptions.height
+          };
+
+      if (aspectRatio) {
+        if (canvas.height * aspectRatio > canvas.width) {
+          cropBox.height = cropBox.width / aspectRatio;
+        } else {
+          cropBox.width = cropBox.height * aspectRatio;
+        }
+      }
+
+      this.cropBox = cropBox;
+      this.cropBoxes.push(this.cropBox);
+      this.cropBoxIndex = this.cropBoxes.length - 1;
       this.limitCropBox(true, true);
 
       // Initialize auto crop area
@@ -406,12 +452,13 @@
       }
     },
 
-    renderCropBox: function () {
+    renderCropBox: function (index) {
       var options = this.options;
       var container = this.container;
       var containerWidth = container.width;
       var containerHeight = container.height;
-      var cropBox = this.cropBox;
+      var cropBoxIndex = index || this.cropBoxIndex;
+      var cropBox = this.cropBoxes[cropBoxIndex] || this.cropBox;
 
       if (cropBox.width > cropBox.maxWidth || cropBox.width < cropBox.minWidth) {
         cropBox.left = cropBox.oldLeft;
@@ -435,7 +482,9 @@
         this.$face.data(DATA_ACTION, (cropBox.width === containerWidth && cropBox.height === containerHeight) ? ACTION_MOVE : ACTION_ALL);
       }
 
-      this.$cropBox.css({
+      var $cropBox = this.$cropBoxes[cropBoxIndex] || this.$cropBox;
+      
+      $cropBox.css({
         width: cropBox.width,
         height: cropBox.height,
         left: cropBox.left,

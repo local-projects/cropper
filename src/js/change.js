@@ -1,10 +1,15 @@
-    change: function (shiftKey, event) {
+    change: function (shiftKey, event, target) {
       var options = this.options;
       var aspectRatio = options.aspectRatio;
       var action = this.action;
       var container = this.container;
       var canvas = this.canvas;
-      var cropBox = this.cropBox;
+      var index =  $(target).data('index');
+      if (index !== undefined) {
+        this.cropBoxIndex = index;
+      }
+      
+      var cropBox = this.cropBoxes[this.cropBoxIndex];
       var width = cropBox.width;
       var height = cropBox.height;
       var left = cropBox.left;
@@ -16,6 +21,7 @@
       var maxWidth = container.width;
       var maxHeight = container.height;
       var renderable = true;
+      var newCrop = false;
       var offset;
       var range;
 
@@ -351,9 +357,11 @@
         case ACTION_CROP:
           if (!range.x || !range.y) {
             renderable = false;
+            newCrop = false;
             break;
           }
 
+          newCrop = true;
           offset = this.$cropper.offset();
           left = this.startX - offset.left;
           top = this.startY - offset.top;
@@ -386,7 +394,13 @@
         // No default
       }
 
-      if (renderable) {
+      if (newCrop) {
+        this.buildNewCrop(cropBox);
+        this.action = action;
+        newCrop = false;
+      }
+
+      else if (renderable) {
         cropBox.width = width;
         cropBox.height = height;
         cropBox.left = left;

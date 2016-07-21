@@ -141,6 +141,14 @@
       var e = event;
       var action = this.action;
       var touchesLength;
+      var target = '';
+
+      if ($(e.target).hasClass('cropper-crop-box')){
+        target = $(e.target)[0];
+      }
+      else if ($(e.target).parent().hasClass('cropper-crop-box')) {
+        target = $(e.target).parent()[0];
+      }
 
       if (this.isDisabled) {
         return;
@@ -175,7 +183,7 @@
         this.endX = e.pageX || originalEvent && originalEvent.pageX;
         this.endY = e.pageY || originalEvent && originalEvent.pageY;
 
-        this.change(e.shiftKey, action === ACTION_ZOOM ? event : null);
+        this.change(e.shiftKey, action === ACTION_ZOOM ? event : null, target);
       }
     },
 

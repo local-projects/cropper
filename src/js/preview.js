@@ -46,7 +46,7 @@
     preview: function () {
       var image = this.image;
       var canvas = this.canvas;
-      var cropBox = this.cropBox;
+      var cropBox = this.cropBoxes[this.cropBoxIndex] || this.cropBox;
       var cropBoxWidth = cropBox.width;
       var cropBoxHeight = cropBox.height;
       var width = image.width;
