@@ -43,63 +43,6 @@ body {
   opacity: 0.5;
 }
 
-@media (min-width: 992px) {
-  .docs-jumbotron h1,
-  .docs-jumbotron p {
-    margin-right: 380px;
-  }
-}
-
-.docs-carbonads-container {
-  position: relative;
-}
-
-.docs-carbonads {
-  max-width: 350px;
-  padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.carbon-wrap {
-  overflow: hidden;
-}
-
-.carbon-img {
-  clear: left;
-  float: left;
-  display: block;
-}
-
-.carbon-text,
-.carbon-poweredby {
-  display: block;
-  margin-left: 140px;
-}
-
-.carbon-text,
-.carbon-text:hover,
-.carbon-text:focus {
-  color: #fff;
-  text-decoration: none;
-}
-
-.carbon-poweredby,
-.carbon-poweredby:hover,
-.carbon-poweredby:focus {
-  color: #ddd;
-  text-decoration: none;
-}
-
-@media (min-width: 992px) {
-  .docs-carbonads {
-    position: absolute;
-    right: 0;
-    bottom: 5px;
-  }
-}
-
 
 /* Content */
 
@@ -202,18 +145,8 @@ body {
   white-space: normal;
 }
 
-.btn-upload .tooltip-inner,
-.btn-toggle .tooltip-inner {
+.btn-upload .tooltip-inner {
   white-space: nowrap;
-}
-
-.btn-toggle {
-  padding: 6px;
-}
-
-.btn-toggle > .docs-tooltip {
-  margin: -6px;
-  padding: 6px;
 }
 
 @media (max-width: 400px) {
@@ -259,20 +192,11 @@ body {
   max-width: 100%;
 }
 
-.docs-diagram .modal-dialog {
-  max-width: 352px;
-}
-
 
 /* Footer */
 
 .docs-footer {
   overflow: hidden;
-}
-
-.links {
-  text-align: center;
-  margin-bottom: 30px;
 }
 
 .heart {
@@ -311,3 +235,17 @@ body {
   background-color: #fff;
   content: "♥";
 }
+
+.close-icon{
+  background-image: url("../img/close-icon.png");
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  right: -25px;
+  top: 0px;
+  background-color: white;
+}
+
+  .close-icon:hover{
+    cursor: pointer;
+  }
