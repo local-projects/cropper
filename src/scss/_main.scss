@@ -35,6 +35,14 @@
   left: 0;
 }
 
+.cropper-crop-box .cropper-point{
+  display: none;
+}
+
+.cropper-crop-box:hover .cropper-point{
+  display: block;
+}
+
 .cropper-wrap-box {
   overflow: hidden;
 }
@@ -52,8 +60,8 @@
 .cropper-view-box {
   display: block;
   overflow: hidden;
-  outline: 1px solid $color-brand;
-  outline-color: rgba($color-brand, .75);
+  outline: 1px solid white;
+  outline-color: rgba(white, .75);
   @include square(100%);
 }
 
@@ -128,7 +136,7 @@
 }
 
 .cropper-line {
-  background-color: $color-brand;
+  background-color: white;
 
   &.line-e {
     top: 0;
@@ -160,7 +168,7 @@
 }
 
 .cropper-point {
-  background-color: $color-brand;
+  background-color: white;
   @include square(5px);
   @include opacity(.75);
 
