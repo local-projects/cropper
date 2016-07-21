@@ -5,7 +5,7 @@
  * Copyright (c) 2014-2016 Fengyuan Chen and contributors
  * Released under the MIT license
  *
- * Date: 2016-07-21T14:27:47.607Z
+ * Date: 2016-07-21T17:40:01.326Z
  */
 
 (function (factory) {
@@ -437,10 +437,10 @@
     this.originalUrl = '';
     this.canvas = null;
     this.cropBox = null;
-    /*this.cropBoxes = options.cropBoxes*/
-    this.cropBoxes = []
-    this.cropBoxIndex = 0
-    console.log(this.cropBoxes);
+    /*this.cropBoxes = options.cropBoxes;*/
+    this.cropBoxes = [];
+    /*this.cropBoxes = {};*/
+    this.cropBoxIndex = 0;
     this.init();
   }
 
@@ -667,8 +667,8 @@
       var $this = this.$element;
       var $clone = this.$clone;
       var $cropper;
-      var $cropBox, $cropBox2;
-      var $face, $face2;
+      var $cropBox;
+      var $face;
 
       if (!this.isLoaded) {
         return;
@@ -681,25 +681,23 @@
 
       // Create cropper elements
       this.$container = $this.parent();
-      this.$cropBoxes = []
+      this.$cropBoxes = [];
+      /*this.$cropBoxes = {};*/
       /*this.$cropper = $cropper = $(Cropper.ORIGINAL_TEMPLATE);*/
       this.$cropper = $cropper = $(Cropper.TEMPLATE);
       this.$canvas = $cropper.find('.cropper-canvas').append($clone);
       this.$dragBox = $cropper.find('.cropper-drag-box');
       /*this.$cropBox = $cropBox = $cropper.find('.cropper-crop-box');*/
       this.$cropBox = $cropBox = $(Cropper.CROP_TEMPLATE1);
-      /*this.$cropBox2 = $cropBox2 = $(Cropper.CROP_TEMPLATE2);*/
       this.$cropBoxes.push(this.$cropBox);
-      /*this.$cropBoxes.push(this.$cropBox2);*/
+      /*this.$cropBoxes[this.cropBoxIndex] = this.$cropBox;*/
       this.$viewBox = $cropper.find('.cropper-view-box');
       this.$face = $face = $cropBox.find('.cropper-face');
-      /*this.$face2 = $face2 = $cropBox2.find('.cropper-face');*/
+      $face.parent().data('index', this.cropBoxes.length);
 
       // Hide the original image
-      $cropper.append($cropBox)
-      /*$cropper.append($cropBox2)*/
+      $cropper.append($cropBox);
       $this.addClass(CLASS_HIDDEN).after($cropper);
-
 
       // Show the clone image if is hidden
       if (!this.isImg) {
@@ -733,14 +731,11 @@
       if (options.cropBoxMovable) {
         $face.addClass(CLASS_MOVE).data(DATA_ACTION, ACTION_ALL);
         // $face.data('index', this.cropBoxIndex);
-        $face.parent().data('index', this.cropBoxes.length);
-        /*$face2.addClass(CLASS_MOVE).data(DATA_ACTION, ACTION_ALL);
-        $face2.data('index', 1);*/
       }
 
       $('.close-icon').click(function() {
         $(this).parent().remove();
-      })
+      });
 
       if (!options.highlight) {
         $face.addClass(CLASS_INVISIBLE);
@@ -770,7 +765,6 @@
 
     buildNewCrop: function(cropOptions) {
       var options = this.options;
-      var $this = this.$element;
       var $clone = this.$clone;
       var $cropper = this.$cropper;
       var $cropBox;
@@ -787,16 +781,18 @@
 
       // Create cropper elements
       this.$cropBox = $cropBox = $(Cropper.CROP_TEMPLATE);
-      this.$cropBoxes.push(this.$cropBox)
+      /*this.$cropBoxes[this.cropBoxIndex] = this.$cropBox;*/
+      this.$cropBoxes.push(this.$cropBox);
       this.$viewBox = $cropper.find('.cropper-view-box');
       this.$face = $face = $cropBox.find('.cropper-face');
+      $face.parent().data('index', this.cropBoxes.length);
 
       // Hide the original image
-      $cropper.append($cropBox)
+      $cropper.append($cropBox);
 
       $('.close-icon').click(function() {
         $(this).parent().remove();
-      })
+      });
 
       // Show the clone image if is hidden
       if (!this.isImg) {
@@ -834,7 +830,6 @@
 
       if (options.cropBoxMovable) {
         $face.addClass(CLASS_MOVE).data(DATA_ACTION, ACTION_ALL);
-        $face.parent().data('index', this.cropBoxes.length);
       }
 
       if (!options.highlight) {
@@ -886,6 +881,7 @@
 
       this.$viewBox = null;
       this.$cropBox = null;
+      this.$cropBoxes = null;
       this.$dragBox = null;
       this.$canvas = null;
       this.$container = null;
@@ -1230,7 +1226,7 @@
       }
 
       this.cropBox = cropBox;
-      this.cropBoxes.push(this.cropBox)
+      this.cropBoxes.push(this.cropBox);
       this.limitCropBox(true, true);
 
       // Initialize auto crop area
@@ -1265,7 +1261,8 @@
       }
 
       this.cropBox = cropBox;
-      this.cropBoxes.push(this.cropBox)
+      this.cropBoxes.push(this.cropBox);
+      this.cropBoxIndex = this.cropBoxes.length - 1;
       this.limitCropBox(true, true);
 
       // Initialize auto crop area
@@ -1386,13 +1383,6 @@
         top: cropBox.top
       });
 
-      /*this.$cropBox2.css({
-        width: cropBox.width,
-        height: cropBox.height,
-        left: cropBox.left - 50,
-        top: cropBox.top - 50
-      });*/
-
       if (this.isCropped && this.isLimited) {
         this.limitCanvas(true, true);
       }
@@ -1414,13 +1404,10 @@
       var crossOrigin = getCrossOrigin(this.crossOrigin);
       var url = crossOrigin ? this.crossOriginUrl : this.url;
       var $clone2;
-      /*var $clone3;*/
 
       this.$preview = $(this.options.preview);
       this.$clone2 = $clone2 = $('<img' + crossOrigin + ' src="' + url + '">');
-      /*this.$clone3 = $clone3 = $('<img' + crossOrigin + ' src="' + url + '">');*/
       this.$viewBox.html($clone2);
-      /*this.$viewBox.append($clone3);*/
       this.$preview.each(function () {
         var $this = $(this);
 
@@ -1480,14 +1467,6 @@
         marginTop: -top,
         transform: getTransform(image)
       });
-
-      /*this.$clone3.css({
-        width: width,
-        height: height,
-        marginLeft: -left - 100,
-        marginTop: -top - 100,
-        transform: getTransform(image)
-      });*/
 
       this.$preview.each(function () {
         var $this = $(this);
@@ -1753,16 +1732,13 @@
       var e = event;
       var action = this.action;
       var touchesLength;
-      var target = $(e.target);
+      var target = '';
 
-      if (target.hasClass('cropper-crop-box')){
-        target = target[0];
+      if ($(e.target).hasClass('cropper-crop-box')){
+        target = $(e.target)[0];
       }
-      else if (target.parent().hasClass('cropper-crop-box')) {
-        target = target.parent()[0];
-      }
-      else {
-        target = '';
+      else if ($(e.target).parent().hasClass('cropper-crop-box')) {
+        target = $(e.target).parent()[0];
       }
 
       if (this.isDisabled) {
@@ -1836,14 +1812,11 @@
       var container = this.container;
       var canvas = this.canvas;
       var index =  $(target).data('index');
-      if (index != undefined) {
-        index = this.cropBoxIndex = $(target).data('index');
-      }
-      else {
-        index = this.cropBoxIndex;
+      if (index !== undefined) {
+        this.cropBoxIndex = index;
       }
       
-      var cropBox = this.cropBoxes[index];
+      var cropBox = this.cropBoxes[this.cropBoxIndex];
       var width = cropBox.width;
       var height = cropBox.height;
       var left = cropBox.left;
@@ -1858,8 +1831,6 @@
       var newCrop = false;
       var offset;
       var range;
-
-      console.log(index);
 
       // Locking aspect ratio in "free mode" by holding shift key (#259)
       if (!aspectRatio && shiftKey) {
@@ -2191,13 +2162,13 @@
 
         // Create crop box
         case ACTION_CROP:
-          newCrop = true;
           if (!range.x || !range.y) {
             renderable = false;
             newCrop = false;
             break;
           }
 
+          newCrop = true;
           offset = this.$cropper.offset();
           left = this.startX - offset.left;
           top = this.startY - offset.top;
@@ -2331,7 +2302,6 @@
 
           if (this.isBuilt) {
             this.$preview.find('img').add(this.$clone2).attr('src', url);
-            /*this.$preview.find('img').add(this.$clone3).attr('src', url);*/
           }
         } else {
           if (this.isImg) {
@@ -2363,7 +2333,7 @@
 
     // Destroy the cropper and remove the instance from the image
     destroy: function () {
-      /*var $this = this.$element;
+      var $this = this.$element;
 
       if (this.isLoaded) {
         if (this.isImg && this.isReplaced) {
@@ -2380,7 +2350,7 @@
         }
       }
 
-      $this.removeData(NAMESPACE);*/
+      $this.removeData(NAMESPACE);
     },
 
     /**
