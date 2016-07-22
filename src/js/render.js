@@ -11,8 +11,7 @@
     },
 
     renderNewCropBox: function (cropOptions) {
-      /*this.initCropBox(cropOptions);*/
-      this.initNewCropBox(cropOptions);
+      this.initCropBox(cropOptions);
 
       if (this.isCropped) {
         this.renderCropBox(getObjSize(this.cropBoxes) - 1);
@@ -439,45 +438,7 @@
       }
     },
 
-    initCropBox: function () {
-      var options = this.options;
-      var canvas = this.canvas;
-      var index = getObjSize(this.cropBoxes);
-      var aspectRatio = options.aspectRatio;
-      var autoCropArea = num(options.autoCropArea) || 0.8;
-      var cropBox = {
-            width: canvas.width,
-            height: canvas.height
-          };
-
-      if (aspectRatio) {
-        if (canvas.height * aspectRatio > canvas.width) {
-          cropBox.height = cropBox.width / aspectRatio;
-        } else {
-          cropBox.width = cropBox.height * aspectRatio;
-        }
-      }
-
-      this.cropBox = cropBox;
-      this.cropBoxes[index] = this.cropBox;
-      /*this.cropBoxes.push(this.cropBox);*/
-      this.cropBoxIndex = index;
-      this.limitCropBox(true, true);
-
-      // Initialize auto crop area
-      cropBox.width = min(max(cropBox.width, cropBox.minWidth), cropBox.maxWidth);
-      cropBox.height = min(max(cropBox.height, cropBox.minHeight), cropBox.maxHeight);
-
-      // The width of auto crop area must large than "minWidth", and the height too. (#164)
-      cropBox.width = max(cropBox.minWidth, cropBox.width * autoCropArea);
-      cropBox.height = max(cropBox.minHeight, cropBox.height * autoCropArea);
-      cropBox.oldLeft = cropBox.left = canvas.left + (canvas.width - cropBox.width) / 2;
-      cropBox.oldTop = cropBox.top = canvas.top + (canvas.height - cropBox.height) / 2;
-
-      this.initialCropBox = $.extend({}, cropBox);
-    },
-
-    initNewCropBox: function (cropOptions) {
+    initCropBox: function (cropOptions) {
       var options = this.options;
       var canvas = this.canvas;
       var index = getObjSize(this.cropBoxes);
@@ -507,7 +468,6 @@
 
       this.cropBox = cropBox;
       this.cropBoxes[index] = this.cropBox;
-      /*this.cropBoxes.push(this.cropBox);*/
       this.cropBoxIndex = index;
       this.limitCropBox(true, true, index);
 
