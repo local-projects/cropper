@@ -483,10 +483,19 @@
       var index = getObjSize(this.cropBoxes);
       var aspectRatio = options.aspectRatio;
       var autoCropArea = num(options.autoCropArea) || 0.8;
-      var cropBox = {
-            width: cropOptions.width,
-            height: cropOptions.height
-          };
+      var cropBox;
+      if (cropOptions) {
+        cropBox = {
+          width: cropOptions.width,
+          height: cropOptions.height
+        };
+      }
+      else {
+        cropBox = {
+          width: canvas.width,
+          height: canvas.height
+        };
+      }
 
       if (aspectRatio) {
         if (canvas.height * aspectRatio > canvas.width) {
@@ -583,7 +592,7 @@
 
     limitCropBox: function (isSizeLimited, isPositionLimited, j) {
 
-      if (j) {
+      if (!isNaN(j)) {
         this.limitSingleCropBox(isSizeLimited, isPositionLimited, j);
         return;
       }
@@ -707,7 +716,7 @@
 
     renderCropBox: function (j) {
 
-      if (j) {
+      if (!isNaN(j)) {
         this.renderSingleCropBox(j);
         return;
       }

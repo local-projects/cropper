@@ -5,6 +5,7 @@
       var $cropper;
       var $cropBox;
       var $face;
+      var index;
 
       if (!this.isLoaded) {
         return;
@@ -17,14 +18,17 @@
 
       // Create cropper elements
       this.$container = $this.parent();
-      this.$cropBoxes = [];
+      this.$cropBoxes = {};
+      /*this.$cropper = $cropper = $(Cropper.ORIGINAL_TEMPLATE);*/
       this.$cropper = $cropper = $(Cropper.TEMPLATE);
       this.$canvas = $cropper.find('.cropper-canvas').append($clone);
       this.$dragBox = $cropper.find('.cropper-drag-box');
       this.$cropBox = $cropBox = $(Cropper.CROP_TEMPLATE1);
-      this.$cropBoxes.push(this.$cropBox);
+      index = getObjSize(this.$cropBoxes);
+      this.$cropBoxes[index] = this.$cropBox;
       this.$viewBox = $cropper.find('.cropper-view-box');
       this.$face = $face = $cropBox.find('.cropper-face');
+      /*$face.parent().data('index', this.cropBoxes.length);*/
       $face.parent().data('index', getObjSize(this.cropBoxes));
 
       // Hide the original image
@@ -62,11 +66,10 @@
 
       if (options.cropBoxMovable) {
         $face.addClass(CLASS_MOVE).data(DATA_ACTION, ACTION_ALL);
+        // $face.data('index', this.cropBoxIndex);
       }
 
-      $('.close-icon').click(function() {
-        $(this).parent().remove();
-      });
+      this.closeCrop();
 
       if (!options.highlight) {
         $face.addClass(CLASS_INVISIBLE);
@@ -100,6 +103,7 @@
       var $cropper = this.$cropper;
       var $cropBox;
       var $face;
+      var index;
 
       if (!this.isLoaded) {
         return;
@@ -112,8 +116,9 @@
 
       // Create cropper elements
       this.$cropBox = $cropBox = $(Cropper.CROP_TEMPLATE);
-      /*this.$cropBoxes[this.cropBoxIndex] = this.$cropBox;*/
-      this.$cropBoxes.push(this.$cropBox);
+      index = getObjSize(this.$cropBoxes);
+      this.$cropBoxes[index] = this.$cropBox;
+
       this.$viewBox = $cropper.find('.cropper-view-box');
       this.$face = $face = $cropBox.find('.cropper-face');
       $face.parent().data('index', getObjSize(this.cropBoxes));
@@ -121,25 +126,7 @@
       // Hide the original image
       $cropper.append($cropBox);
 
-      var that = this;
-      $('.close-icon').click(function(event) {
-        var closeIndex = $(this).parent().data('index');
-        delete that.cropBoxes[closeIndex];
-        var keys = Object.keys(that.cropBoxes);
-        
-        if (that.cropBoxIndex == closeIndex) {
-          if (keys.length > 0) {
-            that.cropBoxIndex = keys[0];
-          }
-          else {
-            that.cropBoxIndex = null;
-          }
-
-        }
-        
-        $(this).parent().remove();
-        event.preventDefault();
-      });
+      this.closeCrop();
 
       // Show the clone image if is hidden
       if (!this.isImg) {
@@ -202,6 +189,31 @@
         this.trigger(EVENT_CROP, this.getData());
         this.isCompleted = true;
       }, this), 0);*/
+    },
+
+    closeCrop: function () {
+      var that = this;
+      $('.close-icon').click(function(event) {
+        var closeIndex = $(this).parent().data('index');
+        delete that.cropBoxes[closeIndex];
+        delete that.$cropBoxes[closeIndex];
+        var keys = Object.keys(that.cropBoxes);
+        
+        if (that.cropBoxIndex === closeIndex) {
+          if (keys.length > 0) {
+            that.cropBoxIndex = keys[0];
+          }
+          else {
+            that.cropBoxIndex = null;
+            that.cropBox = null;
+            that.$cropBox = null;
+          }
+
+        }
+        
+        $(this).parent().remove();
+        event.preventDefault();
+      });
     },
 
     unbuild: function () {

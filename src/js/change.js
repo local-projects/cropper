@@ -5,11 +5,21 @@
       var container = this.container;
       var canvas = this.canvas;
       var index =  $(target).data('index');
+      
       if (index !== undefined) {
         this.cropBoxIndex = index;
       }
+
+      var cropBox;
       
-      var cropBox = this.cropBoxes[this.cropBoxIndex];
+      if (getObjSize(this.cropBoxes) > 0) {
+        cropBox = this.cropBoxes[this.cropBoxIndex];
+      }
+      else {
+        this.buildNewCrop();
+        return;
+      }
+      
       var width = cropBox.width;
       var height = cropBox.height;
       var left = cropBox.left;
