@@ -6,29 +6,47 @@
       this.$preview = $(this.options.preview);
       this.$clone2 = $clone2 = $('<img' + crossOrigin + ' src="' + url + '">');
       this.$viewBox.html($clone2);
-      this.$preview.each(function () {
-        var $this = $(this);
-
-        // Save the original size for recover
-        $this.data(DATA_PREVIEW, {
-          width: $this.width(),
-          height: $this.height(),
-          html: $this.html()
+      this.previews[this.cropBoxIndex] = this.$preview;
+      this.$preview.data(DATA_PREVIEW, {
+          width: this.$preview.width(),
+          height: this.$preview.height(),
+          html: this.$preview.html(),
+          index: this.cropBoxIndex
         });
 
-        /**
-         * Override img element styles
-         * Add `display:block` to avoid margin top issue
-         * (Occur only when margin-top <= -height)
-         */
-        $this.html(
-          '<img' + crossOrigin + ' src="' + url + '" style="' +
-          'display:block;width:100%;height:auto;' +
-          'min-width:0!important;min-height:0!important;' +
-          'max-width:none!important;max-height:none!important;' +
-          'image-orientation:0deg!important;">'
-        );
-      });
+      this.$preview.html(
+        '<img' + crossOrigin + ' src="' + url + '" style="' +
+        'display:block;width:100%;height:auto;' +
+        'min-width:0!important;min-height:0!important;' +
+        'max-width:none!important;max-height:none!important;' +
+        'image-orientation:0deg!important;">'
+      );
+      
+    },
+
+    initNewPreview: function (position) {
+      var crossOrigin = getCrossOrigin(this.crossOrigin);
+      var url = crossOrigin ? this.crossOriginUrl : this.url;
+      var previewContainer = $(this.options.previewContainer);
+      var prev = this.options.preview.replace('.', '');
+      this.$preview = $('<div class="' + prev + ' preview-lg"></div>')
+      previewContainer.append(this.$preview);
+      this.previews[position] = this.$preview;
+
+      this.$preview.data(DATA_PREVIEW, {
+          width: this.$preview.width(),
+          height: this.$preview.height(),
+          html: this.$preview.html(),
+          index: position
+        });
+
+      this.$preview.html(
+        '<img' + crossOrigin + ' src="' + url + '" style="' +
+        'display:block;width:100%;height:auto;' +
+        'min-width:0!important;min-height:0!important;' +
+        'max-width:none!important;max-height:none!important;' +
+        'image-orientation:0deg!important;">'
+      );
     },
 
     resetPreview: function () {
@@ -53,22 +71,22 @@
       var height = image.height;
       var left = cropBox.left - canvas.left - image.left;
       var top = cropBox.top - canvas.top - image.top;
+      var prev = this.previews[this.cropBoxIndex];
 
       if (!this.isCropped || this.isDisabled) {
         return;
       }
 
-      this.$clone2.css({
+      /*this.$clone2.css({
         width: width,
         height: height,
         marginLeft: -left,
         marginTop: -top,
         transform: getTransform(image)
-      });
+      });*/
 
-      this.$preview.each(function () {
-        var $this = $(this);
-        var data = $this.data(DATA_PREVIEW);
+      if (prev) {
+        var data = prev.data(DATA_PREVIEW);
         var originalWidth = data.width;
         var originalHeight = data.height;
         var newWidth = originalWidth;
@@ -76,8 +94,8 @@
         var ratio = 1;
 
         if (cropBoxWidth) {
-          ratio = originalWidth / cropBoxWidth;
-          newHeight = cropBoxHeight * ratio;
+            ratio = originalWidth / cropBoxWidth;
+            newHeight = cropBoxHeight * ratio;
         }
 
         if (cropBoxHeight && newHeight > originalHeight) {
@@ -86,7 +104,7 @@
           newHeight = originalHeight;
         }
 
-        $this.css({
+        prev.css({
           width: newWidth,
           height: newHeight
         }).find('img').css({
@@ -96,5 +114,14 @@
           marginTop: -top * ratio,
           transform: getTransform(image)
         });
+      }
+    },
+
+    deletePreview: function (closeIndex) {
+      var prevs = $(this.options.preview)
+      $.each(prevs, function (index, prev) {
+        if (closeIndex === $(prev).data('preview')['index']) {
+          $(prev).remove();
+        }
       });
     },

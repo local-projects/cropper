@@ -134,6 +134,7 @@
       }
 
       /*this.initPreview();*/
+      this.initNewPreview(getObjSize(this.cropBoxes));
       this.bind();
 
       /*if (options.cropBoxMovable) {
@@ -197,6 +198,8 @@
         var closeIndex = $(this).parent().data('index');
         delete that.cropBoxes[closeIndex];
         delete that.$cropBoxes[closeIndex];
+        delete that.previews[closeIndex];
+        that.deletePreview(closeIndex);
         var keys = Object.keys(that.cropBoxes);
         
         if (that.cropBoxIndex === closeIndex) {
@@ -234,6 +237,7 @@
       // Clear `cropBox` is necessary when replace
       this.cropBox = null;
       this.cropBoxes = null;
+      this.previews = null;
       this.unbind();
 
       this.resetPreview();

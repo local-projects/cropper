@@ -18,5 +18,6 @@
     /*this.cropBoxes = [];*/
     this.cropBoxes = {};
     this.cropBoxIndex = 0;
+    this.previews = {};
     this.init();
   }
