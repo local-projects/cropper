@@ -15,6 +15,7 @@ $(function () {
   var options = {
         aspectRatio: 16 / 9,
         preview: '.img-preview',
+        previewContainer: '.docs-preview',
         crop: function (e) {
           $dataX.val(Math.round(e.x));
           $dataY.val(Math.round(e.y));
