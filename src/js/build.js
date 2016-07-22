@@ -121,8 +121,24 @@
       // Hide the original image
       $cropper.append($cropBox);
 
-      $('.close-icon').click(function() {
+      var that = this;
+      $('.close-icon').click(function(event) {
+        var closeIndex = $(this).parent().data('index');
+        delete that.cropBoxes[closeIndex];
+        var keys = Object.keys(that.cropBoxes);
+        
+        if (that.cropBoxIndex == closeIndex) {
+          if (keys.length > 0) {
+            that.cropBoxIndex = keys[0];
+          }
+          else {
+            that.cropBoxIndex = null;
+          }
+
+        }
+        
         $(this).parent().remove();
+        event.preventDefault();
       });
 
       // Show the clone image if is hidden
@@ -205,6 +221,7 @@
 
       // Clear `cropBox` is necessary when replace
       this.cropBox = null;
+      this.cropBoxes = null;
       this.unbind();
 
       this.resetPreview();
