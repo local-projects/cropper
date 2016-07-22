@@ -15,7 +15,8 @@
     this.canvas = null;
     this.cropBox = null;
     /*this.cropBoxes = options.cropBoxes;*/
-    this.cropBoxes = [];
+    /*this.cropBoxes = [];*/
+    this.cropBoxes = {};
     this.cropBoxIndex = 0;
     this.init();
   }

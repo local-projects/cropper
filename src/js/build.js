@@ -25,7 +25,7 @@
       this.$cropBoxes.push(this.$cropBox);
       this.$viewBox = $cropper.find('.cropper-view-box');
       this.$face = $face = $cropBox.find('.cropper-face');
-      $face.parent().data('index', this.cropBoxes.length);
+      $face.parent().data('index', getObjSize(this.cropBoxes));
 
       // Hide the original image
       $cropper.append($cropBox);
@@ -116,7 +116,7 @@
       this.$cropBoxes.push(this.$cropBox);
       this.$viewBox = $cropper.find('.cropper-view-box');
       this.$face = $face = $cropBox.find('.cropper-face');
-      $face.parent().data('index', this.cropBoxes.length);
+      $face.parent().data('index', getObjSize(this.cropBoxes));
 
       // Hide the original image
       $cropper.append($cropBox);

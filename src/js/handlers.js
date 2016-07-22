@@ -27,7 +27,10 @@
             canvasData[i] = n * ratio;
           }));
           this.setCropBoxData($.each(cropBoxData, function (i, n) {
-            cropBoxData[i] = n * ratio;
+            $.each(n, function (index, value) {
+              n[index] = value * ratio;
+            });
+            /*cropBoxData[i] = n * ratio;*/
           }));
         }
       }

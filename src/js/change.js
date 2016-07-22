@@ -385,7 +385,7 @@
             this.isCropped = true;
 
             if (this.isLimited) {
-              this.limitCropBox(true, true);
+              this.limitCropBox(true, true, this.cropBoxIndex);
             }
           }
 
@@ -407,7 +407,7 @@
         cropBox.top = top;
         this.action = action;
 
-        this.renderCropBox();
+        this.renderCropBox(this.cropBoxIndex);
       }
 
       // Override

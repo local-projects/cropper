@@ -312,3 +312,7 @@
 
     return 'data:image/jpeg;base64,' + btoa(base64);
   }
+
+  function getObjSize(obj) {
+    return Object.keys(obj).length;
+  }

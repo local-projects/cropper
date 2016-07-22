@@ -357,43 +357,53 @@
       var image = this.image;
       var canvas = this.canvas;
       var cropBox = this.cropBox;
+      var cropBoxes = this.cropBoxes;
       var ratio;
-      var data;
+      var allData = {};
+      var that = this;
 
-      if (this.isBuilt && this.isCropped) {
-        data = {
-          x: cropBox.left - canvas.left,
-          y: cropBox.top - canvas.top,
-          width: cropBox.width,
-          height: cropBox.height
-        };
+      $.each(cropBoxes, function (index, value) {
+        var data;
 
-        ratio = image.width / image.naturalWidth;
+        if (that.isBuilt && that.isCropped) {
+          data = {
+            x: value.left - canvas.left,
+            y: value.top - canvas.top,
+            width: value.width,
+            height: value.height
+          };
 
-        $.each(data, function (i, n) {
-          n = n / ratio;
-          data[i] = isRounded ? round(n) : n;
-        });
+          ratio = image.width / image.naturalWidth;
 
-      } else {
-        data = {
-          x: 0,
-          y: 0,
-          width: 0,
-          height: 0
-        };
-      }
+          $.each(data, function (i, n) {
+            n = n / ratio;
+            data[i] = isRounded ? round(n) : n;
+          });
 
-      if (options.rotatable) {
-        data.rotate = image.rotate || 0;
-      }
+        } else {
+          data = {
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0
+          };
+        }
 
-      if (options.scalable) {
-        data.scaleX = image.scaleX || 1;
-        data.scaleY = image.scaleY || 1;
-      }
+        if (options.rotatable) {
+          data.rotate = image.rotate || 0;
+        }
 
-      return data;
+        if (options.scalable) {
+          data.scaleX = image.scaleX || 1;
+          data.scaleY = image.scaleY || 1;
+        }
+
+        allData[index] = data;
+        /*return data;*/
+
+      });
+
+      return allData;
     },
 
     /**
@@ -401,65 +411,70 @@
      *
      * @param {Object} data
      */
-    setData: function (data) {
+    setData: function (allData) {
       var options = this.options;
       var image = this.image;
       var canvas = this.canvas;
-      var cropBoxData = {};
+      var cropBoxesData = {};
       var isRotated;
       var isScaled;
       var ratio;
+      var that = this;
 
-      if ($.isFunction(data)) {
-        data = data.call(this.element);
-      }
-
-      if (this.isBuilt && !this.isDisabled && $.isPlainObject(data)) {
-        if (options.rotatable) {
-          if (isNumber(data.rotate) && data.rotate !== image.rotate) {
-            image.rotate = data.rotate;
-            this.isRotated = isRotated = true;
-          }
+      $.each(allData, function (index, data){
+        var cropBoxData = {};
+        if ($.isFunction(data)) {
+          data = data.call(that.element);
         }
 
-        if (options.scalable) {
-          if (isNumber(data.scaleX) && data.scaleX !== image.scaleX) {
-            image.scaleX = data.scaleX;
-            isScaled = true;
+        if (that.isBuilt && !that.isDisabled && $.isPlainObject(data)) {
+          if (options.rotatable) {
+            if (isNumber(data.rotate) && data.rotate !== image.rotate) {
+              image.rotate = data.rotate;
+              that.isRotated = isRotated = true;
+            }
           }
 
-          if (isNumber(data.scaleY) && data.scaleY !== image.scaleY) {
-            image.scaleY = data.scaleY;
-            isScaled = true;
+          if (options.scalable) {
+            if (isNumber(data.scaleX) && data.scaleX !== image.scaleX) {
+              image.scaleX = data.scaleX;
+              isScaled = true;
+            }
+
+            if (isNumber(data.scaleY) && data.scaleY !== image.scaleY) {
+              image.scaleY = data.scaleY;
+              isScaled = true;
+            }
           }
+
+          if (isRotated) {
+            that.renderCanvas();
+          } else if (isScaled) {
+            that.renderImage();
+          }
+
+          ratio = image.width / image.naturalWidth;
+
+          if (isNumber(data.x)) {
+            cropBoxData.left = data.x * ratio + canvas.left;
+          }
+
+          if (isNumber(data.y)) {
+            cropBoxData.top = data.y * ratio + canvas.top;
+          }
+
+          if (isNumber(data.width)) {
+            cropBoxData.width = data.width * ratio;
+          }
+
+          if (isNumber(data.height)) {
+            cropBoxData.height = data.height * ratio;
+          }
+
+          cropBoxesData[index] = cropBoxData;
         }
-
-        if (isRotated) {
-          this.renderCanvas();
-        } else if (isScaled) {
-          this.renderImage();
-        }
-
-        ratio = image.width / image.naturalWidth;
-
-        if (isNumber(data.x)) {
-          cropBoxData.left = data.x * ratio + canvas.left;
-        }
-
-        if (isNumber(data.y)) {
-          cropBoxData.top = data.y * ratio + canvas.top;
-        }
-
-        if (isNumber(data.width)) {
-          cropBoxData.width = data.width * ratio;
-        }
-
-        if (isNumber(data.height)) {
-          cropBoxData.height = data.height * ratio;
-        }
-
-        this.setCropBoxData(cropBoxData);
-      }
+      });
+      this.setCropBoxData(cropBoxesData);
     },
 
     /**
@@ -539,25 +554,34 @@
       }
     },
 
+
     /**
      * Get the crop box position and size data
      *
      * @return {Object} data
      */
     getCropBoxData: function () {
-      var cropBox = this.cropBox;
-      var data;
+      /*var cropBox = this.cropBox;*/
+      var cropBoxes = this.cropBoxes;
+      var allData = {};
+      var that = this;
 
-      if (this.isBuilt && this.isCropped) {
-        data = {
-          left: cropBox.left,
-          top: cropBox.top,
-          width: cropBox.width,
-          height: cropBox.height
-        };
-      }
+      $.each(cropBoxes, function (index, value){
+        var data;
+        if (that.isBuilt && that.isCropped) {
+          data = {
+            left: value.left,
+            top: value.top,
+            width: value.width,
+            height: value.height
+          };
 
-      return data || {};
+          allData[index] = data;
+        }
+
+      });
+
+      return allData || {};
     },
 
     /**
@@ -566,7 +590,8 @@
      * @param {Object} data
      */
     setCropBoxData: function (data) {
-      var cropBox = this.cropBox;
+      /*var cropBox = this.cropBox;*/
+      var cropBoxes = this.cropBoxes;
       var aspectRatio = this.options.aspectRatio;
       var isWidthChanged;
       var isHeightChanged;
@@ -577,31 +602,33 @@
 
       if (this.isBuilt && this.isCropped && !this.isDisabled && $.isPlainObject(data)) {
 
-        if (isNumber(data.left)) {
-          cropBox.left = data.left;
-        }
-
-        if (isNumber(data.top)) {
-          cropBox.top = data.top;
-        }
-
-        if (isNumber(data.width)) {
-          isWidthChanged = true;
-          cropBox.width = data.width;
-        }
-
-        if (isNumber(data.height)) {
-          isHeightChanged = true;
-          cropBox.height = data.height;
-        }
-
-        if (aspectRatio) {
-          if (isWidthChanged) {
-            cropBox.height = cropBox.width / aspectRatio;
-          } else if (isHeightChanged) {
-            cropBox.width = cropBox.height * aspectRatio;
+        $.each(cropBoxes, function (index, cropBox) {
+          if (isNumber(data.left)) {
+            cropBox.left = data.left;
           }
-        }
+
+          if (isNumber(data.top)) {
+            cropBox.top = data.top;
+          }
+
+          if (isNumber(data.width)) {
+            isWidthChanged = true;
+            cropBox.width = data.width;
+          }
+
+          if (isNumber(data.height)) {
+            isHeightChanged = true;
+            cropBox.height = data.height;
+          }
+
+          if (aspectRatio) {
+            if (isWidthChanged) {
+              cropBox.height = cropBox.width / aspectRatio;
+            } else if (isHeightChanged) {
+              cropBox.width = cropBox.height * aspectRatio;
+            }
+          }
+        });
 
         this.renderCropBox();
       }
