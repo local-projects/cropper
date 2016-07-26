@@ -181,7 +181,6 @@
 
       this.setDragMode(options.dragMode);
       this.renderNewCropBox(cropOptions);
-      this.setData(options.data);
       /*$this.one(EVENT_BUILT, options.built);*/
 
       // Trigger the built event asynchronously to keep `data('cropper')` is defined

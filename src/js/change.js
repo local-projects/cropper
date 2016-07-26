@@ -405,6 +405,8 @@
       }
 
       if (newCrop) {
+        cropBox.left = left;
+        cropBox.top = top;
         this.buildNewCrop(cropBox);
         this.action = action;
         newCrop = false;

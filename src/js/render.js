@@ -459,10 +459,19 @@
       }
 
       if (aspectRatio) {
-        if (canvas.height * aspectRatio > canvas.width) {
-          cropBox.height = cropBox.width / aspectRatio;
-        } else {
-          cropBox.width = cropBox.height * aspectRatio;
+        if (cropOptions) {
+          if (cropOptions.height * aspectRatio > cropOptions.width) {
+            cropOptions.height = cropOptions.width / aspectRatio;
+          } else {
+            cropOptions.width = cropOptions.height * aspectRatio;
+          }
+        }
+        else {
+          if (canvas.height * aspectRatio > canvas.width) {
+            cropBox.height = cropBox.width / aspectRatio;
+          } else {
+            cropBox.width = cropBox.height * aspectRatio;
+          }
         }
       }
 
@@ -478,8 +487,15 @@
       // The width of auto crop area must large than "minWidth", and the height too. (#164)
       cropBox.width = max(cropBox.minWidth, cropBox.width * autoCropArea);
       cropBox.height = max(cropBox.minHeight, cropBox.height * autoCropArea);
-      cropBox.oldLeft = cropBox.left = canvas.left + (canvas.width - cropBox.width) / 2;
-      cropBox.oldTop = cropBox.top = canvas.top + (canvas.height - cropBox.height) / 2;
+      
+      if (cropOptions) {
+        cropBox.oldLeft = cropBox.left = cropOptions.left + (cropOptions.width - cropBox.width) / 2;
+        cropBox.oldTop = cropBox.top = cropOptions.top + (cropOptions.height - cropBox.height) / 2;
+      }
+      else {
+        cropBox.oldLeft = cropBox.left = canvas.left + (canvas.width - cropBox.width) / 2;
+        cropBox.oldTop = cropBox.top = canvas.top + (canvas.height - cropBox.height) / 2;
+      }
 
       this.initialCropBox = $.extend({}, cropBox);
     },
