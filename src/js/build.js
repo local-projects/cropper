@@ -24,12 +24,12 @@
       this.$canvas = $cropper.find('.cropper-canvas').append($clone);
       this.$dragBox = $cropper.find('.cropper-drag-box');
       this.$cropBox = $cropBox = $(Cropper.CROP_TEMPLATE1);
-      index = getObjSize(this.$cropBoxes);
+      index = getTime();
+      this.cropBoxIndex = index;
       this.$cropBoxes[index] = this.$cropBox;
       this.$viewBox = $cropper.find('.cropper-view-box');
       this.$face = $face = $cropBox.find('.cropper-face');
-      /*$face.parent().data('index', this.cropBoxes.length);*/
-      $face.parent().data('index', getObjSize(this.cropBoxes));
+      $face.parent().data('index', index);
 
       // Hide the original image
       $cropper.append($cropBox);
@@ -116,12 +116,13 @@
 
       // Create cropper elements
       this.$cropBox = $cropBox = $(Cropper.CROP_TEMPLATE);
-      index = getObjSize(this.$cropBoxes);
+      index = getTime();
+      this.cropBoxIndex = index;
       this.$cropBoxes[index] = this.$cropBox;
 
       this.$viewBox = $cropper.find('.cropper-view-box');
       this.$face = $face = $cropBox.find('.cropper-face');
-      $face.parent().data('index', getObjSize(this.cropBoxes));
+      $face.parent().data('index', index);
 
       // Hide the original image
       $cropper.append($cropBox);
@@ -134,7 +135,7 @@
       }
 
       /*this.initPreview();*/
-      this.initNewPreview(getObjSize(this.cropBoxes));
+      this.initNewPreview(index);
       this.bind();
 
       /*if (options.cropBoxMovable) {

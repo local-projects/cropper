@@ -14,7 +14,7 @@
       this.initCropBox(cropOptions);
 
       if (this.isCropped) {
-        this.renderCropBox(getObjSize(this.cropBoxes) - 1);
+        this.renderCropBox(this.cropBoxIndex);
       }
     },
 
@@ -441,7 +441,7 @@
     initCropBox: function (cropOptions) {
       var options = this.options;
       var canvas = this.canvas;
-      var index = getObjSize(this.cropBoxes);
+      var index = this.cropBoxIndex;
       var aspectRatio = options.aspectRatio;
       var autoCropArea = num(options.autoCropArea) || 0.8;
       var cropBox;
@@ -477,7 +477,6 @@
 
       this.cropBox = cropBox;
       this.cropBoxes[index] = this.cropBox;
-      this.cropBoxIndex = index;
       this.limitCropBox(true, true, index);
 
       // Initialize auto crop area

@@ -316,3 +316,8 @@
   function getObjSize(obj) {
     return Object.keys(obj).length;
   }
+
+  function getTime() {
+    var d = new Date();
+    return d.getTime();
+  }
