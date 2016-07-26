@@ -1,4 +1,15 @@
-    render: function () {
+    render: function (cropOptions) {
+      
+      if (cropOptions) {
+        this.initCropBox(cropOptions);
+
+        if (this.isCropped) {
+          this.renderCropBox(this.cropBoxIndex);
+        }
+
+        return;
+      }
+
       this.initContainer();
       this.initCanvas();
       this.initCropBox();
@@ -7,14 +18,6 @@
 
       if (this.isCropped) {
         this.renderCropBox();
-      }
-    },
-
-    renderNewCropBox: function (cropOptions) {
-      this.initCropBox(cropOptions);
-
-      if (this.isCropped) {
-        this.renderCropBox(this.cropBoxIndex);
       }
     },
 
@@ -446,10 +449,20 @@
       var autoCropArea = num(options.autoCropArea) || 0.8;
       var cropBox;
       if (cropOptions) {
-        cropBox = {
-          width: cropOptions.width,
-          height: cropOptions.height
-        };
+        if (cropOptions.left && cropOptions.top) {
+          cropBox = {
+            width: cropOptions.width,
+            height: cropOptions.height,
+            left: cropOptions.left,
+            top: cropOptions.top
+          };
+        }
+        else {
+          cropBox = {
+            width: cropOptions.width,
+            height: cropOptions.height
+          };
+        }
       }
       else {
         cropBox = {
@@ -484,14 +497,15 @@
       cropBox.height = min(max(cropBox.height, cropBox.minHeight), cropBox.maxHeight);
 
       // The width of auto crop area must large than "minWidth", and the height too. (#164)
-      cropBox.width = max(cropBox.minWidth, cropBox.width * autoCropArea);
-      cropBox.height = max(cropBox.minHeight, cropBox.height * autoCropArea);
-      
       if (cropOptions) {
-        cropBox.oldLeft = cropBox.left = cropOptions.left + (cropOptions.width - cropBox.width) / 2;
+        cropBox.width = cropOptions.width;
+        cropBox.height = cropOptions.height;
+        cropBox.oldLeft = cropBox.left = cropOptions.left;
         cropBox.oldTop = cropBox.top = cropOptions.top + (cropOptions.height - cropBox.height) / 2;
       }
       else {
+        cropBox.width = max(cropBox.minWidth, cropBox.width * autoCropArea);
+        cropBox.height = max(cropBox.minHeight, cropBox.height * autoCropArea);
         cropBox.oldLeft = cropBox.left = canvas.left + (canvas.width - cropBox.width) / 2;
         cropBox.oldTop = cropBox.top = canvas.top + (canvas.height - cropBox.height) / 2;
       }
@@ -641,71 +655,30 @@
       });
     },
 
-    renderSingleCropBox: function (index) {
-      var options = this.options;
-      var container = this.container;
-      var containerWidth = container.width;
-      var containerHeight = container.height;
-      var cropBoxIndex = index || this.cropBoxIndex;
-      var cropBox = this.cropBoxes[cropBoxIndex] || this.cropBox;
-
-      if (cropBox.width > cropBox.maxWidth || cropBox.width < cropBox.minWidth) {
-        cropBox.left = cropBox.oldLeft;
-      }
-
-      if (cropBox.height > cropBox.maxHeight || cropBox.height < cropBox.minHeight) {
-        cropBox.top = cropBox.oldTop;
-      }
-
-      cropBox.width = min(max(cropBox.width, cropBox.minWidth), cropBox.maxWidth);
-      cropBox.height = min(max(cropBox.height, cropBox.minHeight), cropBox.maxHeight);
-
-      this.limitCropBox(false, true, index);
-
-      cropBox.oldLeft = cropBox.left = min(max(cropBox.left, cropBox.minLeft), cropBox.maxLeft);
-      cropBox.oldTop = cropBox.top = min(max(cropBox.top, cropBox.minTop), cropBox.maxTop);
-
-      if (options.movable && options.cropBoxMovable) {
-
-        // Turn to move the canvas when the crop box is equal to the container
-        this.$face.data(DATA_ACTION, (cropBox.width === containerWidth && cropBox.height === containerHeight) ? ACTION_MOVE : ACTION_ALL);
-      }
-
-      var $cropBox = this.$cropBoxes[cropBoxIndex] || this.$cropBox;
-      
-      $cropBox.css({
-        width: cropBox.width,
-        height: cropBox.height,
-        left: cropBox.left,
-        top: cropBox.top
-      });
-
-      if (this.isCropped && this.isLimited) {
-        this.limitCanvas(true, true, index);
-      }
-
-      if (!this.isDisabled) {
-        this.output();
-      }
-    },
-
-    renderCropBox: function (j) {
-
-      if (!isNaN(j)) {
-        this.renderSingleCropBox(j);
-        return;
-      }
-
+    renderCropBox: function (matchIndex) {
       var options = this.options;
       var container = this.container;
       var containerWidth = container.width;
       var containerHeight = container.height;
       var cropBoxes = this.cropBoxes;
+      var matchCropBoxIndex;
+      var matchCropBox;
+      if (!isNaN(matchIndex)) {
+        matchCropBoxIndex = matchIndex || this.cropBoxIndex;
+        matchCropBoxIndex = matchCropBoxIndex.toString();
+        matchCropBox = this.cropBoxes[matchCropBoxIndex] || this.cropBox;
+      }
       /*var cropBoxIndex = index || this.cropBoxIndex;
       var cropBox = this.cropBoxes[cropBoxIndex] || this.cropBox;*/
       var that = this;
 
       $.each(cropBoxes, function (index, cropBox) {
+
+        if (matchCropBoxIndex) {
+          if (matchCropBoxIndex !== index) {
+            return true;
+          }
+        }
 
         if (cropBox.width > cropBox.maxWidth || cropBox.width < cropBox.minWidth) {
           cropBox.left = cropBox.oldLeft;
@@ -718,7 +691,7 @@
         cropBox.width = min(max(cropBox.width, cropBox.minWidth), cropBox.maxWidth);
         cropBox.height = min(max(cropBox.height, cropBox.minHeight), cropBox.maxHeight);
 
-        that.limitCropBox(false, true);
+        that.limitCropBox(false, true, index);
 
         cropBox.oldLeft = cropBox.left = min(max(cropBox.left, cropBox.minLeft), cropBox.maxLeft);
         cropBox.oldTop = cropBox.top = min(max(cropBox.top, cropBox.minTop), cropBox.maxTop);
@@ -739,7 +712,7 @@
         });
 
         if (that.isCropped && that.isLimited) {
-          that.limitCanvas(true, true);
+          that.limitCanvas(true, true, index);
         }
 
         if (!that.isDisabled) {

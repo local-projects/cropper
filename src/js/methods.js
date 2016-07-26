@@ -478,6 +478,85 @@
     },
 
     /**
+     * Set the cropped area position and size with new data
+     *
+     * @param {Object} data
+     */
+    setNewData: function (allData) {
+      var options = this.options;
+      var image = this.image;
+      var canvas = this.canvas;
+      var cropBoxesData = {};
+      var isRotated;
+      var isScaled;
+      var ratio;
+      var that = this;
+
+      $.each(allData, function (index, data){
+        var cropBoxData = {};
+        if ($.isFunction(data)) {
+          data = data.call(that.element);
+        }
+
+        if (that.isBuilt && !that.isDisabled && $.isPlainObject(data)) {
+          if (options.rotatable) {
+            if (isNumber(data.rotate) && data.rotate !== image.rotate) {
+              image.rotate = data.rotate;
+              that.isRotated = isRotated = true;
+            }
+          }
+
+          if (options.scalable) {
+            if (isNumber(data.scaleX) && data.scaleX !== image.scaleX) {
+              image.scaleX = data.scaleX;
+              isScaled = true;
+            }
+
+            if (isNumber(data.scaleY) && data.scaleY !== image.scaleY) {
+              image.scaleY = data.scaleY;
+              isScaled = true;
+            }
+          }
+
+          if (isRotated) {
+            that.renderCanvas();
+          } else if (isScaled) {
+            that.renderImage();
+          }
+
+          ratio = image.width / image.naturalWidth;
+
+          if (isNumber(data.x)) {
+            cropBoxData.left = data.x * ratio + canvas.left;
+          }
+
+          if (isNumber(data.y)) {
+            cropBoxData.top = data.y * ratio + canvas.top;
+          }
+
+          if (isNumber(data.width)) {
+            cropBoxData.width = data.width * ratio;
+          }
+
+          if (isNumber(data.height)) {
+            cropBoxData.height = data.height * ratio;
+          }
+
+          if (index in that.cropBoxes) {
+            that.closeCrop(index);
+          }
+          cropBoxesData[index] = cropBoxData;
+          that.buildNewCrop(cropBoxData, index);
+          /*data.left = data.x;
+          data.top = data.y;
+          that.buildNewCrop(data, index);*/
+        }
+      });
+
+      /*this.setCropBoxData(cropBoxesData);*/
+    },
+
+    /**
      * Get the container size data
      *
      * @return {Object} data

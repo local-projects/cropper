@@ -97,7 +97,7 @@
       }, this), 0);
     },
 
-    buildNewCrop: function(cropOptions) {
+    buildNewCrop: function(cropOptions, newIndex) {
       var options = this.options;
       var $clone = this.$clone;
       var $cropper = this.$cropper;
@@ -116,7 +116,7 @@
 
       // Create cropper elements
       this.$cropBox = $cropBox = $(Cropper.CROP_TEMPLATE);
-      index = getTime();
+      index = newIndex || getTime();
       this.cropBoxIndex = index;
       this.$cropBoxes[index] = this.$cropBox;
 
@@ -181,7 +181,7 @@
       }
 
       this.setDragMode(options.dragMode);
-      this.renderNewCropBox(cropOptions);
+      this.render(cropOptions);
       /*$this.one(EVENT_BUILT, options.built);*/
 
       // Trigger the built event asynchronously to keep `data('cropper')` is defined
@@ -192,31 +192,48 @@
       }, this), 0);*/
     },
 
-    closeCrop: function () {
-      var that = this;
-      $('.close-icon').click(function(event) {
-        var closeIndex = $(this).parent().data('index');
-        delete that.cropBoxes[closeIndex];
-        delete that.$cropBoxes[closeIndex];
-        delete that.previews[closeIndex];
-        that.deletePreview(closeIndex);
-        var keys = Object.keys(that.cropBoxes);
-        
-        if (that.cropBoxIndex === closeIndex) {
-          if (keys.length > 0) {
-            that.cropBoxIndex = keys[0];
-          }
-          else {
-            that.cropBoxIndex = null;
-            that.cropBox = null;
-            that.$cropBox = null;
-          }
+    closeCrop: function (indexToClose) {
 
+      if (indexToClose) {
+        var closeEl = this.$cropBoxes[indexToClose];
+        if (!closeEl) {
+          return;
         }
-        
-        $(this).parent().remove();
+
+        var closeIndex = this.$cropBoxes[indexToClose].data('index');
+        this.close(closeIndex);
+        closeEl.remove();
         event.preventDefault();
-      });
+      }
+      else {
+        var that = this;
+        $('.close-icon').click(function(event) {
+          var closeIndex = $(this).parent().data('index');
+          that.close.call(that, closeIndex);
+          $(this).parent().remove();
+          event.preventDefault();
+        });
+      }
+    },
+
+    close: function (closeIndex) {
+      delete this.cropBoxes[closeIndex];
+      delete this.$cropBoxes[closeIndex];
+      delete this.previews[closeIndex];
+      this.deletePreview(closeIndex);
+      var keys = Object.keys(this.cropBoxes);
+      
+      if (this.cropBoxIndex === closeIndex) {
+        if (keys.length > 0) {
+          this.cropBoxIndex = keys[0];
+        }
+        else {
+          this.cropBoxIndex = null;
+          this.cropBox = null;
+          this.$cropBox = null;
+        }
+
+      }
     },
 
     unbuild: function () {

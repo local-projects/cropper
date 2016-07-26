@@ -405,9 +405,10 @@
       }
 
       if (newCrop) {
-        cropBox.left = left;
-        cropBox.top = top;
-        this.buildNewCrop(cropBox);
+        var tempCropBox = $.extend({}, cropBox);
+        tempCropBox.left = left;
+        tempCropBox.top = top;
+        this.buildNewCrop(tempCropBox);
         this.action = action;
         newCrop = false;
       }
