@@ -1,11 +1,13 @@
 var figure = {
 
 selectedElem: null,
+selectedJoint: null,
 
 springs: function () {
 
   var self = this;
 
+  /*var el = $('.docs-preview').find('.img-preview');*/
   var el = $('.img-preview')[0];
 
   var springSystem = new rebound.SpringSystem();
@@ -112,11 +114,6 @@ springs: function () {
         
       }
     });*/
-
-
-    /*var headImgContainer = svgContainer.append('g').attr('id', 'head-img');
-    var svgImg = headImgContainer.append('svg:image').attr('xlink:href', '../../assets/img/TestImage.jpeg').attr('x', 160).attr('y', -20).attr('width', 60).attr('height', 75);
-    svgImg.attr('clipPath', 'url(#imgPath)')*/
 
 },
 
@@ -396,6 +393,9 @@ var legContainer = svgContainer.append('g').attr('id', 'legs');
         $pivot.on('click', function () {
           if (self.selectedElem) {
             var $clone = $(self.selectedElem).clone();
+            var indexData = $(self.selectedElem).data();
+            $clone.data(indexData);
+            $(this).data(indexData);
             var $img = $clone.find('img');
             var $this = $(this);
             var pivotContainer = {
@@ -420,73 +420,63 @@ var legContainer = svgContainer.append('g').attr('id', 'legs');
               $clone.css(pivotContainer);
               $img.css(pivotImg);
               $clone.attr('draggable', 'false').addClass('offset-preview');
-              $this.addClass('active');
+              $('.pivot').removeClass('active').addClass('inactive');
+              $this.removeClass('inactive').addClass('active');
               $('#svg-container').append($clone);
+              
+              var cropIndex = $(self.selectedElem).data().preview.index;
+              /*var currentCrops = JSON.parse(window.crops);*/
+              var associatedCrop = window.crops[cropIndex];
+              if (associatedCrop) {
+                associatedCrop['pivot'] = {};
+                associatedCrop['pivot']['id'] = $(this).attr('id');
+                associatedCrop['pivot']['originalX'] = parseInt($(this).css('left'));
+                associatedCrop['pivot']['originalY'] = parseInt($(this).css('top'));
+              }
+
+              window.crops[cropIndex] = associatedCrop;
+              console.log(window.crops);
           }
         });
+
+
+        $pivot.on('mousedown', function (event) {
+          self.selectedJoint = this;
+        });
+
       }
     }
   }
+
+  $(document).on('mousemove', function (event) {
+    if (self.selectedJoint) {
+      var $joint = $(self.selectedJoint);
+      var associatedData = $joint.data().preview.index;
+      var associatedCrop = window.crops[associatedData];
+        if (associatedCrop) {
+          var originalX = associatedCrop['pivot']['originalX'];
+          var originalY = associatedCrop['pivot']['originalY'];
+          var dragX = event.pageX, dragY = event.pageY;
+          var newX = originalX - dragX;
+          var newY = originalY - dragY;
+          $joint.css({left: dragX, top: dragY});
+          associatedCrop['pivot']['offsetX'] = newX;
+          associatedCrop['pivot']['offsetY'] = newY;
+          window.crops[associatedData] = associatedCrop;
+          console.log(window.crops);
+        }
+        else {
+          $joint.data() = {};
+        }
+    }
+    
+  });
+
+  $('document').on('mouseup', function (event) {
+    self.selectedJoint = null;
+  });
   
 
-
-
-    /*skeleton.snap = {
-      common: {
-        fill: 'black',
-        r: 8
-      }
-    };
-    
-    skeleton.snap.head = {
-      cx: xVal + 5, 
-      cy: yVal, 
-      id: 'head-snap'
-    };
-
-    var $headSnap = svgContainer.append('circle');
-    snap($headSnap, skeleton.snap.head);
-
-
-    skeleton.snap.shoulder = {
-      left: {
-        cx: xVal - 45, 
-        cy: 60, 
-        id: 'left-shoulder-snap'
-      }, 
-      right: {
-        cx: xVal + 45 + 12, 
-        cy: 60, 
-        id: 'right-shoulder-snap'
-      }
-    };
-
-    var $leftShoulderSnap = handContainer.append('circle');
-    snap($leftShoulderSnap, skeleton.snap.shoulder.left);
-    var $rightShoulderSnap = handContainer.append('circle');
-    snap($rightShoulderSnap, skeleton.snap.shoulder.right);
-
-
-
-
-
-    skeleton.snap.elbow = {
-      left: {
-        cx: xVal - 45 - 30, 
-        cy: 90, 
-        id: 'left-elbow-snap'
-      }, 
-      right: {
-        cx: xVal + 45 + 40, 
-        cy: 90, 
-        id: 'right-elbow-snap'
-      }
-    };
-
-    var $leftElbowSnap = handContainer.append('circle');
-    snap($leftElbowSnap, skeleton.snap.elbow.left);
-    var $rightElbowSnap = handContainer.append('circle');
-    snap($rightElbowSnap, skeleton.snap.elbow.right);*/
 },
 
 }

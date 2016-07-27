@@ -106,10 +106,13 @@ $(function () {
 
   $('.next-step').on('click', function (event) {
     var $this = $(this);
-    window.crops = JSON.stringify($image.cropper('getData'));
-    console.log(JSON.parse(window.crops));
+    /*window.crops = JSON.stringify($image.cropper('getData'));
+    console.log(JSON.parse(window.crops));*/
+    window.crops = $image.cropper('getData');
+    console.log(window.crops);
 
-    $('.header-title').find('h1').html('Assign to Joint');
+    /*$('.header-title').find('h1').html('Assign to Joint');*/
+    $('.header-title').find('h1').html('');
     $('.img-container').hide();
     $('.docs-buttons').hide();
     $('.docs-toggles').hide();
