@@ -75,28 +75,6 @@ springs: function () {
     draggingElem = $(this).clone();
     var draggingImg = draggingElem.find('img');
     var circleSnap = $('#head-snap');
-    
-    var imgContainerProps = {
-      width: draggingElem.width()/4,
-      height: draggingElem.height()/4,
-      position: 'absolute',
-      'float': 'none',
-      'left': parseInt(circleSnap.attr('cx')) - draggingElem.width()/8,
-      'top': parseInt(circleSnap.attr('cy')) - draggingElem.height()/8
-    }
-
-    var newImgProps = {
-      'width': draggingImg.width()/4,
-      'height': draggingImg.height()/4,
-      'margin-left': parseInt(draggingImg.css('margin-left')) / 4,
-      'margin-top': parseInt(draggingImg.css('margin-top')) / 4
-    }
-
-    draggingImg.css({width: newImgProps['width'], height: newImgProps['height'], 'margin-left': newImgProps['margin-left'], 'margin-top': newImgProps['margin-left']});
-    draggingElem.css({width: imgContainerProps['width'], height: imgContainerProps['height'], position: imgContainerProps['position']});
-    draggingElem.css({'left': imgContainerProps['left'], 'top': imgContainerProps['top'], 'float': imgContainerProps['float']});
-    // svgContainer.append(draggingElem);
-    $('#svg-container').prepend(draggingElem);
   }
 
   function dragEnd(event) {
