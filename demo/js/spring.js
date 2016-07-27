@@ -134,102 +134,196 @@ drawSkeleton: function  () {
 
 
   var svgContainer = d3.select('#svg-container').append('svg').attr('width', '100%').attr('height', '100%');
+  var containerWid = 375, containerHt = 500;
+  var xVal = (containerWid - 10) / 2;
+  var yVal = 10;
 
   var skeleton = {
-    elementProps: {
-      width: 375, 
-      height: 500
+    container: {
+      width: containerWid, 
+      height: containerHt
     },
 
     common: {
       width: 10,
       fill: 'lightgrey'
+    },
+
+    torso : {
+      x: xVal, 
+      y: yVal, 
+      height: 175, 
+      id: 'torso',
+      partOf: 'body'
+    },
+
+    leftShoulder: {
+      x: xVal, 
+      y: 40, 
+      height: 50, 
+      style: 'transform: rotate(70deg)', 
+      class: 'left-hand', 
+      id: 'left-shoulder',
+      partOf: 'hand'
+    },
+
+    rightShoulder: {
+      x: xVal, 
+      y: 40, 
+      height: 50, 
+      style: 'transform: rotate(-70deg)', 
+      class: 'right-hand', 
+      id: 'right-shoulder',
+      partOf: 'hand'
+    },
+
+    leftElbow: {
+      x: xVal - 45, 
+      y: 55, 
+      height: 50, 
+      style: 'transform:rotate(45deg)', 
+      class: 'left-hand', 
+      id: 'left-elbow',
+      partOf: 'hand'
+    },
+
+    rightElbow: {
+      x: xVal + 45, 
+      y: 55, 
+      height: 50, 
+      style: 'transform:rotate(-45deg)', 
+      class: 'right-hand', 
+      id: 'right-elbow',
+      partOf: 'hand'
+    },
+
+    leftHand: {
+      x: xVal - 45 - 35, 
+      y: 90, 
+      height: 50, 
+      style: 'transform:rotate(35deg)', 
+      class: 'left-hand', 
+      id: 'left-hand',
+      partOf: 'hand'
+    },
+
+    rightHand: {
+      x: xVal + 45 + 35, 
+      y: 90, 
+      height: 50, 
+      style: 'transform:rotate(-35deg)', 
+      class: 'right-hand', 
+      id: 'right-hand',
+      partOf: 'hand'
+    },
+
+    leftHip: {
+      x: xVal, 
+      y: 175, 
+      height: 25, 
+      style: 'transform:rotate(60deg)', 
+      class: 'left-leg', 
+      id: 'left-hip',
+      partOf: 'leg'
+    },
+
+    rightHip: {
+      x: xVal, 
+      y: 175, 
+      height: 25, 
+      style: 'transform:rotate(-60deg)', 
+      class: 'right-leg', 
+      id: 'right-hip',
+      partOf: 'leg'
+    },
+
+    leftKnee: {
+      x: xVal - 20, 
+      y: 175 + 10, 
+      height: 125, 
+      style: 'transform:rotate(15deg)', 
+      class: 'left-leg', 
+      id: 'left-knee',
+      partOf: 'leg'
+    },
+
+    rightKnee: {
+      x: xVal + 20, 
+      y: 175 + 10, 
+      height: 125, 
+      style: 'transform:rotate(-15deg)', 
+      class: 'right-leg', 
+      id: 'right-knee',
+      partOf: 'leg'
+    },
+
+    leftFoot: {
+      x: xVal - 52, 
+      y: 175 + 25 + 105, 
+      height: 75, 
+      style: 'transform:rotate(0deg)', 
+      class: 'left-leg', 
+      id: 'left-foot',
+      partOf: 'leg'
+    },
+
+    rightFoot: {
+      x: xVal + 52, 
+      y: 175 + 25 + 105, 
+      height: 75, 
+      style: 'transform:rotate(0deg)', 
+      class: 'right-leg', 
+      id: 'right-foot',
+      partOf: 'leg'
     }
+
   };
 
-  /* Torso */
-  var xVal = (skeleton.elementProps.width - 10) / 2;
-  var yVal = 10;
 
-  skeleton.torso = {
-    x: xVal, 
-    y: yVal, 
-    height: 175, 
-    id: 'torso'
-  };
-  
-  var $torso = svgContainer.append('rect');
-  setAttributes($torso, skeleton.torso);
-
-
-  skeleton.snap = {
-    common: {
-      fill: 'black',
-      r: 8
-    }
-  };
-  
-  skeleton.snap.head = {
-    cx: xVal + 5, 
-    cy: yVal, 
-    id: 'head-snap'
-  };
-
-  var $headSnap = svgContainer.append('circle');
-  snap($headSnap, skeleton.snap.head);
 
 var handContainer = svgContainer.append('g').attr('id', 'hand');
+var legContainer = svgContainer.append('g').attr('id', 'legs');
 
+  for (var part in skeleton) {
+    if (part !== 'container' && part !== 'common') {
+      switch(skeleton[part].partOf) {
+        case 'body':
+          var $bodyPart = svgContainer.append('rect');
+          setAttributes($bodyPart, skeleton[part]);
+          break;
+        case 'hand':
+          var $bodyPart = handContainer.append('rect');
+          setAttributes($bodyPart, skeleton[part]);
+          break;
+        case 'leg':
+          var $bodyPart = legContainer.append('rect');
+          setAttributes($bodyPart, skeleton[part]);
+          break;
+        default:
+          break;
+      }
+    }
+  }
+  
+
+
+
+    /*skeleton.snap = {
+      common: {
+        fill: 'black',
+        r: 8
+      }
+    };
     
-    /* Shoulder */
-    skeleton.leftShoulder = {
-        x: xVal, 
-        y: 40, 
-        height: 50, 
-        style: 'transform: rotate(70deg)', 
-        class: 'left-hand', 
-        id: 'left-shoulder'
-      };
-    
-    skeleton.rightShoulder = {
-        x: xVal, 
-        y: 40, 
-        height: 50, 
-        style: 'transform: rotate(-70deg)', 
-        class: 'right-hand', 
-        id: 'right-shoulder'
-      };
+    skeleton.snap.head = {
+      cx: xVal + 5, 
+      cy: yVal, 
+      id: 'head-snap'
+    };
 
-    var $leftShoulder = handContainer.append('rect');
-    setAttributes($leftShoulder, skeleton.leftShoulder);
+    var $headSnap = svgContainer.append('circle');
+    snap($headSnap, skeleton.snap.head);
 
-    var $rightShoulder = handContainer.append('rect');
-    setAttributes($rightShoulder, skeleton.rightShoulder);
-
-
-    /*Elbow*/
-    skeleton.leftElbow = {
-        x: xVal - 45, 
-        y: 55, 
-        height: 50, 
-        style: 'transform:rotate(45deg)', 
-        class: 'left-hand', 
-        id: 'left-elbow'
-      };
-
-    skeleton.rightElbow = {
-        x: xVal + 45, 
-        y: 55, 
-        height: 50, 
-        style: 'transform:rotate(-45deg)', 
-        class: 'right-hand', 
-        id: 'right-elbow'
-      };
-
-    var $leftElbow = handContainer.append('rect');
-    setAttributes($leftElbow, skeleton.leftElbow);
-    var $rightElbow = handContainer.append('rect');
-    setAttributes($rightElbow, skeleton.rightElbow);
 
     skeleton.snap.shoulder = {
       left: {
@@ -250,29 +344,7 @@ var handContainer = svgContainer.append('g').attr('id', 'hand');
     snap($rightShoulderSnap, skeleton.snap.shoulder.right);
 
 
-    /*Hand*/
-    skeleton.leftHand = {
-        x: xVal - 45 - 35, 
-        y: 90, 
-        height: 50, 
-        style: 'transform:rotate(35deg)', 
-        class: 'left-hand', 
-        id: 'left-hand'
-      };
-    
-    skeleton.rightHand = {
-        x: xVal + 45 + 35, 
-        y: 90, 
-        height: 50, 
-        style: 'transform:rotate(-35deg)', 
-        class: 'right-hand', 
-        id: 'right-hand'
-      };
 
-    var $leftHand = handContainer.append('rect');
-    setAttributes($leftHand, skeleton.leftHand);
-    var $rightHand = handContainer.append('rect');
-    setAttributes($rightHand, skeleton.rightHand);
 
 
     skeleton.snap.elbow = {
@@ -291,87 +363,7 @@ var handContainer = svgContainer.append('g').attr('id', 'hand');
     var $leftElbowSnap = handContainer.append('circle');
     snap($leftElbowSnap, skeleton.snap.elbow.left);
     var $rightElbowSnap = handContainer.append('circle');
-    snap($rightElbowSnap, skeleton.snap.elbow.right);
-
-
-var legContainer = svgContainer.append('g').attr('id', 'legs');
-
-  /* Hips */
-    skeleton.leftHip = {
-        x: xVal, 
-        y: 175, 
-        height: 25, 
-        style: 'transform:rotate(60deg)', 
-        class: 'left-leg', 
-        id: 'left-hip'
-      };
-    
-    skeleton.rightHip = {
-        x: xVal, 
-        y: 175, 
-        height: 25, 
-        style: 'transform:rotate(-60deg)', 
-        class: 'right-leg', 
-        id: 'right-hip'
-      };
-
-    var $leftHip = legContainer.append('rect');
-    setAttributes($leftHip, skeleton.leftHip);
-    var $rightHip = legContainer.append('rect');
-    setAttributes($rightHip, skeleton.rightHip);
-
-
-  /* Knee */
-    skeleton.leftKnee = {
-        x: xVal - 20, 
-        y: 175 + 10, 
-        height: 125, 
-        style: 'transform:rotate(15deg)', 
-        class: 'left-leg', 
-        id: 'left-knee'
-      };
-
-    skeleton.rightKnee = {
-        x: xVal + 20, 
-        y: 175 + 10, 
-        height: 125, 
-        style: 'transform:rotate(-15deg)', 
-        class: 'right-leg', 
-        id: 'right-knee'
-      };
-  
-
-    var $leftKnee = legContainer.append('rect');
-    setAttributes($leftKnee, skeleton.leftKnee);
-    var $rightKnee = legContainer.append('rect');
-    setAttributes($rightKnee, skeleton.rightKnee);
-
-
-  /* Foot */
-    skeleton.leftFoot = {
-        x: xVal - 52, 
-        y: 175 + 25 + 105, 
-        width: skeleton.common.width, 
-        height: 75, 
-        style: 'transform:rotate(0deg)', 
-        class: 'left-leg', 
-        id: 'left-foot'
-      };
-
-    skeleton.rightFoot = {
-        x: xVal + 52, 
-        y: 175 + 25 + 105, 
-        width: skeleton.common.width, 
-        height: 75, 
-        style: 'transform:rotate(0deg)', 
-        class: 'right-leg', 
-        id: 'right-foot'
-      };
-
-    var $leftFoot = legContainer.append('rect');
-    setAttributes($leftFoot, skeleton.leftFoot);
-    var $rightFoot = legContainer.append('rect');
-    setAttributes($rightFoot, skeleton.rightFoot);
+    snap($rightElbowSnap, skeleton.snap.elbow.right);*/
 },
 
 }

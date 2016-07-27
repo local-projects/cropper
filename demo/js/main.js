@@ -104,10 +104,10 @@ $(function () {
   });
 
 
-  $('.next-step').on('click', function () {
+  $('.next-step').on('click', function (event) {
     var $this = $(this);
-    window.crops = $image.cropper('getData');
-    console.log(window.crops);
+    window.crops = JSON.stringify($image.cropper('getData'));
+    console.log(JSON.parse(window.crops));
 
     $('.header-title').find('h1').html('Assign to Joint');
     $('.img-container').hide();
@@ -117,6 +117,8 @@ $(function () {
 
     $('#svg-container').show();
     figure.drawSkeleton();
+
+    event.preventDefault();
   });
 
   // Methods
