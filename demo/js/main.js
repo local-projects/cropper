@@ -116,6 +116,7 @@ $(function () {
     $this.hide();
 
     $('#svg-container').show();
+    figure.drawSkeleton();
   });
 
   // Methods
