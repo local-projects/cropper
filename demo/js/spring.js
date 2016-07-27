@@ -137,6 +137,8 @@ drawSkeleton: function  () {
   var containerWid = 375, containerHt = 500;
   var xVal = (containerWid - 10) / 2;
   var yVal = 10;
+  var shoulderPos = 40;
+  var torsoHt = 200;
 
   var skeleton = {
     container: {
@@ -152,15 +154,15 @@ drawSkeleton: function  () {
     torso : {
       x: xVal, 
       y: yVal, 
-      height: 175, 
+      height: torsoHt, 
       id: 'torso',
       partOf: 'body'
     },
 
     leftShoulder: {
       x: xVal, 
-      y: 40, 
-      height: 50, 
+      y: shoulderPos, 
+      height: 60, 
       style: 'transform: rotate(70deg)', 
       class: 'left-hand', 
       id: 'left-shoulder',
@@ -169,8 +171,8 @@ drawSkeleton: function  () {
 
     rightShoulder: {
       x: xVal, 
-      y: 40, 
-      height: 50, 
+      y: shoulderPos, 
+      height: 60, 
       style: 'transform: rotate(-70deg)', 
       class: 'right-hand', 
       id: 'right-shoulder',
@@ -178,8 +180,9 @@ drawSkeleton: function  () {
     },
 
     leftElbow: {
-      x: xVal - 45, 
-      y: 55, 
+      x: xVal - 57.5, 
+      /*x: 125, */
+      y: shoulderPos + 20, 
       height: 50, 
       style: 'transform:rotate(45deg)', 
       class: 'left-hand', 
@@ -188,8 +191,9 @@ drawSkeleton: function  () {
     },
 
     rightElbow: {
-      x: xVal + 45, 
-      y: 55, 
+      x: xVal + 57.5, 
+      /*x: 240,*/
+      y: shoulderPos + 20, 
       height: 50, 
       style: 'transform:rotate(-45deg)', 
       class: 'right-hand', 
@@ -198,8 +202,8 @@ drawSkeleton: function  () {
     },
 
     leftHand: {
-      x: xVal - 45 - 35, 
-      y: 90, 
+      x: xVal - 45 - 47, 
+      y: shoulderPos + 55, 
       height: 50, 
       style: 'transform:rotate(35deg)', 
       class: 'left-hand', 
@@ -208,8 +212,8 @@ drawSkeleton: function  () {
     },
 
     rightHand: {
-      x: xVal + 45 + 35, 
-      y: 90, 
+      x: xVal + 45 + 47, 
+      y: shoulderPos + 55, 
       height: 50, 
       style: 'transform:rotate(-35deg)', 
       class: 'right-hand', 
@@ -217,9 +221,29 @@ drawSkeleton: function  () {
       partOf: 'hand'
     },
 
+    leftPalm: {
+      x: xVal - 45 - 47 - 25, 
+      y: shoulderPos + 90, 
+      height: 25, 
+      style: 'transform:rotate(45deg)', 
+      class: 'left-hand', 
+      id: 'left-palm',
+      partOf: 'hand'
+    },
+
+    rightPalm: {
+      x: xVal + 45 + 47 + 25, 
+      y: shoulderPos + 90, 
+      height: 25, 
+      style: 'transform:rotate(-45deg)', 
+      class: 'right-hand', 
+      id: 'right-palm',
+      partOf: 'hand'
+    },
+
     leftHip: {
       x: xVal, 
-      y: 175, 
+      y: torsoHt, 
       height: 25, 
       style: 'transform:rotate(60deg)', 
       class: 'left-leg', 
@@ -229,7 +253,7 @@ drawSkeleton: function  () {
 
     rightHip: {
       x: xVal, 
-      y: 175, 
+      y: torsoHt, 
       height: 25, 
       style: 'transform:rotate(-60deg)', 
       class: 'right-leg', 
@@ -239,7 +263,7 @@ drawSkeleton: function  () {
 
     leftKnee: {
       x: xVal - 20, 
-      y: 175 + 10, 
+      y: torsoHt + 10, 
       height: 125, 
       style: 'transform:rotate(15deg)', 
       class: 'left-leg', 
@@ -249,7 +273,7 @@ drawSkeleton: function  () {
 
     rightKnee: {
       x: xVal + 20, 
-      y: 175 + 10, 
+      y: torsoHt + 10, 
       height: 125, 
       style: 'transform:rotate(-15deg)', 
       class: 'right-leg', 
@@ -257,11 +281,31 @@ drawSkeleton: function  () {
       partOf: 'leg'
     },
 
-    leftFoot: {
+    leftKnee2: {
       x: xVal - 52, 
-      y: 175 + 25 + 105, 
+      y: torsoHt + 25 + 105, 
       height: 75, 
       style: 'transform:rotate(0deg)', 
+      class: 'left-leg', 
+      id: 'left-knee2',
+      partOf: 'leg'
+    },
+
+    rightKnee2: {
+      x: xVal + 52, 
+      y: torsoHt + 25 + 105, 
+      height: 75, 
+      style: 'transform:rotate(0deg)', 
+      class: 'right-leg', 
+      id: 'right-knee2',
+      partOf: 'leg'
+    },
+
+    leftFoot: {
+      x: xVal - 52, 
+      y: torsoHt + 25 + 105 + 70, 
+      height: 25, 
+      style: 'transform:rotate(45deg)', 
       class: 'left-leg', 
       id: 'left-foot',
       partOf: 'leg'
@@ -269,9 +313,9 @@ drawSkeleton: function  () {
 
     rightFoot: {
       x: xVal + 52, 
-      y: 175 + 25 + 105, 
-      height: 75, 
-      style: 'transform:rotate(0deg)', 
+      y: torsoHt + 25 + 105 + 70, 
+      height: 25, 
+      style: 'transform:rotate(-45deg)', 
       class: 'right-leg', 
       id: 'right-foot',
       partOf: 'leg'
