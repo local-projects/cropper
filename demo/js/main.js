@@ -104,6 +104,20 @@ $(function () {
   });
 
 
+  $('.next-step').on('click', function () {
+    var $this = $(this);
+    window.crops = $image.cropper('getData');
+    console.log(window.crops);
+
+    $('.header-title').find('h1').html('Assign to Joint');
+    $('.img-container').hide();
+    $('.docs-buttons').hide();
+    $('.docs-toggles').hide();
+    $this.hide();
+
+    $('#svg-container').show();
+  });
+
   // Methods
   $('.docs-buttons').on('click', '[data-method]', function () {
     var $this = $(this);

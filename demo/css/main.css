@@ -58,6 +58,8 @@ body {
 
 .docs-preview {
   margin-right: -15px;
+  max-height: 600px;
+  overflow: scroll;
 }
 
 .img-preview {
@@ -212,6 +214,7 @@ body {
   height: 500px;
   /*margin-top: 170px;*/
   position: relative;
+  display: none;
 }
 
   .left-hand,
