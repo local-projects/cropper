@@ -29,20 +29,6 @@ body {
 }
 
 
-/* Jumbotron */
-
-.docs-jumbotron {
-  background-color: #0074d9;
-  color: #fff;
-}
-
-.docs-jumbotron .version {
-  font-size: 14px;
-  color: #fff;
-  filter: alpha(opacity=50);
-  opacity: 0.5;
-}
-
 
 /* Content */
 
@@ -51,6 +37,7 @@ body {
   background-color: #f7f7f7;
   width: 100%;
   text-align: center;
+  cursor: move;
 }
 
 .img-container {
@@ -193,47 +180,13 @@ body {
 }
 
 
-/* Footer */
 
-.docs-footer {
-  overflow: hidden;
-}
 
-.heart {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 30px;
+/* Additions */
+
+.next-step{
   margin-top: 20px;
   margin-bottom: 20px;
-  color: #ddd;
-  font-size: 18px;
-  line-height: 30px;
-  text-align: center;
-}
-
-.heart:hover {
-  color: #ff4136;
-}
-
-.heart:before {
-  position: absolute;
-  top: 50%;
-  right: 0;
-  left: 0;
-  display: block;
-  height: 0;
-  border-top: 1px solid #eee;
-  content: " ";
-}
-
-.heart:after {
-  position: relative;
-  z-index: 1;
-  padding-left: 8px;
-  padding-right: 8px;
-  background-color: #fff;
-  content: "♥";
 }
 
 .close-icon{
@@ -248,4 +201,27 @@ body {
 
   .close-icon:hover{
     cursor: pointer;
+  }
+
+
+
+
+/*d3*/
+#svg-container{
+  width: 100%;
+  height: 500px;
+  /*margin-top: 170px;*/
+  position: relative;
+}
+
+  .left-hand,
+  .left-leg{
+    -webkit-transform-origin: 0% 0%;
+    transform-origin: 0% 0%;
+  }
+
+  .right-hand,
+  .right-leg{
+    -webkit-transform-origin: 0% 0%;
+    transform-origin: 100% 0%;
   }
