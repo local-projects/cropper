@@ -2,57 +2,13 @@ var figure = {
 
 selectedElem: null,
 selectedJoint: null,
-spring: null,
 
-createSpring: function () {
-  var springSystem = new rebound.SpringSystem();
-  this.spring = springSystem.createSpring(4, 3);
-},
-
-updateSpring: function (val, el) {
-  var self = this;
-  this._changeEl = el;
-  this.val = val;
-
-  /*if (val !== undefined) {
-    this.spring.setEndValue(val);
-  }*/
-
-  /*if (this.spring.listeners.length > 0){
-    return;
-  }*/
-
-  this.spring.addListener({
-    onSpringUpdate: function (spring) {
-      var val = self.spring.getCurrentValue();
-      val = rebound.MathUtil.mapValueInRange(val, 0, 1, 1, 0.8);
-      /*if (self.selectedElem) {
-        
-      }*/
-      self.scale(self.selectedElem, val);
-      /*self.scale(el, val);*/
-      /*self.scale(_changeEl, val);*/
-      /*self.scale(self._changeEl, self.val);*/
-    }
-  });
-},
-
-scale: function (el, val) {
-  el.style.mozTransform = el.style.msTransform = el.style.webkitTransform =
-  el.style.transform = 'scale3d('+ val + ',' + val + ', 1)';
-},
-
-springs: function (initEl) {
+addListener: function (initEl) {
 
   var self = this;
 
   /*var el = $('.docs-preview').find('.img-preview');*/
   var el = initEl || $('.img-preview')[0];
-
-  if (this.spring === null) {
-    /*this.createSpring();
-    this.updateSpring();*/
-  }
 
   
   var dragStarted = false;
@@ -63,8 +19,6 @@ springs: function (initEl) {
   el.addEventListener('click', function (event) {
     event.preventDefault();
     if ($(this).hasClass('active')) {
-      /*self.spring.setEndValue(0); */
-      /*self.updateSpring(0, this);*/
       $(this).removeClass('active');
       self.selectedElem = null;
       return;
@@ -73,39 +27,20 @@ springs: function (initEl) {
     var $previews = $('.docs-preview').find('.active');
     if ($previews.length > 0) {
       $previews.removeClass('active');
-      /*self.updateSpring(0, $previews[0]);*/
-      /*self.spring.setEndValue(0); */
     }
     
     $(this).addClass('active');
     self.selectedElem = this;
-    /*self.updateSpring(1, this);*/
-    /*self.spring.setEndValue(1);*/
-    
-    /*if (this.spring.getCurrentValue() == 0) {
-      // spring.setEndValue(0);
-      this.spring.setEndValue(1);
-      self.selectedElem = this; 
-    }
-    else {
-     this.spring.setEndValue(0); 
-     self.selectedElem = null;
-    }*/
-    
-    // this.style.opacity = '0.5';
   });
 
 /*  el.addEventListener('mousedown', function () {
-    spring.setEndValue(1);
     // this.style.opacity = '0.5';
   });
 
   el.addEventListener('mouseout', function () {
-    spring.setEndValue(0);
   });
 
   el.addEventListener('mouseup', function () {
-    spring.setEndValue(0);
     // this.style.opacity = '1';
   });
 
@@ -168,7 +103,7 @@ springs: function (initEl) {
 
 drawSkeleton: function  () {
 
-  this.springs();
+  this.addListener();
   var self = this;
 
   function setAttributes (element, props, common) {
@@ -497,7 +432,7 @@ var legContainer = svgContainer.append('g').attr('id', 'legs');
     }
   }
 
-  $(document).on('mousemove', function (event) {
+  /*$(document).on('mousemove', function (event) {
     if (self.selectedJoint) {
       var $joint = $(self.selectedJoint);
       var associatedData = $joint.data().preview.index;
@@ -518,7 +453,7 @@ var legContainer = svgContainer.append('g').attr('id', 'legs');
         }
     }
     
-  });
+  });*/
 
   $('document').on('mouseup', function (event) {
     self.selectedJoint = null;

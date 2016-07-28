@@ -48,7 +48,7 @@
         'image-orientation:0deg!important;">'
       );
 
-      figure.springs(this.$preview[0]);
+      figure.addListener(this.$preview[0]);
     },
 
     resetPreview: function () {
