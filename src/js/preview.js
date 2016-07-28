@@ -47,6 +47,8 @@
         'max-width:none!important;max-height:none!important;' +
         'image-orientation:0deg!important;">'
       );
+
+      figure.springs(this.$preview[0]);
     },
 
     resetPreview: function () {
