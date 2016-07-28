@@ -21,6 +21,8 @@ addListener: function (initEl) {
     if ($(this).hasClass('active')) {
       $(this).removeClass('active');
       self.selectedElem = null;
+      self.showSelectedJoints(true);
+      self.showJointPreviews(true);
       return;
     }
     
@@ -31,6 +33,8 @@ addListener: function (initEl) {
     
     $(this).addClass('active');
     self.selectedElem = this;
+    self.showSelectedJoints();
+    self.showJointPreviews();
   });
 
 /*  el.addEventListener('mousedown', function () {
@@ -101,7 +105,7 @@ addListener: function (initEl) {
 },
 
 
-drawSkeleton: function  () {
+draw: function  (skeletonOptions) {
 
   this.addListener();
   var self = this;
@@ -116,10 +120,6 @@ drawSkeleton: function  () {
     }
   }
 
-  function snap (element, props) {
-    setAttributes(element, props, skeleton.snap.common);
-  }
-
 
   var svgContainer = d3.select('#svg-container').append('svg').attr('width', '100%').attr('height', '100%');
   var containerWid = 375, containerHt = 500;
@@ -127,10 +127,8 @@ drawSkeleton: function  () {
   var yVal = 10;
   var shoulderPos = 50;
   var torsoHt = 200;
-  var pivotSize = 20;
-  var scalingFactor = 1;
 
-  var skeleton = {
+  var drawOptions = {
     container: {
       width: containerWid, 
       height: containerHt
@@ -344,9 +342,11 @@ drawSkeleton: function  () {
   };
 
 
+  var skeleton = skeletonOptions || drawOptions;
 
-var handContainer = svgContainer.append('g').attr('id', 'hand');
-var legContainer = svgContainer.append('g').attr('id', 'legs');
+
+  var handContainer = svgContainer.append('g').attr('id', 'hand');
+  var legContainer = svgContainer.append('g').attr('id', 'legs');
 
   for (var part in skeleton) {
     if (part !== 'container' && part !== 'common') {
@@ -373,54 +373,8 @@ var legContainer = svgContainer.append('g').attr('id', 'legs');
         $pivot.addClass(pv.class).attr('id', pv.id).css({left: pv.x, top: pv.y});
         $pivot.attr('draggable', 'true');
         $('#svg-container').append($pivot);
-        $pivot.on('click', function () {
-          if (self.selectedElem) {
-            var $clone = $(self.selectedElem).clone();
-            var indexData = $(self.selectedElem).data();
-            $clone.data(indexData);
-            $(this).data(indexData);
-            var $img = $clone.find('img');
-            var $this = $(this);
-            var pivotContainer = {
-                'width': $clone.width() / scalingFactor,
-                'height': $clone.height() / scalingFactor,
-                'position': 'absolute',
-                'float': 'none',
-                'left': parseInt($this.css('left')) - ($clone.width() / (scalingFactor * 2)) + (pivotSize / 2),
-                'top': parseInt($this.css('top')) - ($clone.height() / (scalingFactor * 2)) + (pivotSize / 2),
-                'margin-bottom': '0',
-                'margin-right': '0',
-                'opacity': 0.5
-              }
-
-              var pivotImg = {
-                'width': $img.width() / scalingFactor,
-                'height': $img.height() / scalingFactor,
-                'margin-left': parseInt($img.css('margin-left')) / scalingFactor,
-                'margin-top': parseInt($img.css('margin-top')) / scalingFactor
-              }
-
-              $clone.css(pivotContainer);
-              $img.css(pivotImg);
-              $clone.attr('draggable', 'false').addClass('offset-preview');
-              $('.pivot').removeClass('active').addClass('inactive');
-              $this.removeClass('inactive').addClass('active');
-              $('#svg-container').append($clone);
-              
-              var cropIndex = $(self.selectedElem).data().preview.index;
-              /*var currentCrops = JSON.parse(window.crops);*/
-              var associatedCrop = window.crops[cropIndex];
-              if (associatedCrop) {
-                associatedCrop['pivot'] = {};
-                associatedCrop['pivot']['id'] = $(this).attr('id');
-                associatedCrop['pivot']['originalX'] = parseInt($(this).css('left'));
-                associatedCrop['pivot']['originalY'] = parseInt($(this).css('top'));
-              }
-
-              window.crops[cropIndex] = associatedCrop;
-              console.log(window.crops);
-              self.selectedElem = null;
-          }
+        $pivot.on('click', function (event) {
+          self.updateJoint.call(this, self);
         });
 
 
@@ -461,6 +415,108 @@ var legContainer = svgContainer.append('g').attr('id', 'legs');
   });
   
 
+},
+
+updateJoint: function (self) {
+    var pivotSize = 20;
+    var scalingFactor = 1;
+
+    if (self.selectedElem) {
+    var $clone = $(self.selectedElem).clone();
+    var indexData = $(self.selectedElem).data();
+    var cropIndex = $(self.selectedElem).data().preview.index;
+    var associatedCrop = window.crops[cropIndex];
+
+    if (associatedCrop.pivot) {
+      if (Object.keys(associatedCrop.pivot).length > 0) {
+        var markup = associatedCrop['pivot']['html'];
+        $(markup).remove();
+        self.showSelectedJoints();
+      }
+    }
+
+    if ($(this).data().preview) {
+      return;
+    }
+
+    $clone.data(indexData);
+    $(this).data(indexData);
+    var $img = $clone.find('img');
+    var $this = $(this);
+    var pivotContainer = {
+        'width': $clone.width() / scalingFactor,
+        'height': $clone.height() / scalingFactor,
+        'position': 'absolute',
+        'float': 'none',
+        'left': parseInt($this.css('left')) - ($clone.width() / (scalingFactor * 2)) + (pivotSize / 2),
+        'top': parseInt($this.css('top')) - ($clone.height() / (scalingFactor * 2)) + (pivotSize / 2),
+        'margin-bottom': '0',
+        'margin-right': '0',
+        'opacity': 0.5
+      }
+
+      var pivotImg = {
+        'width': $img.width() / scalingFactor,
+        'height': $img.height() / scalingFactor,
+        'margin-left': parseInt($img.css('margin-left')) / scalingFactor,
+        'margin-top': parseInt($img.css('margin-top')) / scalingFactor
+      }
+
+      $clone.css(pivotContainer);
+      $clone.addClass('active');
+      $img.css(pivotImg);
+      $clone.attr('draggable', 'false').addClass('offset-preview');
+      /*$('.pivot').removeClass('active').removeClass('has-data').removeClass('no-data').addClass('inactive');*/
+      $('.pivot').removeClass('active').addClass('inactive');
+      $this.removeClass('inactive').addClass('active');
+      $('#svg-container').append($clone);
+      self.showSelectedJoints();
+      
+      /*var currentCrops = JSON.parse(window.crops);*/
+      
+      if (associatedCrop) {
+        associatedCrop['pivot'] = {};
+        associatedCrop['pivot']['id'] = $(this).attr('id');
+        associatedCrop['pivot']['originalX'] = parseInt($(this).css('left'));
+        associatedCrop['pivot']['originalY'] = parseInt($(this).css('top'));
+        associatedCrop['pivot']['html'] = $clone[0];
+      }
+
+      window.crops[cropIndex] = associatedCrop;
+      console.log(window.crops);
+      $(self.selectedElem).removeClass('active');
+      self.selectedElem = null;
+  }
+
+
+},
+
+showSelectedJoints: function (hide) {
+  var $joints = $('.pivot');
+  if (hide) {
+    $joints.removeClass('has-data').removeClass('no-data');
+    return;
+  }
+
+  $.each($joints, function (index, joint) {
+    if ($(joint).data().preview && $(joint).data().preview.index) {
+      $(joint).addClass('has-data');
+    }
+    else {
+      $(joint).addClass('no-data');
+    }
+  });
+},
+
+showJointPreviews: function (hide) {
+  var $imgPreviews = $('#svg-container');
+  if (hide) {
+    $imgPreviews.removeClass('active').removeClass('offset-preview');
+    return;
+  }
+
+  $imgPreviews.addClass('active').addClass('offset-preview');
+  
 },
 
 }

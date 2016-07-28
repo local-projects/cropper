@@ -119,7 +119,7 @@ $(function () {
     $this.hide();
 
     $('#svg-container').show();
-    figure.drawSkeleton();
+    figure.draw();
 
     event.preventDefault();
   });
