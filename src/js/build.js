@@ -192,6 +192,12 @@
       }, this), 0);*/
     },
 
+    draw: function () {
+      if (this.joints) {
+        this.joints.draw();
+      }
+    },
+
     closeCrop: function (indexToClose) {
 
       if (indexToClose) {

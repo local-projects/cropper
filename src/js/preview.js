@@ -21,6 +21,10 @@
         'max-width:none!important;max-height:none!important;' +
         'image-orientation:0deg!important;">'
       );
+
+      if (this.joints) {
+        this.attachListener(this.$preview[0]);
+      }
       
     },
 
@@ -48,7 +52,14 @@
         'image-orientation:0deg!important;">'
       );
 
-      figure.addListener(this.$preview[0]);
+      if (this.joints) {
+        this.attachListener(this.$preview[0]);
+      }
+      
+    },
+
+    attachListener: function (el) {
+      this.joints.attachListener(el);
     },
 
     resetPreview: function () {
