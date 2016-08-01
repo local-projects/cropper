@@ -1,9 +1,12 @@
 function JointPreview (options) {
-	this.options = options;
+	this.options = options || {};
+	this.container = this.options.container || '#svg-container';
+	this.pivot = this.options.pivot || '.pivot';
+	this.$pivot = $(this.pivot);
 }
 
 JointPreview.prototype = {
-	constructor: JointPreview;
+	constructor: JointPreview,
 
 	init: function () {
 
@@ -13,7 +16,7 @@ JointPreview.prototype = {
 
 	},
 
-	updateJoint: function (self) {
+	updateJoint: function () {
 		var pivotSize = 20;
 		var scalingFactor = 1;
 
@@ -25,22 +28,22 @@ JointPreview.prototype = {
 			var cropIndex = $(selected).data().preview.index;
 			var associatedCrop = window.crops[cropIndex];
 
-		if (associatedCrop.pivot) {
-			if (Object.keys(associatedCrop.pivot).length > 0) {
-				var markup = associatedCrop['pivot']['html'];
-				$(markup).remove();
-				// self.showSelectedJoints();
+			if (associatedCrop.pivot) {
+				if (Object.keys(associatedCrop.pivot).length > 0) {
+					var markup = associatedCrop['pivot']['html'];
+					$(markup).remove();
+					// self.showSelectedJoints();
+				}
 			}
-		}
 
-		if ($(this).data().preview) {
-			return;
-		}
+			if ($(this.pivot).data().preview) {
+				return;
+			}
 
 			$clone.data(indexData);
-			$(this).data(indexData);
+			this.$pivot.data(indexData);
 			var $img = $clone.find('img');
-			var $this = $(this);
+			var $this = this.$pivot;
 			var pivotContainer = {
 				'width': $clone.width() / scalingFactor,
 				'height': $clone.height() / scalingFactor,
@@ -65,10 +68,10 @@ JointPreview.prototype = {
 			$img.css(pivotImg);
 			$clone.attr('draggable', 'false').addClass('offset-preview');
 			/*$('.pivot').removeClass('active').removeClass('has-data').removeClass('no-data').addClass('inactive');*/
-			$('.pivot').removeClass('active').addClass('inactive');
+			$(this.pivot).removeClass('active').addClass('inactive');
 			$this.removeClass('inactive').addClass('active');
-			$('#svg-container').append($clone);
-			self.showSelectedJoints();
+			$(this.container).append($clone);
+			/*self.showSelectedJoints();*/
 
 			/*var currentCrops = JSON.parse(window.crops);*/
 
@@ -84,7 +87,9 @@ JointPreview.prototype = {
 			console.log(window.crops);
 			$(selected).removeClass('active');
 			selected = null;
+			this.pivot = $clone;
 		}
+		return this.pivot;
 
 	},
 }

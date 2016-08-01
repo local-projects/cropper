@@ -9,6 +9,8 @@ function Joint (options) {
 	this.offsetX = 0;
 	this.offsetY = 0;
 	this.container = this.options.container;
+	this.$pivot = null;
+	this.attachedPreviews = [];
 }
 
 Joint.prototype = {
@@ -23,14 +25,24 @@ Joint.prototype = {
 		$pivot.addClass(this.class).attr('id', this.id).css({left: this.x, top: this.y});
 		$pivot.attr('draggable', 'true');
 		$(this.container).append($pivot);
+		this.$pivot = $('#'+ this.id);
+		this.attachListener();
+	},
 
-		/*$pivot.on('click', function (event) {
+	attachListener: function () {
+		var self = this;
+		this.$pivot.on('click', function (event) {
 			event.preventDefault();
-			self.updateJoint.call(this, self);
-		});*/
+			/*self.updateJoint.call(this, self);*/
+			var jp = new JointPreview({'pivot': self.$pivot});
+			var pivotImage = jp.updateJoint();
+			if (pivotImage != null) {
+				this.attachedPreviews.push(pivotImage);
+			}
+		});
 
 
-		/*$pivot.on('mousedown', function (event) {
+		/*this.$pivot.on('mousedown', function (event) {
 			event.preventDefault();
 			self.selectedJoint = this;
 		});*/

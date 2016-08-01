@@ -34,6 +34,9 @@ Preview.prototype = {
 		el.addEventListener('click', function (event) {
 			event.preventDefault();
 
+			// self.previewContainer = self.container.find(self.previewContainer[0]);
+			self.previewContainer = $('.img-preview');
+
 			if ($(this).hasClass('active')) {
 				$(this).removeClass('active');
 				Preview.Selected = null;

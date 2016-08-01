@@ -119,40 +119,6 @@ Skeleton.prototype = {
 		}
 	},
 
-	attachListener: function (initEl) {
-    var self = this;
-
-    /*var el = initEl || $('.docs-preview').find('.img-preview')[0];*/
-    var el = initEl || $('.img-preview')[0];
-    
-    /*var dragStarted = false;
-    var draggingElem = null;
-    var attachedElem = null;*/
-
-    el.addEventListener('click', function (event) {
-      event.preventDefault();
-
-      self.container.find('.img-preview').removeClass('active');
-      if ($(this).hasClass('active')) {
-        $(this).removeClass('active');
-        /*self.selectedElem = null;
-        self.showSelectedJoints(true);
-        self.showJointPreviews(true);*/
-        return;
-      }
-      
-      var $previews = $('.docs-preview').find('.active');
-      if ($previews.length > 0) {
-        $previews.removeClass('active');
-      }
-      
-      $(this).addClass('active');
-      /*self.selectedElem = this;
-      self.showSelectedJoints();
-      self.showJointPreviews();*/
-    });
-  },
-
 	getDefaults: function () {
     var containerWid = 375, containerHt = 500;
     var xVal = (containerWid - 10) / 2;
