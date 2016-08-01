@@ -2,9 +2,17 @@ function Joints(options) {
   var defaults = this.getDefaults();
   this.selectedElem = null;
   this.selectedJoint = null;
+  this.joints = [];
   this.options = $.extend({}, defaults, $.isPlainObject(options) && options);
 
-  var draw = options.draw || true;
+  var draw;
+  if ('draw' in options && options.draw === false) {
+    draw = options.draw;
+  }
+  else {
+    draw = true;
+  }
+
   this.init(draw);
 }
 
@@ -16,6 +24,7 @@ Joints.prototype = {
     if (draw) {
       this.draw();
     }
+    /*this.mouseListener();*/
   },
 
   draw: function (el) {
@@ -24,16 +33,17 @@ Joints.prototype = {
 
   drawSkeleton: function (el) {
     var self = this;
-    var selector = d3.select(el) || d3.select('#svg-container');
-    this.svgContainer = selector.append('svg').attr('width', '100%').attr('height', '100%');
-    this.handContainer = this.svgContainer.append('g').attr('id', 'hand');
-    this.legContainer = this.svgContainer.append('g').attr('id', 'legs');
+    var selector = el || '#svg-container';
+    var container = d3.select(selector).append('svg').attr('width', '100%').attr('height', '100%');
+    this.svgContainer = $(selector);
+    this.handContainer = container.append('g').attr('id', 'hand');
+    this.legContainer = container.append('g').attr('id', 'legs');
 
     for (var part in this.skeleton) {
       if (part !== 'container' && part !== 'common') {
         switch(this.skeleton[part].partOf) {
           case 'body':
-            var $bodyPart = this.svgContainer.append('rect');
+            var $bodyPart = container.append('rect');
             this.setAttributes($bodyPart, this.skeleton[part]);
             break;
           case 'hand':
@@ -54,12 +64,15 @@ Joints.prototype = {
           $pivot.addClass(pv.class).attr('id', pv.id).css({left: pv.x, top: pv.y});
           $pivot.attr('draggable', 'true');
           $('#svg-container').append($pivot);
+          
           $pivot.on('click', function (event) {
+            event.preventDefault();
             self.updateJoint.call(this, self);
           });
 
 
           $pivot.on('mousedown', function (event) {
+            event.preventDefault();
             self.selectedJoint = this;
           });
 
@@ -154,6 +167,8 @@ Joints.prototype = {
 
     el.addEventListener('click', function (event) {
       event.preventDefault();
+
+      self.svgContainer.find('.img-preview').removeClass('active');
       if ($(this).hasClass('active')) {
         $(this).removeClass('active');
         self.selectedElem = null;
@@ -171,6 +186,41 @@ Joints.prototype = {
       self.selectedElem = this;
       self.showSelectedJoints();
       self.showJointPreviews();
+    });
+  },
+
+  mouseListener: function () {
+    var self = this;
+    $(document).on('mousemove', function (event) {
+      event.preventDefault();
+      if (self.selectedJoint) {
+        var $joint = $(self.selectedJoint);
+        var associatedData = $joint.data().preview.index;
+        var associatedCrop = window.crops[associatedData];
+          if (associatedCrop) {
+            var originalX = associatedCrop['pivot']['originalX'];
+            var originalY = associatedCrop['pivot']['originalY'];
+            var dragX = event.pageX, dragY = event.pageY;
+            var newX = originalX - dragX;
+            var newY = originalY - dragY;
+            $joint.css({left: event.pageX, top: event.pageY});
+            associatedCrop['pivot']['offsetX'] = newX;
+            associatedCrop['pivot']['offsetY'] = newY;
+            window.crops[associatedData] = associatedCrop;
+          }
+          else {
+            $joint.data() = {};
+          }
+      }
+    
+    });
+
+    $('document').on('mouseup', function (event) {
+      if (self.selectedJoint) {
+        self.selectedJoint = null;
+      }
+      
+      console.log(window.crops);
     });
   },
 

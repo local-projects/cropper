@@ -22,8 +22,8 @@
         'image-orientation:0deg!important;">'
       );
 
-      if (this.joints) {
-        this.attachListener(this.$preview[0]);
+      if (this.attachedPreview) {
+        this.addPreview(this.$preview[0]);
       }
       
     },
@@ -52,14 +52,14 @@
         'image-orientation:0deg!important;">'
       );
 
-      if (this.joints) {
-        this.attachListener(this.$preview[0]);
+      if (this.attachedPreview) {
+        this.addPreview(this.$preview[0]);
       }
       
     },
 
-    attachListener: function (el) {
-      this.joints.attachListener(el);
+    addPreview: function (el) {
+      this.attachedPreview.addPreview(el);
     },
 
     resetPreview: function () {

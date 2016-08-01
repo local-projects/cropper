@@ -12,7 +12,8 @@ $(function () {
   var $dataRotate = $('#dataRotate');
   var $dataScaleX = $('#dataScaleX');
   var $dataScaleY = $('#dataScaleY');
-  var joints = new Joints({draw: false});
+  var preview = new Preview();
+  /*var joints = new Joints({draw: false});*/
   var options = {
         aspectRatio: 16 / 9,
         preview: '.img-preview',
@@ -29,7 +30,8 @@ $(function () {
         cropend: function (e) {
           console.log('cropend');
         },
-        joints: joints,
+        attachedPreview: preview,
+        /*joints: joints,*/
       };
 
 
@@ -124,7 +126,8 @@ $(function () {
     $this.hide();
 
     $('#svg-container').show();
-    $image.cropper('draw');
+    // draw
+    var sk = new Skeleton();
 
     event.preventDefault();
   });
