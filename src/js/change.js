@@ -408,6 +408,8 @@
         var tempCropBox = $.extend({}, cropBox);
         tempCropBox.left = left;
         tempCropBox.top = top;
+        tempCropBox.width = 0;
+        tempCropBox.height = 0;
         this.buildNewCrop(tempCropBox);
         this.action = action;
         newCrop = false;
