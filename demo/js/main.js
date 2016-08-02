@@ -15,7 +15,7 @@ $(function () {
   var preview = new Preview();
   /*var joints = new Joints({draw: false});*/
   var options = {
-        aspectRatio: 16 / 9,
+        aspectRatio: NaN,
         preview: '.img-preview',
         previewContainer: '.docs-preview',
         crop: function (e) {

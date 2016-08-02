@@ -17,6 +17,7 @@ Skeleton.prototype = {
 	init: function () {
 		this._initializeDefaultJoints();
 		this.draw();
+		this.mouseListener();
 	},
 
 	_initializeJoints: function () {
@@ -117,6 +118,51 @@ Skeleton.prototype = {
 		for (var prop in combinedProps) {
 			element.attr(prop, combinedProps[prop]);
 		}
+	},
+
+	mouseListener: function () {
+		var self = this;
+		$(this.container).on('mousemove', function (event) {
+			event.preventDefault();
+			var selectedJoint = Joint.Selected;
+			if (selectedJoint) {
+				var $joint = $(selectedJoint);
+				
+				var dragX = event.pageX;
+				var dragY = event.pageY;
+				var targetOffsetX = $(event.currentTarget).offset().left;
+				var targetOffsetY = $(event.currentTarget).offset().top;
+				var x = dragX - targetOffsetX;
+				var y = dragY - targetOffsetY;
+
+				$joint.css({left: x, top: y});
+
+				/*var associatedData = $joint.data().preview.index;
+				var associatedCrop = window.crops[associatedData];
+				if (associatedCrop) {
+					var originalX = associatedCrop['pivot']['originalX'];
+					var originalY = associatedCrop['pivot']['originalY'];
+					var dragX = event.pageX, dragY = event.pageY;
+					var newX = originalX - dragX;
+					var newY = originalY - dragY;
+					$joint.css({left: event.pageX, top: event.pageY});
+					associatedCrop['pivot']['offsetX'] = newX;
+					associatedCrop['pivot']['offsetY'] = newY;
+					window.crops[associatedData] = associatedCrop;
+				}
+
+				else {
+					$joint.data() = {};
+				}*/
+			}
+		});
+
+		$(this.container).on('mouseup', function (event) {
+			if (Joint.Selected) {
+				Joint.Selected = null;
+			}
+			// console.log(window.crops);
+		});
 	},
 
 	getDefaults: function () {

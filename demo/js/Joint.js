@@ -13,6 +13,8 @@ function Joint (options) {
 	this.attachedPreviews = [];
 }
 
+Joint.Selected = null;
+
 Joint.prototype = {
 	constructor: Joint,
 
@@ -25,7 +27,8 @@ Joint.prototype = {
 		$pivot.addClass(this.class).attr('id', this.id).css({left: this.x, top: this.y});
 		$pivot.attr('draggable', 'true');
 		$(this.container).append($pivot);
-		this.$pivot = $('#'+ this.id);
+		// this.$pivot = $('#'+ this.id);
+		this.$pivot = $pivot;
 		this.attachListener();
 	},
 
@@ -34,17 +37,40 @@ Joint.prototype = {
 		this.$pivot.on('click', function (event) {
 			event.preventDefault();
 			/*self.updateJoint.call(this, self);*/
-			var jp = new JointPreview({'pivot': self.$pivot});
-			var pivotImage = jp.updateJoint();
-			if (pivotImage != null) {
-				this.attachedPreviews.push(pivotImage);
+			if (Preview.Selected) {
+				var jp = new JointPreview({'pivot': self.$pivot});
+				self.removePreview(jp, self.attachedPreviews.length);
+				self.attachedPreviews.push(jp);
 			}
+			else {
+				for (var i = 0; i < self.attachedPreviews.length; i++) {
+					self.attachedPreviews[i].showPreview();
+				}
+			}
+
 		});
 
 
-		/*this.$pivot.on('mousedown', function (event) {
+		this.$pivot.on('mousedown', function (event) {
 			event.preventDefault();
-			self.selectedJoint = this;
-		});*/
-	}
+			// self.selectedJoint = this;
+			if (Preview.Selected) {
+				return;
+			}
+			else {
+				if (self.attachedPreviews.length > 0) {
+					Joint.Selected = this;
+				}
+			}
+		});
+	},
+
+	removePreview: function (jp, index) {
+		var self = this;
+		$(jp.preview).find('.close-icon-preview').on('click', function (event) {
+			event.preventDefault();
+			jp.remove();
+			self.attachedPreviews.splice(index, 1);
+		});
+	},
 }

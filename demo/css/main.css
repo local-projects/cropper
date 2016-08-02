@@ -205,6 +205,32 @@ body {
     cursor: pointer;
   }
 
+  .close-icon-preview{
+    background-image: url("../../assets/img/close-icon.png");
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    right: 0px;
+    top: 0px;
+    background-color: white;
+  }
+
+  .close-icon-preview:hover{
+    cursor: pointer;
+  }
+
+.hide-preview{
+  display: none;
+}
+
+.get-json{
+  display: none;
+}
+
+#putJson{
+  display: none;
+}
+
 
 /*d3*/
 #svg-container{
@@ -212,7 +238,8 @@ body {
   height: 700px;
   position: relative;
   display: none;
-  margin-top: 50px;
+  margin-bottom: 50px;
+  outline: 5px solid grey;
 }
 
   .left-hand,
@@ -268,10 +295,13 @@ body {
 }
 
 #svg-container .img-preview {
-  transform: scale(0);
-  transition: transform 1s;
+  /*transform: scale(0);
+  transition: transform 1s;*/
+  visibility: hidden;
 }
 
   #svg-container .img-preview.active{
-    transform: scale(0.8);
+    /*transform: scale(0.8);*/
+    visibility: visible;
+    outline: none;
   }

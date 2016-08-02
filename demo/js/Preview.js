@@ -21,6 +21,10 @@ Preview.prototype = {
 		this.previews.push(newPreview);
 	},
 
+	setPreviewContainer: function () {
+		this.previewContainer = this.options.previewContainer || $('.img-preview');
+	},
+
 	attachListener: function (initEl) {
 		var self = this;
 
@@ -34,8 +38,9 @@ Preview.prototype = {
 		el.addEventListener('click', function (event) {
 			event.preventDefault();
 
-			// self.previewContainer = self.container.find(self.previewContainer[0]);
-			self.previewContainer = $('.img-preview');
+			self.setPreviewContainer();
+			var pc = self.container.find(self.previewContainer);
+			/*self.previewContainer = $('.img-preview');*/
 
 			if ($(this).hasClass('active')) {
 				$(this).removeClass('active');
@@ -45,7 +50,7 @@ Preview.prototype = {
 				return;
 			}
 
-			self.previewContainer.removeClass('active');
+			pc.removeClass('active');
 
 			/*var $previews = self.container.find('.active');
 			if ($previews.length > 0) {
