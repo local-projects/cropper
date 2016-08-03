@@ -84,7 +84,9 @@ $(function () {
     var $this = $(this);
     /*window.crops = JSON.stringify($image.cropper('getData'));
     console.log(JSON.parse(window.crops));*/
-    window.crops = $image.cropper('getData');
+    var crops = $image.cropper('getData');
+    var cr = {'crops': crops}
+    localStorage.setItem('crops', JSON.stringify(cr));
     console.log(window.crops);
 
     /*$('.header-title').find('h1').html('Assign to Joint');*/

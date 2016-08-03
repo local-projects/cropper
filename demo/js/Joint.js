@@ -6,8 +6,6 @@ function Joint (options) {
 	this.class = this.options.class || '';
 	/*this.width = this.options.width;
 	this.height = this.options.height;*/
-	this.offsetX = 0;
-	this.offsetY = 0;
 	this.container = this.options.container;
 	this.$pivot = null;
 	this.attachedPreviews = [];
@@ -46,6 +44,35 @@ Joint.prototype = {
 			}
 
 		});
+	},
+
+	getData: function () {
+		var data = {};
+		var di;
+
+		if (this.attachedPreviews.length === 0) {
+			data['previews'] = [];
+			data['x'] = this.x;
+			data['y'] = this.y;
+			data['id'] = this.id;
+			data['class'] = this.class;
+
+			return data;
+		}
+
+		data['previews'] = [];
+		data['x'] = this.x;
+		data['y'] = this.y;
+		data['id'] = this.id;
+		data['class'] = this.class;
+
+		for (var i = 0; i < this.attachedPreviews.length; i++) {
+			var pr = this.attachedPreviews[i];
+			var id = pr.getData();
+			data['previews'].push(id);
+		}
+
+		return data;
 	},
 
 	removePreview: function (jp, index) {

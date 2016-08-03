@@ -5,6 +5,13 @@ function JointPreview (options) {
 	this.$pivot = $(this.pivot);
 	this.previews = [];
 	this.preview = null;
+	this.relatedId = null;
+	
+	this.offsetX = 0.5;
+	this.offsetY = 0.5;
+	this.sizeX = 1;
+	this.sizeY = 1;
+	this.directions = [];
 	this.init();
 }
 
@@ -21,6 +28,18 @@ JointPreview.prototype = {
 
 	},
 
+	getData: function () {
+		
+		var d =	{
+				'id': this.relatedId,
+				'anchor': [this.offsetX, this.offsetY],
+				'size': [this.sizeX, this.sizeY],
+				'directions': this.directions
+				}
+		
+		return d;
+	},
+
 	updateJoint: function () {
 		var pivotSize = 20;
 		var scalingFactor = 1;
@@ -32,6 +51,10 @@ JointPreview.prototype = {
 			var closeIcon  = $('<div>');
 			closeIcon.addClass('close-icon-preview');
 			$clone.append(closeIcon);
+			var indexData = $(selected).data();
+			$clone.data(indexData);
+			this.relatedId = indexData.preview.index;
+
 			/*var indexData = $(selected).data();
 			var cropIndex = $(selected).data().preview.index;
 			var associatedCrop = window.crops[cropIndex];
@@ -79,7 +102,6 @@ JointPreview.prototype = {
 			this.$pivot.removeClass('active').addClass('inactive');
 			$this.removeClass('inactive').addClass('active');
 			$(this.container).append($clone);
-			/*self.showSelectedJoints();*/
 
 			/*var currentCrops = JSON.parse(window.crops);*/
 

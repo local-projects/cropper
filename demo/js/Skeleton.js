@@ -5,7 +5,9 @@ function Skeleton(options) {
 	this.container = this.options.container || '#svg-container';
 
 	var defaults = this.getDefaults();
-	this.skeleton = defaults;
+	this.skeleton = defaults.skeleton;
+	this.pivots = defaults.pivots;
+	this.devicePixelRatio = window.devicePixelRatio || 1;
 	// this.options = $.extend({}, defaults, $.isPlainObject(options) && options);
 	
 	this.init();
@@ -29,14 +31,12 @@ Skeleton.prototype = {
 	},
 
 	_initializeDefaultJoints: function () {
-		for (var part in this.skeleton) {
-			if (this.skeleton[part].pivot) {
-				var pv = this.skeleton[part].pivot;
-				pv['container'] = this.container;
-				this.jointPositions.push(pv);
-				var joint = new Joint(pv);
-				this.joints.push(joint);
-			}
+		for (var pivot in this.pivots) {
+			var pv = this.pivots[pivot];
+			pv['container'] = this.container;
+			this.jointPositions.push(pv);
+			var joint = new Joint(pv);
+			this.joints.push(joint);
 		}
 	},
 
@@ -120,6 +120,30 @@ Skeleton.prototype = {
 		}
 	},
 
+	getData: function () {
+		
+		var data = {};
+		var dj = data['joints'] = {};
+		var crops = localStorage.getItem('crops');
+		var cr;
+		
+		for (var i = 0; i < this.joints.length; i++) {
+			var j = this.joints[i];
+			var d = j.getData();
+			dj[i] = d;
+		}
+
+		if (crops) {
+			cr = JSON.parse(crops);
+		}
+		else {
+			cr = {};
+		}
+
+		var gd = $.extend({}, cr, data);
+		return gd;
+	},
+
 	mouseListener: function () {
 		var self = this;
 		$(this.container).on('mousemove', function (event) {
@@ -178,7 +202,47 @@ Skeleton.prototype = {
 		var shoulderPos = 50;
 		var torsoHt = 200;
 
-		var drawOptions = {
+		var pivots = {
+
+			'torso': {
+				x: xVal - 5,
+				y: yVal - 5,
+				id: 'torso',
+				class: 'pivot'
+			},
+
+			'elbow-left': {
+				x: xVal - 67.5,
+				y: shoulderPos + 15,
+				id: 'elbow-left',
+				class: 'pivot'
+			},
+
+			'elbow-right': {
+				x: xVal + 57.5,
+				y: shoulderPos + 15,
+				id: 'elbow-right',
+				class: 'pivot'
+			},
+
+			'hand-left': {
+				x: xVal - 45 - 47 - 10,
+				y: shoulderPos + 55,
+				id: 'hand-left',
+				class: 'pivot'
+			},
+
+			'hand-right': {
+				x: xVal + 45 + 47,
+				y: shoulderPos + 55,
+				id: 'hand-right',
+				class: 'pivot'
+			}
+
+
+		};
+
+		var skeletonStructure = {
 			container: {
 				width: containerWid, 
 				height: containerHt
@@ -194,13 +258,7 @@ Skeleton.prototype = {
 				y: yVal, 
 				height: torsoHt, 
 				id: 'torso-body',
-				partOf: 'body',
-				pivot: {
-					x: xVal - 5,
-					y: yVal - 5,
-					id: 'torso',
-					class: 'pivot'
-				}
+				partOf: 'body'
 			},
 
 			leftShoulder: {
@@ -220,7 +278,7 @@ Skeleton.prototype = {
 				style: 'transform: rotate(-70deg)', 
 				class: 'right-hand', 
 				id: 'right-shoulder',
-				partOf: 'hand'
+				partOf: 'hand',
 			},
 
 			leftElbow: {
@@ -232,12 +290,6 @@ Skeleton.prototype = {
 				class: 'left-hand', 
 				id: 'left-elbow',
 				partOf: 'hand',
-				pivot: {
-					x: xVal - 67.5,
-					y: shoulderPos + 15,
-					id: 'pivot-elbow-left',
-					class: 'pivot'
-				}
 			},
 
 			rightElbow: {
@@ -249,12 +301,6 @@ Skeleton.prototype = {
 				class: 'right-hand', 
 				id: 'right-elbow',
 				partOf: 'hand',
-				pivot: {
-					x: xVal + 57.5,
-					y: shoulderPos + 15,
-					id: 'pivot-elbow-right',
-					class: 'pivot'
-				}
 			},
 
 			leftHand: {
@@ -265,12 +311,6 @@ Skeleton.prototype = {
 				class: 'left-hand', 
 				id: 'left-hand',
 				partOf: 'hand',
-				pivot: {
-					x: xVal - 45 - 47 - 10,
-					y: shoulderPos + 55,
-					id: 'pivot-hand-left',
-					class: 'pivot'
-				}
 			},
 
 			rightHand: {
@@ -281,12 +321,6 @@ Skeleton.prototype = {
 				class: 'right-hand', 
 				id: 'right-hand',
 				partOf: 'hand',
-				pivot: {
-					x: xVal + 45 + 47,
-					y: shoulderPos + 55,
-					id: 'pivot-hand-right',
-					class: 'pivot'
-				}
 			},
 
 			leftPalm: {
@@ -390,6 +424,6 @@ Skeleton.prototype = {
 			}
 		}
 
-		return drawOptions;
+		return {'skeleton': skeletonStructure, 'pivots': pivots};
 	},
 }
