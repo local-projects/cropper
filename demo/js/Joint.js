@@ -13,8 +13,6 @@ function Joint (options) {
 	this.attachedPreviews = [];
 }
 
-Joint.Selected = null;
-
 Joint.prototype = {
 	constructor: Joint,
 
@@ -36,7 +34,6 @@ Joint.prototype = {
 		var self = this;
 		this.$pivot.on('click', function (event) {
 			event.preventDefault();
-			/*self.updateJoint.call(this, self);*/
 			if (Preview.Selected) {
 				var jp = new JointPreview({'pivot': self.$pivot});
 				self.removePreview(jp, self.attachedPreviews.length);
@@ -49,20 +46,6 @@ Joint.prototype = {
 			}
 
 		});
-
-
-		this.$pivot.on('mousedown', function (event) {
-			event.preventDefault();
-			// self.selectedJoint = this;
-			if (Preview.Selected) {
-				return;
-			}
-			else {
-				if (self.attachedPreviews.length > 0) {
-					Joint.Selected = this;
-				}
-			}
-		});
 	},
 
 	removePreview: function (jp, index) {
@@ -71,6 +54,9 @@ Joint.prototype = {
 			event.preventDefault();
 			jp.remove();
 			self.attachedPreviews.splice(index, 1);
+			if (self.attachedPreviews.length === 0) {
+				self.$pivot.removeClass('active');
+			}
 		});
 	},
 }

@@ -238,6 +238,7 @@ body {
   height: 700px;
   position: relative;
   display: none;
+  margin-top: 50px;
   margin-bottom: 50px;
   outline: 5px solid grey;
 }
@@ -264,7 +265,7 @@ body {
     }
 
     .pivot.active{
-      cursor: move;
+      cursor: pointer;
     }
 
     .pivot.inactive{
@@ -304,4 +305,5 @@ body {
     /*transform: scale(0.8);*/
     visibility: visible;
     outline: none;
+    cursor: move;
   }

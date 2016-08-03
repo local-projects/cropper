@@ -8,6 +8,8 @@ function JointPreview (options) {
 	this.init();
 }
 
+JointPreview.Selected = null;
+
 JointPreview.prototype = {
 	constructor: JointPreview,
 
@@ -94,11 +96,21 @@ JointPreview.prototype = {
 			$(selected).removeClass('active');
 			selected = Preview.Selected = null;
 			this.preview = $clone;
+			this.offsetListener();
 			this.previews.push($clone);
 		}
 		/*return this.previews;*/
 		return this.preview;
 
+	},
+
+	offsetListener: function () {
+		if (this.preview) {
+			this.preview.on('mousedown', function (event) {
+				event.preventDefault();
+				JointPreview.Selected = this;
+			});
+		}
 	},
 
 	showPreview: function () {

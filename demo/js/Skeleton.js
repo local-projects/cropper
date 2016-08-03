@@ -124,9 +124,9 @@ Skeleton.prototype = {
 		var self = this;
 		$(this.container).on('mousemove', function (event) {
 			event.preventDefault();
-			var selectedJoint = Joint.Selected;
-			if (selectedJoint) {
-				var $joint = $(selectedJoint);
+			var selectedJointPreview = JointPreview.Selected;
+			if (selectedJointPreview) {
+				var $joint = $(selectedJointPreview);
 				
 				var dragX = event.pageX;
 				var dragY = event.pageY;
@@ -134,6 +134,12 @@ Skeleton.prototype = {
 				var targetOffsetY = $(event.currentTarget).offset().top;
 				var x = dragX - targetOffsetX;
 				var y = dragY - targetOffsetY;
+
+				var wid = $joint.width();
+				var hgt = $joint.height();
+
+				x = x - (wid / 2);
+				y = y - (hgt / 2);
 
 				$joint.css({left: x, top: y});
 
@@ -158,8 +164,8 @@ Skeleton.prototype = {
 		});
 
 		$(this.container).on('mouseup', function (event) {
-			if (Joint.Selected) {
-				Joint.Selected = null;
+			if (JointPreview.Selected) {
+				JointPreview.Selected = null;
 			}
 			// console.log(window.crops);
 		});
