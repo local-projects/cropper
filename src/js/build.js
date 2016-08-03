@@ -24,7 +24,7 @@
       this.$canvas = $cropper.find('.cropper-canvas').append($clone);
       this.$dragBox = $cropper.find('.cropper-drag-box');
       this.$cropBox = $cropBox = $(Cropper.CROP_TEMPLATE1);
-      index = getTime();
+      index = generateUUID();
       this.cropBoxIndex = index;
       this.$cropBoxes[index] = this.$cropBox;
       this.$viewBox = $cropper.find('.cropper-view-box');
@@ -116,7 +116,7 @@
 
       // Create cropper elements
       this.$cropBox = $cropBox = $(Cropper.CROP_TEMPLATE);
-      index = newIndex || getTime();
+      index = newIndex || generateUUID();
       this.cropBoxIndex = index;
       this.$cropBoxes[index] = this.$cropBox;
 
