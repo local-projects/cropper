@@ -13,11 +13,13 @@ $(function () {
   var $dataScaleX = $('#dataScaleX');
   var $dataScaleY = $('#dataScaleY');
   var preview = new Preview();
-  /*var joints = new Joints({draw: false});*/
   var options = {
         aspectRatio: NaN,
         preview: '.img-preview',
         previewContainer: '.docs-preview',
+        cropstart: function (e) {
+          console.log('cropstart');
+        },
         crop: function (e) {
           $dataX.val(Math.round(e.x));
           $dataY.val(Math.round(e.y));
@@ -31,7 +33,7 @@ $(function () {
           console.log('cropend');
         },
         attachedPreview: preview,
-        /*joints: joints,*/
+        cropBoxes : ['crop1', 'crop2'],
       };
 
 
@@ -42,27 +44,29 @@ $(function () {
   // Cropper
   $image.on({
     'build.cropper': function (e) {
-      console.log(e.type);
+      console.log('build.cropper');
     },
     'built.cropper': function (e) {
-      console.log(e.type);
+      console.log('built.cropper');
     },
     'cropstart.cropper': function (e) {
-      console.log(e.type, e.action);
+      console.log('cropstart.cropper');
     },
     'cropmove.cropper': function (e) {
-      console.log(e.type, e.action);
+      console.log('cropmove.cropper');
     },
     'cropend.cropper': function (e) {
-      console.log(e.type, e.action);
+      console.log('cropend.cropper');
     },
     'crop.cropper': function (e) {
-      console.log(e.type, e.x, e.y, e.width, e.height, e.rotate, e.scaleX, e.scaleY);
+      console.log('crop.cropper');
     },
     'zoom.cropper': function (e) {
-      console.log(e.type, e.ratio);
+      console.log('zoom.cropper');
     }
   }).cropper(options);
+
+  /*$image.cropper(options);*/
 
 
   // Buttons
@@ -74,41 +78,6 @@ $(function () {
     $('button[data-method="rotate"]').prop('disabled', true);
     $('button[data-method="scale"]').prop('disabled', true);
   }
-
-
-  // Download
-  if (typeof $download[0].download === 'undefined') {
-    $download.addClass('disabled');
-  }
-
-
-  // Options
-  $('.docs-toggles').on('change', 'input', function () {
-    var $this = $(this);
-    var name = $this.attr('name');
-    var type = $this.prop('type');
-    var cropBoxData;
-    var canvasData;
-
-    if (!$image.data('cropper')) {
-      return;
-    }
-
-    if (type === 'checkbox') {
-      options[name] = $this.prop('checked');
-      cropBoxData = $image.cropper('getCropBoxData');
-      canvasData = $image.cropper('getCanvasData');
-
-      options.built = function () {
-        $image.cropper('setCropBoxData', cropBoxData);
-        $image.cropper('setCanvasData', canvasData);
-      };
-    } else if (type === 'radio') {
-      options[name] = $this.val();
-    }
-
-    $image.cropper('destroy').cropper(options);
-  });
 
 
   $('.next-step').on('click', function (event) {
@@ -132,63 +101,6 @@ $(function () {
     event.preventDefault();
   });
 
-  // Methods
-  $('.docs-buttons').on('click', '[data-method]', function () {
-    var $this = $(this);
-    var data = $this.data();
-    var $target;
-    var result;
-
-    if ($this.prop('disabled') || $this.hasClass('disabled')) {
-      return;
-    }
-
-    if ($image.data('cropper') && data.method) {
-      data = $.extend({}, data); // Clone a new one
-
-      if (typeof data.target !== 'undefined') {
-        $target = $(data.target);
-
-        if (typeof data.option === 'undefined') {
-          try {
-            data.option = JSON.parse($target.val());
-          } catch (e) {
-            console.log(e.message);
-          }
-        }
-      }
-
-      result = $image.cropper(data.method, data.option, data.secondOption);
-
-      switch (data.method) {
-        case 'scaleX':
-        case 'scaleY':
-          $(this).data('option', -data.option);
-          break;
-
-        case 'getCroppedCanvas':
-          if (result) {
-
-            // Bootstrap's Modal
-            $('#getCroppedCanvasModal').modal().find('.modal-body').html(result);
-
-            if (!$download.hasClass('disabled')) {
-              $download.attr('href', result.toDataURL('image/jpeg'));
-            }
-          }
-
-          break;
-      }
-
-      if ($.isPlainObject(result) && $target) {
-        try {
-          $target.val(JSON.stringify(result));
-        } catch (e) {
-          console.log(e.message);
-        }
-      }
-
-    }
   });
 
 
