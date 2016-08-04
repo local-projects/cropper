@@ -12,7 +12,8 @@ $(function () {
   var $dataRotate = $('#dataRotate');
   var $dataScaleX = $('#dataScaleX');
   var $dataScaleY = $('#dataScaleY');
-  var preview = new Preview();
+  var directions = Directions();
+  var preview = new Preview({'directions': directions});
   var options = {
         aspectRatio: NaN,
         preview: '.img-preview',

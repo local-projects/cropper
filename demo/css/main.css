@@ -262,6 +262,7 @@ body {
       background-color: black;
       border-radius: 50%;
       z-index: 2;
+      transform: scale(1);
     }
 
     .pivot.active{
@@ -272,12 +273,8 @@ body {
       opacity: 0.3;
     }
 
-    .pivot.has-data{
-      background-color: red;
-    }
-
-    .pivot.no-data{
-      background-color: green;
+    .pivot.unselected{
+      transform: scale(0.6);
     }
 
   .offset-preview{
@@ -303,7 +300,12 @@ body {
 
   #svg-container .img-preview.active{
     /*transform: scale(0.8);*/
+    transform: scale(1);
     visibility: visible;
     outline: none;
     cursor: move;
   }
+
+.dropdown-container {
+  float: left;
+}

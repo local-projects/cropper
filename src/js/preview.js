@@ -60,6 +60,7 @@
 
     addPreview: function (el) {
       this.attachedPreview.addPreview(el);
+      this.attachedPreview.addDirectionTemplate();
     },
 
     resetPreview: function () {
