@@ -46,13 +46,15 @@ JointPreview.prototype = {
 		var selected = Preview.Selected;
 
 		if (selected) {
-			var $clone = $(selected).clone();
+			var $selected = $(selected);
+			var $selectedImg = $selected.find('img');
+			var $clone = $selected.clone();
 			
 			var closeIcon  = $('<div>');
 			closeIcon.addClass('close-icon-preview');
 			$clone.append(closeIcon);
 			
-			var indexData = $(selected).data();
+			var indexData = $selected.data();
 			$clone.data(indexData);
 			
 			this.relatedId = indexData.preview.index;
@@ -86,8 +88,8 @@ JointPreview.prototype = {
 
 			var imgWid = wd / this.sizeX;
 			var imgHgt = imgWid / imageAspectRatio;
-			var imglt = parseFloat($(selected).find('img').css('margin-left')) * (imgWid / $(selected).find('img').width());
-			var imgtp = parseFloat($(selected).find('img').css('margin-top')) * (imgHgt / $(selected).find('img').height());
+			var imglt = parseFloat($selectedImg.css('margin-left')) * (imgWid / $selectedImg.width());
+			var imgtp = parseFloat($selectedImg.css('margin-top')) * (imgHgt / $selectedImg.height());
 
 			var pivotImg = {
 				'width': imgWid,
@@ -106,7 +108,7 @@ JointPreview.prototype = {
 			$(this.container).append($clone);
 
 
-			$(selected).removeClass('active');
+			$selected.removeClass('active');
 			selected = Preview.Selected = null;
 			this.preview = $clone;
 			this.offsetListener();
