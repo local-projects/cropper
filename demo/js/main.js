@@ -98,11 +98,23 @@ $(function () {
 
     $('#svg-container').show();
     // draw
-    var sk = new Skeleton();
+    // var sk = new Skeleton();
+    window.sk = new Skeleton();
 
     event.preventDefault();
   });
 
+  $('.get-json').on('click', function (event) {
+    event.preventDefault();
+    /*var data = $image.cropper('getData');*/
+    window.sk.getData();
+    var data = localStorage.getItem('crops');
+    if (data) {
+      $('#putJson').val(data);
+    }
+    else {
+      $('#putJson').val('Error getting data');
+    }
   });
 
 

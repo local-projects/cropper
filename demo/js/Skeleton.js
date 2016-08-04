@@ -130,7 +130,8 @@ Skeleton.prototype = {
 		for (var i = 0; i < this.joints.length; i++) {
 			var j = this.joints[i];
 			var d = j.getData();
-			dj[i] = d;
+			var id = d.id;
+			dj[id] = d;
 		}
 
 		if (crops) {
@@ -141,6 +142,7 @@ Skeleton.prototype = {
 		}
 
 		var gd = $.extend({}, cr, data);
+		localStorage.setItem('crops', JSON.stringify(gd));
 		return gd;
 	},
 

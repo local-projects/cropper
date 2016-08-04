@@ -186,6 +186,9 @@
      * @param {jQuery Event} _event (private)
      */
     zoom: function (ratio, _event) {
+
+      return; /* Disable canvas zoom */
+
       var canvas = this.canvas;
 
       ratio = num(ratio);
@@ -370,7 +373,7 @@
             x: value.left - canvas.left,
             y: value.top - canvas.top,
             width: value.width,
-            height: value.height
+            height: value.height,
           };
 
           ratio = image.width / image.naturalWidth;
@@ -379,6 +382,11 @@
             n = n / ratio;
             data[i] = isRounded ? round(n) : n;
           });
+
+          data['sizeX'] = value.width / image.width;
+          data['sizeY'] = value.height / image.height;
+          data['cropAspectRatio'] = value.width / value.height;
+          data['imageAspectRatio'] = image.width / image.height;
 
         } else {
           data = {

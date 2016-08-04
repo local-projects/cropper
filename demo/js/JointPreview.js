@@ -42,56 +42,58 @@ JointPreview.prototype = {
 
 	updateJoint: function () {
 		var pivotSize = 20;
-		var scalingFactor = 1;
 
 		var selected = Preview.Selected;
 
 		if (selected) {
 			var $clone = $(selected).clone();
+			
 			var closeIcon  = $('<div>');
 			closeIcon.addClass('close-icon-preview');
 			$clone.append(closeIcon);
+			
 			var indexData = $(selected).data();
 			$clone.data(indexData);
+			
 			this.relatedId = indexData.preview.index;
-
-			/*var indexData = $(selected).data();
-			var cropIndex = $(selected).data().preview.index;
-			var associatedCrop = window.crops[cropIndex];
-			if (associatedCrop.pivot) {
-				if (Object.keys(associatedCrop.pivot).length > 0) {
-					var markup = associatedCrop['pivot']['html'];
-					$(markup).remove();
-					// self.showSelectedJoints();
-				}
-			}
-
-			if (this.$pivot.data().preview) {
-				return;
-			}
-
-			$clone.data(indexData);
-			this.$pivot.data(indexData);*/
+			
+			var crops = JSON.parse(localStorage.getItem('crops'));
+			var crop = crops.crops[this.relatedId];
+			this.sizeX = crop.sizeX;
+			this.sizeY = crop.sizeY;
+			var aspectRatio = crop.cropAspectRatio;
+			var imageAspectRatio = crop.imageAspectRatio;
 			
 			var $img = $clone.find('img');
 			var $this = this.$pivot;
+
+			var wd = $(this.container).width() * this.sizeX;
+			var ht = wd / aspectRatio;
+			var lt = parseInt($this.css('left')) - (wd / 2) + (pivotSize / 2);
+			var tp = parseInt($this.css('top')) - (ht / 2) + (pivotSize / 2);
+
 			var pivotContainer = {
-				'width': $clone.width() / scalingFactor,
-				'height': $clone.height() / scalingFactor,
+				'width': wd,
+				'height': ht,
 				'position': 'absolute',
 				'float': 'none',
-				'left': parseInt($this.css('left')) - ($clone.width() / (scalingFactor * 2)) + (pivotSize / 2),
-				'top': parseInt($this.css('top')) - ($clone.height() / (scalingFactor * 2)) + (pivotSize / 2),
+				'left': lt,
+				'top': tp,
 				'margin-bottom': '0',
 				'margin-right': '0',
-				'opacity': 1
+				'opacity': 1,
 			}
 
+			var imgWid = wd / this.sizeX;
+			var imgHgt = imgWid / imageAspectRatio;
+			var imglt = parseFloat($(selected).find('img').css('margin-left')) * (imgWid / $(selected).find('img').width());
+			var imgtp = parseFloat($(selected).find('img').css('margin-top')) * (imgHgt / $(selected).find('img').height());
+
 			var pivotImg = {
-				'width': $img.width() / scalingFactor,
-				'height': $img.height() / scalingFactor,
-				'margin-left': parseInt($img.css('margin-left')) / scalingFactor,
-				'margin-top': parseInt($img.css('margin-top')) / scalingFactor
+				'width': imgWid,
+				'height': imgHgt,
+				'margin-left': imglt,
+				'margin-top': imgtp
 			}
 
 			$clone.css(pivotContainer);
@@ -103,18 +105,7 @@ JointPreview.prototype = {
 			$this.removeClass('inactive').addClass('active');
 			$(this.container).append($clone);
 
-			/*var currentCrops = JSON.parse(window.crops);*/
 
-			/*if (associatedCrop) {
-				associatedCrop['pivot'] = {};
-				associatedCrop['pivot']['id'] = $(this).attr('id');
-				associatedCrop['pivot']['originalX'] = parseInt($(this).css('left'));
-				associatedCrop['pivot']['originalY'] = parseInt($(this).css('top'));
-				associatedCrop['pivot']['html'] = $clone[0];
-			}*/
-
-			/*window.crops[cropIndex] = associatedCrop;*/
-			console.log(window.crops);
 			$(selected).removeClass('active');
 			selected = Preview.Selected = null;
 			this.preview = $clone;
