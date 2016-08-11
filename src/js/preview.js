@@ -27,7 +27,7 @@
       this.previewsData[position] = this.$preview.data();
 
       if (this.attachedPreview) {
-        var template = this.attachedPreview.getTemplate(crossOrigin, url);
+        var template = this.attachedPreview.getTemplate(url, crossOrigin);
         this.$preview.html(template);
         this.addPreview(position);
       }
@@ -99,6 +99,17 @@
         var imgMarginLeft = -left * ratio;
         var imgMarginTop = -top * ratio;
 
+        prev.data(DATA_PREVIEW, {
+          width: originalWidth,
+          height: originalHeight,
+          containerWidth: newWidth,
+          containerHeight: newHeight,
+          imgWidth: imgWidth,
+          imgHeight: imgHeight,
+          imgMarginLeft: imgMarginLeft,
+          imgMarginTop: imgMarginTop
+        });
+
         prev.css({
           width: newWidth,
           height: newHeight
@@ -110,14 +121,6 @@
           transform: getTransform(image)
         });
 
-        prev.data(DATA_PREVIEW, {
-          width: newWidth,
-          height: newHeight,
-          imgWidth: imgWidth,
-          imgHeight: imgHeight,
-          imgMarginLeft: imgMarginLeft,
-          imgMarginTop: imgMarginTop
-        });
       }
     },
 

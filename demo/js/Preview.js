@@ -8,8 +8,9 @@ function Preview (options) {
 	this.directions = {};
 	// this.init();
 
-	var tm = this.getTemplate();
-	this.template = $(tm);
+	this.template = null;
+
+	this.url = this.options.url ? this.options.url : '';
 }
 
 Preview.Selected = null;
@@ -22,19 +23,51 @@ Preview.prototype = {
 		this.previews[0] = this.previewContainer[0];
 	},
 
-	addPreview: function (index) {
+	addPreview: function (index, append) {
+		var tm = this.getTemplate(this.url);
+		this.template = $(tm);
+
 		var el = this.template[0];
 		this.attachListener(el);
 		this.previews[index] = el;
 
-		this.addDirection(index);
+		if (append) {
+			this.appendPreview(el);
+		}
+		else {
+			this.addDirection(index);
+		}
+	},
+
+	addSavedPreview: function (key, crop) {
+		var tm = this.getTemplate(this.url);
+		this.template = $(tm);
+
+		var vals = crop.preview.preview;
+		var con = this.getNewTemplateContainer('img-preview');
+
+
+		var el = this.template[0];
+		$(el).css({width: vals.imgWidth, height: vals.imgHeight, marginLeft: vals.imgMarginLeft, marginTop: vals.imgMarginTop});
+		con.append(el);
+		con.css({width: vals.containerWidth, height: vals.containerHeight});
+
+		var dt = $.extend(vals, {'index': key})
+		con.data('preview', dt);
+		this.previews[key] = con;
+		this.attachListener(con[0]);
+		this.appendPreview(con);
+	},
+
+	appendPreview: function (el) {
+		this.container.append(el);
 	},
 
 	addPreviewWithData: function (data) {
-		var canvas = $('<canvas>')[0];
+		/*var canvas = $('<canvas>')[0];
 		canvas.width = data.width;
 		canvas.height = data.height;
-		context = canvas.getContext('2d');
+		context = canvas.getContext('2d');*/
 	},
 
 	addDirection: function (index) {
@@ -56,8 +89,14 @@ Preview.prototype = {
 		return this.directions[index].getCurrentDirections();
 	},
 
-	getTemplate: function (crossOrigin, url) {
-		var template = '<img' + crossOrigin + ' src="' + url + '" style="' +
+	getNewTemplateContainer: function (prev) {
+		var tem = $('<div class="' + prev + ' preview-lg"></div>');
+		return tem;
+	},
+
+	getTemplate: function (url, crossOrigin) {
+		var cr = crossOrigin ? crossOrigin : '';
+		var template = '<img' + cr + ' src="' + url + '" style="' +
 						'display:block;width:100%;height:auto;' +
 						'min-width:0!important;min-height:0!important;' +
 						'max-width:none!important;max-height:none!important;' +

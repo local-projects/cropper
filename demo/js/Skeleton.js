@@ -15,15 +15,8 @@ function Skeleton(options) {
 
 	this.image = Defaults.crops[0];
 
-	this.previews = [];
-
-	if (this.options.crops) {
-		for (var crop in this.options.crops) {
-			var cr = this.options.crops[crop];
-			this.previews.push(cr.preview);
-			console.log(cr.preview.preview);
-		}
-	}
+	// this.previews = [];
+	this.preview = new Preview({'url': this.image});
 
 	this.init();
 }
@@ -35,6 +28,10 @@ Skeleton.prototype = {
 		this._initializeDefaultJoints();
 		this.draw();
 		this.mouseListener();
+
+		if (this.options.crops) {
+			this.initializePreviews();
+		}
 	},
 
 	_initializeJoints: function () {
@@ -52,6 +49,15 @@ Skeleton.prototype = {
 			this.jointPositions.push(pv);
 			var joint = new Joint(pv);
 			this.joints.push(joint);
+		}
+	},
+
+	initializePreviews: function () {
+		for (var crop in this.options.crops) {
+			var cr = this.options.crops[crop];
+			// this.previews.push(cr.preview);
+			console.log(cr.preview.preview);
+			this.preview.addSavedPreview(crop, cr);
 		}
 	},
 

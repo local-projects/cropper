@@ -57,9 +57,10 @@ body {
 }
 
 .docs-preview {
+  margin-top: 40px;
   margin-right: -15px;
   max-height: 600px;
-  overflow: scroll;
+  /*overflow-y: scroll;*/
 }
 
 .img-preview {
