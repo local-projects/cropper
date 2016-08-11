@@ -10,9 +10,12 @@
 		}
 		
 		var xVal = (containerWid - 35) / 2;
-		var yVal = 10;
-		var shoulderPos = 50;
-		var torsoHt = 200;
+		// var yVal = 70;
+		var yVal = (containerHt / 4) / 2; // 1/4th of height divided by half(top and bottom)
+		// var shoulderPos = 120;
+		var shoulderPos = yVal + yVal / 2;
+		var bodyHt = (containerHt / 4) + yVal;
+		var torsoHt = bodyHt + yVal;
 
 		this.pivots = {
 
@@ -132,7 +135,7 @@
 			torso : {
 				x: xVal, 
 				y: yVal, 
-				height: torsoHt, 
+				height: bodyHt, 
 				id: 'torso-body',
 				partOf: 'body'
 			},

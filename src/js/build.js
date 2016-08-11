@@ -219,7 +219,6 @@
       delete this.cropBoxes[closeIndex];
       delete this.$cropBoxes[closeIndex];
       delete this.previews[closeIndex];
-      delete this.previewsData[closeIndex];
       this.deletePreview(closeIndex);
       var keys = Object.keys(this.cropBoxes);
       
@@ -255,7 +254,6 @@
       this.cropBox = null;
       this.cropBoxes = null;
       this.previews = null;
-      this.previewsData = null;
       this.unbind();
 
       this.resetPreview();

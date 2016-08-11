@@ -19,7 +19,7 @@
     this.cropBoxes = {};
     this.cropBoxIndex = 0;
     this.previews = {};
-    this.previewsData = {};
+    this.previewObjs = {};
     this.attachedPreview = options.attachedPreview;
     this.init();
   }

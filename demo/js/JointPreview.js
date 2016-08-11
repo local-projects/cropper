@@ -128,13 +128,23 @@ JointPreview.prototype = {
 		}
 	},
 
+	getIndex: function () {
+		if (this.preview) {
+			return $(this.preview).data().preview.index;
+		}
+		else {
+			return '';
+		}
+	},
+
 	showPreview: function () {
 		if (this.preview) {
 			if ($(this.preview).hasClass('active')) {
 				$(this.preview).removeClass('active');
-				return;
+				return 'inactive';
 			}
 			$(this.preview).addClass('active');
+			return 'active';
 		}
 
 		/*if (this.previews.length > 0) {

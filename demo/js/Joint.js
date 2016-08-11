@@ -26,6 +26,7 @@ Joint.prototype = {
 		// this.$pivot = $('#'+ this.id);
 		this.$pivot = $pivot;
 		this.attachListener();
+		this.showAll();
 	},
 
 	attachListener: function () {
@@ -43,12 +44,65 @@ Joint.prototype = {
 					return;
 				}
 				
+				var indices = [];
 				for (var i = 0; i < self.attachedPreviews.length; i++) {
-					self.attachedPreviews[i].showPreview();
+					var at = self.attachedPreviews[i].showPreview();
+					
+					if (at == 'active') {
+						indices.push(self.attachedPreviews[i].getIndex());
+					}
+					
 				}
+
+				if (indices.length > 0) {
+					self.filterPreviews(indices);
+				}
+				else {
+					self.showAllPreviews();
+				}
+				
 			}
 
 		});
+	},
+
+	filterPreviews: function (indices) {
+		var prs = $('.docs-preview').find('.img-preview');
+		var count = 0;
+		
+		for (var i = 0; i < prs.length; i++) {
+			var pr = prs[i];
+			var currentIndex = $(pr).data().preview.index;
+
+			if ($.inArray(currentIndex, indices) >= 0) {
+				$(pr).show();
+			}
+			else {
+				$(pr).hide();
+				++count;
+			}
+		}
+
+		if (count > 0) {
+			$('.show-all').removeAttr('disabled');
+		}
+	},
+
+	showAll: function () {
+		$('.show-all').on('click', function () {
+			this.showAllPreviews();
+		}.bind(this));
+	},
+
+	showAllPreviews: function () {
+		var prs = $('.docs-preview').find('.img-preview');
+		
+		for (var i = 0; i < prs.length; i++) {
+			var pr = prs[i];
+			$(pr).show();
+		}
+
+		$('.show-all').attr('disabled', 'true');
 	},
 
 	getData: function () {

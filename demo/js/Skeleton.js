@@ -13,11 +13,6 @@ function Skeleton(options) {
 	this.pivots = def.pivots;
 	// this.options = $.extend({}, defaults, $.isPlainObject(options) && options);
 
-	this.image = Defaults.crops[0];
-
-	// this.previews = [];
-	this.preview = new Preview({'url': this.image});
-
 	this.init();
 }
 
@@ -28,10 +23,6 @@ Skeleton.prototype = {
 		this._initializeDefaultJoints();
 		this.draw();
 		this.mouseListener();
-
-		if (this.options.crops) {
-			this.initializePreviews();
-		}
 	},
 
 	_initializeJoints: function () {
@@ -49,15 +40,6 @@ Skeleton.prototype = {
 			this.jointPositions.push(pv);
 			var joint = new Joint(pv);
 			this.joints.push(joint);
-		}
-	},
-
-	initializePreviews: function () {
-		for (var crop in this.options.crops) {
-			var cr = this.options.crops[crop];
-			// this.previews.push(cr.preview);
-			console.log(cr.preview.preview);
-			this.preview.addSavedPreview(crop, cr);
 		}
 	},
 
@@ -174,16 +156,13 @@ Skeleton.prototype = {
 
 		var _ww = window.innerWidth;
 		var _wh = window.innerHeight;
+		_wh = 0.9 * _wh;
 
 		var scaleWd = 1;
 		var scaleHt = 1;
 
-		if (0.66 * _ww < _wd) {
-			var w = _ww / 2;
-			scaleWd = Math.ceil(_wd / w);
-		}
-		
 		scaleHt = Math.ceil(_ht / _wh);
+		scaleWd = scaleHt;
 
 		var _scaledWidth = _wd / scaleWd;
 		var _scaledHeight = _ht / scaleHt;

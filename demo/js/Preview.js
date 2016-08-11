@@ -123,8 +123,6 @@ Preview.prototype = {
 			if ($(this).hasClass('active')) {
 				$(this).removeClass('active');
 				Preview.Selected = null;
-				/*self.showSelectedJoints(true);
-				self.showJointPreviews(true);*/
 				return;
 			}
 
@@ -137,9 +135,11 @@ Preview.prototype = {
 
 			$(this).addClass('active');
 			Preview.Selected = this;
-			/*self.showSelectedJoints();
-			self.showJointPreviews();*/
 		});
+	},
+
+	hidePreview: function (index) {
+		this.previews[index];
 	},
 
 	removePreview: function (index) {

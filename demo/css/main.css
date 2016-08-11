@@ -249,7 +249,13 @@ body {
   position: relative;
   margin-top: 50px;
   margin-bottom: 50px;
-  outline: 5px solid grey;
+  margin-left: auto;
+  margin-right: auto;
+  border: 3px dashed grey;
+}
+
+.container-skeleton {
+  border: 5px solid lightblue;
 }
 
   .left-hand,

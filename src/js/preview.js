@@ -24,8 +24,6 @@
           index: this.cropBoxIndex
         });
 
-      this.previewsData[position] = this.$preview.data();
-
       if (this.attachedPreview) {
         var template = this.attachedPreview.getTemplate(url, crossOrigin);
         this.$preview.html(template);
