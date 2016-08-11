@@ -21,7 +21,7 @@ Joint.prototype = {
 	draw: function () {
 		var $pivot = $('<div>');
 		$pivot.addClass(this.class).attr('id', this.id).css({left: this.x, top: this.y});
-		$pivot.attr('draggable', 'true');
+		/*$pivot.attr('draggable', 'true');*/
 		$(this.container).append($pivot);
 		// this.$pivot = $('#'+ this.id);
 		this.$pivot = $pivot;
@@ -38,6 +38,11 @@ Joint.prototype = {
 				self.attachedPreviews.push(jp);
 			}
 			else {
+
+				if (self.attachedPreviews.length < 1) {
+					return;
+				}
+				
 				for (var i = 0; i < self.attachedPreviews.length; i++) {
 					self.attachedPreviews[i].showPreview();
 				}

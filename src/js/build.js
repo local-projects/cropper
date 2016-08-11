@@ -40,7 +40,7 @@
         $clone.removeClass(CLASS_HIDE);
       }
 
-      this.initPreview();
+      this.initPreview(index);
       this.bind();
 
       options.aspectRatio = max(0, options.aspectRatio) || NaN;
@@ -134,8 +134,7 @@
         $clone.removeClass(CLASS_HIDE);
       }
 
-      /*this.initPreview();*/
-      this.initNewPreview(index);
+      this.initPreview(index);
       this.bind();
 
       /*if (options.cropBoxMovable) {
@@ -220,6 +219,7 @@
       delete this.cropBoxes[closeIndex];
       delete this.$cropBoxes[closeIndex];
       delete this.previews[closeIndex];
+      delete this.previewsData[closeIndex];
       this.deletePreview(closeIndex);
       var keys = Object.keys(this.cropBoxes);
       
@@ -255,6 +255,7 @@
       this.cropBox = null;
       this.cropBoxes = null;
       this.previews = null;
+      this.previewsData = null;
       this.unbind();
 
       this.resetPreview();

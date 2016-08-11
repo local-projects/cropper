@@ -361,6 +361,7 @@
       var canvas = this.canvas;
       var cropBox = this.cropBox;
       var cropBoxes = this.cropBoxes;
+      var previews = this.previews;
       var ratio;
       var allData = {};
       var that = this;
@@ -406,7 +407,14 @@
           data.scaleY = image.scaleY || 1;
         }
 
+        if (that.attachedPreview) {
+          data['direction'] = that.attachedPreview.getDirection(index);
+        }
+
+        data['preview'] = previews[index].data();
+
         allData[index] = data;
+
         /*return data;*/
 
       });

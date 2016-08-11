@@ -1,47 +1,120 @@
-	function Defaults() {
-		var containerWid = 375, containerHt = 500;
-		var xVal = (containerWid - 10) / 2;
+	function Defaults(options) {
+		this.options = options || {};
+		var containerWid = 375; 
+		var containerHt = 500;
+		this.container = null
+		if (this.options.container) {
+			this.container = this.options.container;
+			containerWid = this.container.width;
+			containerHt = this.container.height;
+		}
+		
+		var xVal = (containerWid - 35) / 2;
 		var yVal = 10;
 		var shoulderPos = 50;
 		var torsoHt = 200;
 
 		this.pivots = {
 
-			'torso': {
-				x: xVal - 5,
+			'head': {
+				x: xVal - 2.5,
 				y: yVal - 5,
+				id: 'head',
+				class: 'pivot'
+			},
+
+			'torso' : {
+				x: xVal - 2.5, 
+				y: torsoHt - 5,  
 				id: 'torso',
 				class: 'pivot'
 			},
 
-			'elbow-left': {
-				x: xVal - 67.5,
+			'shoulder-left': {
+				x: xVal - 60,
 				y: shoulderPos + 15,
+				id: 'shoulder-left',
+				class: 'pivot'
+			},
+
+			'shoulder-right': {
+				x: xVal + 55.5,
+				y: shoulderPos + 15,
+				id: 'shoulder-right',
+				class: 'pivot'
+			},
+
+			'elbow-left': {
+				x: xVal - 45 - 47 - 8,
+				y: shoulderPos + 55,
 				id: 'elbow-left',
 				class: 'pivot'
 			},
 
 			'elbow-right': {
-				x: xVal + 57.5,
-				y: shoulderPos + 15,
+				x: xVal + 45 + 47 + 3,
+				y: shoulderPos + 55,
 				id: 'elbow-right',
 				class: 'pivot'
 			},
 
 			'hand-left': {
-				x: xVal - 45 - 47 - 10,
-				y: shoulderPos + 55,
+				x: xVal - 45 - 47 - 25 - 8, 
+				y: shoulderPos + 90, 
 				id: 'hand-left',
-				class: 'pivot'
+				class: 'pivot', 
 			},
 
 			'hand-right': {
-				x: xVal + 45 + 47,
-				y: shoulderPos + 55,
+				x: xVal + 45 + 47 + 25, 
+				y: shoulderPos + 90, 
 				id: 'hand-right',
-				class: 'pivot'
-			}
+				class: 'pivot', 
+			},
 
+			'left-hip': {
+				x: xVal - 24, 
+				y: torsoHt + 8, 
+				id: 'left-hip',
+				class: 'pivot', 
+			},
+
+			'right-hip': {
+				x: xVal + 19, 
+				y: torsoHt + 8, 
+				id: 'right-hip',
+				class: 'pivot', 
+			},
+
+			'left-knee': {
+				x: xVal - 52 - 4, 
+				y: torsoHt + 25 + 105 - 3, 
+				height: 75, 
+				id: 'left-knee',
+				class: 'pivot', 
+			},
+
+			'right-knee': {
+				x: xVal + 52 - 2, 
+				y: torsoHt + 25 + 105 - 3, 
+				id: 'right-knee',
+				class: 'pivot', 
+			},
+
+			'left-foot': {
+				x: xVal - 52 - 5, 
+				y: torsoHt + 25 + 105 + 70 - 3, 
+				height: 25, 
+				id: 'left-foot',
+				class: 'pivot', 
+			},
+
+			'right-foot': {
+				x: xVal + 52, 
+				y: torsoHt + 25 + 105 + 70 - 3, 
+				id: 'right-foot',
+				class: 'pivot', 
+			},
 
 		};
 
@@ -230,7 +303,7 @@
 		/*return {'skeleton': skeletonStructure, 'pivots': pivots};*/
 	};
 
-	function Directions () {
-		var directions = ['North', 'North-East', 'East', 'South-East', 'South', 'South-West', 'West', 'North-Wast'];
-		return directions;
-	}
+
+Defaults.crops = [
+			'../../assets/img/dreyer_605.jpg'
+]

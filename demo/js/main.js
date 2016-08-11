@@ -12,8 +12,8 @@ $(function () {
   var $dataRotate = $('#dataRotate');
   var $dataScaleX = $('#dataScaleX');
   var $dataScaleY = $('#dataScaleY');
-  var directions = Directions();
-  var preview = new Preview({'directions': directions});
+  // var directions = Directions();
+  var preview = new Preview();
   var options = {
         aspectRatio: NaN,
         preview: '.img-preview',
@@ -81,28 +81,18 @@ $(function () {
   }
 
 
+  $('.get-data').on('click', function (event) {
+    event.preventDefault();
+    console.log($image.cropper('getData'));
+  });
+
   $('.next-step').on('click', function (event) {
     var $this = $(this);
-    /*window.crops = JSON.stringify($image.cropper('getData'));
-    console.log(JSON.parse(window.crops));*/
     var crops = $image.cropper('getData');
-    var cr = {'crops': crops}
-    localStorage.setItem('crops', JSON.stringify(cr));
-    console.log(window.crops);
+    var data = {'crops': crops}
+    localStorage.setItem('crops', JSON.stringify(data));
 
-    /*$('.header-title').find('h1').html('Assign to Joint');*/
-    $('.header-title').find('h1').html('');
-    $('.img-container').hide();
-    $('.docs-buttons').hide();
-    $('.docs-toggles').hide();
-    $this.hide();
 
-    $('#svg-container').show();
-    // draw
-    // var sk = new Skeleton();
-    window.sk = new Skeleton();
-
-    event.preventDefault();
   });
 
   $('.get-json').on('click', function (event) {

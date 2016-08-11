@@ -1,12 +1,22 @@
-    initPreview: function () {
+    initPreview: function (position) {
       var crossOrigin = getCrossOrigin(this.crossOrigin);
       var url = crossOrigin ? this.crossOriginUrl : this.url;
       var $clone2;
-
-      this.$preview = $(this.options.preview);
-      this.$clone2 = $clone2 = $('<img' + crossOrigin + ' src="' + url + '">');
-      this.$viewBox.html($clone2);
-      this.previews[this.cropBoxIndex] = this.$preview;
+      
+      if (this.$viewBox.length < 1) {
+        this.$clone2 = $clone2 = $('<img' + crossOrigin + ' src="' + url + '">');
+        this.$viewBox.html($clone2);
+        this.$preview = $(this.options.preview);
+      }
+      else {
+        var prev = this.options.preview.replace('.', '');
+        this.$preview = $('<div class="' + prev + ' preview-lg"></div>')
+        var previewContainer = $(this.options.previewContainer);
+        previewContainer.append(this.$preview);
+      }
+      
+      this.previews[position] = this.$preview;
+      
       this.$preview.data(DATA_PREVIEW, {
           width: this.$preview.width(),
           height: this.$preview.height(),
@@ -14,53 +24,19 @@
           index: this.cropBoxIndex
         });
 
-      this.$preview.html(
-        '<img' + crossOrigin + ' src="' + url + '" style="' +
-        'display:block;width:100%;height:auto;' +
-        'min-width:0!important;min-height:0!important;' +
-        'max-width:none!important;max-height:none!important;' +
-        'image-orientation:0deg!important;">'
-      );
+      this.previewsData[position] = this.$preview.data();
 
       if (this.attachedPreview) {
-        this.addPreview(this.$preview[0]);
+        var template = this.attachedPreview.getTemplate(crossOrigin, url);
+        this.$preview.html(template);
+        this.addPreview(position);
       }
       
     },
 
-    initNewPreview: function (position) {
-      var crossOrigin = getCrossOrigin(this.crossOrigin);
-      var url = crossOrigin ? this.crossOriginUrl : this.url;
-      var previewContainer = $(this.options.previewContainer);
-      var prev = this.options.preview.replace('.', '');
-      this.$preview = $('<div class="' + prev + ' preview-lg"></div>')
-      previewContainer.append(this.$preview);
-      this.previews[position] = this.$preview;
-
-      this.$preview.data(DATA_PREVIEW, {
-          width: this.$preview.width(),
-          height: this.$preview.height(),
-          html: this.$preview.html(),
-          index: position
-        });
-
-      this.$preview.html(
-        '<img' + crossOrigin + ' src="' + url + '" style="' +
-        'display:block;width:100%;height:auto;' +
-        'min-width:0!important;min-height:0!important;' +
-        'max-width:none!important;max-height:none!important;' +
-        'image-orientation:0deg!important;">'
-      );
-
-      if (this.attachedPreview) {
-        this.addPreview(this.$preview[0]);
-      }
-      
-    },
-
-    addPreview: function (el) {
-      this.attachedPreview.addPreview(el);
-      this.attachedPreview.addDirectionTemplate();
+    addPreview: function (index) {
+      this.attachedPreview.addPreview(index);
+      // this.attachedPreview.addDirectionTemplate();
     },
 
     resetPreview: function () {
@@ -118,24 +94,40 @@
           newHeight = originalHeight;
         }
 
+        var imgWidth = width * ratio;
+        var imgHeight = height * ratio;
+        var imgMarginLeft = -left * ratio;
+        var imgMarginTop = -top * ratio;
+
         prev.css({
           width: newWidth,
           height: newHeight
         }).find('img').css({
-          width: width * ratio,
-          height: height * ratio,
-          marginLeft: -left * ratio,
-          marginTop: -top * ratio,
+          width: imgWidth,
+          height: imgHeight,
+          marginLeft: imgMarginLeft,
+          marginTop: imgMarginTop,
           transform: getTransform(image)
+        });
+
+        prev.data(DATA_PREVIEW, {
+          width: newWidth,
+          height: newHeight,
+          imgWidth: imgWidth,
+          imgHeight: imgHeight,
+          imgMarginLeft: imgMarginLeft,
+          imgMarginTop: imgMarginTop
         });
       }
     },
 
     deletePreview: function (closeIndex) {
+      var self = this;
       var prevs = $(this.options.preview)
       $.each(prevs, function (index, prev) {
         if (closeIndex === $(prev).data('preview')['index']) {
           $(prev).remove();
+          self.attachedPreview.removePreview(closeIndex);
         }
       });
     },

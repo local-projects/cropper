@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cropper</title>
+  <link rel="stylesheet" href="../../assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../css/main.css">
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <!--[if lt IE 8]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
+
+  <!-- Content -->
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8">
+        <!-- <h3 class="page-header">Demo:</h3> -->
+        <!-- <div class="img-container">
+          <img id="image" src="https://unsplash.it/800/600" alt="Picture">
+        </div> -->
+        <!-- <img id="image" src="https://unsplash.it/800/600/?random" alt="Picture"> -->
+
+        <div id="svg-container"></div>
+        <div id="error-msg"></div>
+
+        <button type="button" class="btn btn-primary hide-preview" data-method="">
+          <span class="docs-tooltip" data-toggle="tooltip" title="">
+            Hide Preview
+          </span>
+        </button>
+
+        <button type="button" class="btn btn-primary get-json" data-method="getData" data-option data-target="#putJson">
+          <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;getData&quot;)">
+            Get JSON
+          </span>
+        </button>
+
+        <input type="text" class="form-control" id="putJson" placeholder="Get data to here or set data with this value">
+
+      </div>
+      
+      <div class="col-md-4">
+        <!-- <h3 class="page-header">Preview:</h3> -->
+        <div class="docs-preview clearfix">
+
+          <div class="img-preview preview-lg" draggable="true"></div>
+          <!-- <div class="img-preview preview-md"></div>
+          <div class="img-preview preview-sm"></div>
+          <div class="img-preview preview-xs"></div> -->
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../../assets/js/jquery.min.js"></script>
+  <script src="../../assets/js/bootstrap.min.js"></script>
+  <script src="../../assets/js/d3-selection.min.js"></script>
+  <script src="../../assets/js/d3-path.min.js"></script>
+  <script src="../../assets/js/d3-shape.min.js"></script>
+  <!-- <script src="js/Joints.js"></script> -->
+  <script src="../js/Defaults.js"></script>
+  <script src="../js/Directions.js"></script>
+  <script src="../js/JointPreview.js"></script>
+  <script src="../js/Preview.js"></script>
+  <script src="../js/Joint.js"></script>
+  <script src="../js/Skeleton.js"></script>
+  <script src="../js/init.js"></script>
+</body>
+</html>

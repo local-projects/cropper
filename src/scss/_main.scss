@@ -7,6 +7,7 @@
   line-height: 0;
   direction: ltr !important; // Ignore global rtl
   user-select: none;
+  border: 3px solid lightblue;
 
   img {
     // Avoid margin top issue (Occur only when margin-top <= -height)
@@ -54,7 +55,6 @@
 
 .cropper-modal {
   background-color: #000;
-  @include opacity(.5);
 }
 
 .cropper-view-box {

@@ -3,12 +3,28 @@ function Skeleton(options) {
 	this.jointPositions = this.options.joints || [];
 	this.joints = [];
 	this.container = this.options.container || '#svg-container';
-	var def = new Defaults();
+	this.config = this.options.config;
+
+	this.scaleContainer();
+
+	var def = new Defaults(this.config);
+	
 	this.skeleton = def.skeleton;
 	this.pivots = def.pivots;
-	this.devicePixelRatio = window.devicePixelRatio || 1;
 	// this.options = $.extend({}, defaults, $.isPlainObject(options) && options);
-	
+
+	this.image = Defaults.crops[0];
+
+	this.previews = [];
+
+	if (this.options.crops) {
+		for (var crop in this.options.crops) {
+			var cr = this.options.crops[crop];
+			this.previews.push(cr.preview);
+			console.log(cr.preview.preview);
+		}
+	}
+
 	this.init();
 }
 
@@ -145,6 +161,38 @@ Skeleton.prototype = {
 		return gd;
 	},
 
+	scaleContainer: function () {
+
+		var _wd = this.config.container.width;
+		var _ht = this.config.container.height;
+
+		var _ww = window.innerWidth;
+		var _wh = window.innerHeight;
+
+		var scaleWd = 1;
+		var scaleHt = 1;
+
+		if (0.66 * _ww < _wd) {
+			var w = _ww / 2;
+			scaleWd = Math.ceil(_wd / w);
+		}
+		
+		scaleHt = Math.ceil(_ht / _wh);
+
+		var _scaledWidth = _wd / scaleWd;
+		var _scaledHeight = _ht / scaleHt;
+
+		var def = null;
+
+		this.config.container.width = _scaledWidth;
+		this.config.container.height = _scaledHeight;
+
+		$(this.container).css({
+			'width': _scaledWidth,
+			'height': _scaledHeight
+		});
+	},
+
 	mouseListener: function () {
 		var self = this;
 		$(this.container).on('mousemove', function (event) {
@@ -168,23 +216,6 @@ Skeleton.prototype = {
 
 				$joint.css({left: x, top: y});
 
-				/*var associatedData = $joint.data().preview.index;
-				var associatedCrop = window.crops[associatedData];
-				if (associatedCrop) {
-					var originalX = associatedCrop['pivot']['originalX'];
-					var originalY = associatedCrop['pivot']['originalY'];
-					var dragX = event.pageX, dragY = event.pageY;
-					var newX = originalX - dragX;
-					var newY = originalY - dragY;
-					$joint.css({left: event.pageX, top: event.pageY});
-					associatedCrop['pivot']['offsetX'] = newX;
-					associatedCrop['pivot']['offsetY'] = newY;
-					window.crops[associatedData] = associatedCrop;
-				}
-
-				else {
-					$joint.data() = {};
-				}*/
 			}
 		});
 
@@ -192,7 +223,6 @@ Skeleton.prototype = {
 			if (JointPreview.Selected) {
 				JointPreview.Selected = null;
 			}
-			// console.log(window.crops);
 		});
 	},
 }

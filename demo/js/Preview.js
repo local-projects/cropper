@@ -1,10 +1,15 @@
 function Preview (options) {
 	this.options = options || {};
-	this.previews = [];
+	this.previews = {};
 	this.container = this.options.container || $('.docs-preview');
 	this.previewContainer = this.options.previewContainer || $('.img-preview');
-	this.directions = options.directions;
+	
+	this.direction = null;
+	this.directions = {};
 	// this.init();
+
+	var tm = this.getTemplate();
+	this.template = $(tm);
 }
 
 Preview.Selected = null;
@@ -14,57 +19,50 @@ Preview.prototype = {
 
 	init: function () {
 		this.attachListener();
-		this.previews.push(this.previewContainer[0]);
+		this.previews[0] = this.previewContainer[0];
 	},
 
-	addPreview: function (newPreview) {
-		this.attachListener(newPreview);
-		this.previews.push(newPreview);
+	addPreview: function (index) {
+		var el = this.template[0];
+		this.attachListener(el);
+		this.previews[index] = el;
+
+		this.addDirection(index);
+	},
+
+	addPreviewWithData: function (data) {
+		var canvas = $('<canvas>')[0];
+		canvas.width = data.width;
+		canvas.height = data.height;
+		context = canvas.getContext('2d');
+	},
+
+	addDirection: function (index) {
+		this.direction = new Directions();
+		this.directions[index] = this.direction;
+		this.addDirectionTemplate();
 	},
 
 	addDirectionTemplate: function () {
-
-		var list = '';
-
-		for (var i = 0; i < this.directions.length; i++) {
-			var direction = this.directions[i];
-
-			list += "<li><a href='#'>"+direction+"</a></li>";
-		}
-
-		var dropdownContainer = $("<div class='dropdown-container'></div>");
-		var dir	= $("<div class='dropdown'>" +
-						"<button class='btn btn-default dropdown-toggle' type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'>" +
-						"Direction" +
-						"<span class='caret'></span>" +
-						"</button>" +
-						"<ul class='dropdown-menu' aria-labelledby='dropdownMenu1'>" +
-						list +
-						"</ul>" +
-					"</div>")
-
-		dropdownContainer.append(dir);
-		this.container.append(dropdownContainer);
-		this.addDirectionListener();
-
-	},
-	
-	addDirectionListener: function () {
-		var self = this;
-		var dm = $('.dropdown-menu a');
-		dm.on('click', function (event) {
-			event.preventDefault();
-			var dir = $(event.currentTarget).text();
-			var button = $(this).parent().parent().parent().find('button');
-			var buttonChildren = button.children();
-			button.text(dir);
-			button.append(buttonChildren);
-			self.directions.push(dir);
-		});
+		var template = this.direction.getTemplate();
+		this.container.append(template);
 	},
 
 	setPreviewContainer: function () {
 		this.previewContainer = this.options.previewContainer || $('.img-preview');
+	},
+
+	getDirection: function (index) {
+		return this.directions[index].getCurrentDirections();
+	},
+
+	getTemplate: function (crossOrigin, url) {
+		var template = '<img' + crossOrigin + ' src="' + url + '" style="' +
+						'display:block;width:100%;height:auto;' +
+						'min-width:0!important;min-height:0!important;' +
+						'max-width:none!important;max-height:none!important;' +
+						'image-orientation:0deg!important;">'
+		return template;
 	},
 
 	attachListener: function (initEl) {
@@ -82,7 +80,6 @@ Preview.prototype = {
 
 			self.setPreviewContainer();
 			var pc = self.container.find(self.previewContainer);
-			/*self.previewContainer = $('.img-preview');*/
 
 			if ($(this).hasClass('active')) {
 				$(this).removeClass('active');
@@ -105,4 +102,10 @@ Preview.prototype = {
 			self.showJointPreviews();*/
 		});
 	},
+
+	removePreview: function (index) {
+		delete this.previews[index];
+		this.directions[index].remove();
+		delete this.directions[index];
+	}
 }
