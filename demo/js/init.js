@@ -8,6 +8,8 @@ function init (options) {
 	this.image = Defaults.crops[0];
 	this.combinedProps = null;
 
+	this.sk = null;
+
 	var self = this;
 	
 	$.getJSON('/demo/js/config.json', function(json) {
@@ -20,7 +22,8 @@ function init (options) {
 			if (self.combinedProps.crops) {
 				self.renderPreviews();
 			}
-			var sk = new Skeleton(self.combinedProps);
+			self.sk = new Skeleton(self.combinedProps);
+			self.getData();
 		})
 		.error(function(req) {
 			console.error(req);
@@ -32,6 +35,15 @@ function init (options) {
 			console.log(cr.preview.preview);
 			this.preview.addSavedPreview(crop, cr);
 		}
+	}
+
+	this.getData = function () {
+		var self = this;
+		$('.save-json').on('click', function () {
+			var data = self.sk.getData();
+			console.log(data);
+		});
+		
 	}
 
 
