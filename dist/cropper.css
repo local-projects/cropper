@@ -5,7 +5,7 @@
  * Copyright (c) 2014-2016 Fengyuan Chen and contributors
  * Released under the MIT license
  *
- * Date: 2016-07-21T14:27:47.607Z
+ * Date: 2016-08-12T19:34:35.579Z
  */
 .cropper-container {
   font-size: 0;
@@ -17,6 +17,8 @@
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+
+  border: 3px solid lightblue;
 
   direction: ltr !important;
 }
@@ -66,10 +68,7 @@
 }
 
 .cropper-modal {
-  opacity: .5;
   background-color: #000;
-
-  filter: alpha(opacity=50);
 }
 
 .cropper-view-box {
