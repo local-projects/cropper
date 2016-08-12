@@ -167,13 +167,12 @@ Preview.prototype = {
 
 		if (theId !== '') {
 			var imgs = $('#svg-container').find('.img-preview');
-			for (var j = 0; j < imgs.length; j++) {
-				var img = imgs[i];
+			$.each(imgs, function (index, img){
 				var dt = $(img).data();
 				if (dt.preview.index == theId) {
 					$(img).addClass('active');
 				}
-			}
+			});
 		}
 		
 
