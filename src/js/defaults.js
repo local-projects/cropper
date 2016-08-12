@@ -40,7 +40,7 @@
     highlight: true,
 
     // Show the grid background
-    background: true,
+    background: false,
 
     // Enable to crop the image automatically when initialize
     autoCrop: true,
