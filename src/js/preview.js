@@ -37,6 +37,17 @@
       // this.attachedPreview.addDirectionTemplate();
     },
 
+    deletePreview: function (closeIndex) {
+      var self = this;
+      var prevs = $(this.options.preview)
+      $.each(prevs, function (index, prev) {
+        if (closeIndex === $(prev).data('preview')['index']) {
+          $(prev).remove();
+          self.attachedPreview.removePreview(closeIndex);
+        }
+      });
+    },
+
     resetPreview: function () {
       this.$preview.each(function () {
         var $this = $(this);
@@ -105,7 +116,8 @@
           imgWidth: imgWidth,
           imgHeight: imgHeight,
           imgMarginLeft: imgMarginLeft,
-          imgMarginTop: imgMarginTop
+          imgMarginTop: imgMarginTop,
+          index: this.cropBoxIndex
         });
 
         prev.css({
@@ -120,15 +132,4 @@
         });
 
       }
-    },
-
-    deletePreview: function (closeIndex) {
-      var self = this;
-      var prevs = $(this.options.preview)
-      $.each(prevs, function (index, prev) {
-        if (closeIndex === $(prev).data('preview')['index']) {
-          $(prev).remove();
-          self.attachedPreview.removePreview(closeIndex);
-        }
-      });
     },
