@@ -9,6 +9,8 @@ function init (options) {
 	this.combinedProps = null;
 
 	this.sk = null;
+	Defaults.writeData = new Event('writeData');
+	this.container = null;
 
 	var self = this;
 	
@@ -23,7 +25,11 @@ function init (options) {
 				self.renderPreviews();
 			}
 			self.sk = new Skeleton(self.combinedProps);
+			self.container = self.sk.getContainer();
+			Defaults.container = self.container;
 			self.getData();
+			self.saveData();
+			self.attachListener();
 		})
 		.error(function(req) {
 			console.error(req);
@@ -38,12 +44,26 @@ function init (options) {
 	}
 
 	this.getData = function () {
+		var data = self.sk.getData();
+		console.log(data);
+	}
+
+	this.saveData = function () {
 		var self = this;
 		$('.save-json').on('click', function () {
 			var data = self.sk.getData();
 			console.log(data);
 		});
-		
+	}
+
+	this.attachListener = function () {
+		var self = this;
+		if (this.container) {
+			$(this.container)[0].addEventListener('writeData', function () {
+				var data = self.sk.getData();
+				console.log(data);
+			});
+		}
 	}
 
 

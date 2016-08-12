@@ -2,8 +2,8 @@ function Skeleton(options) {
 	this.options = options || {};
 	this.jointPositions = this.options.joints || [];
 	this.joints = [];
-	this.container = this.options.container || '#svg-container';
 	this.config = this.options.config;
+	this.container = this.config.skeletonContainer || '#svg-container';
 
 	this.scaleContainer();
 
@@ -37,7 +37,7 @@ Skeleton.prototype = {
 		for (var pivot in this.pivots) {
 			var pv = this.pivots[pivot];
 			pv['container'] = this.container;
-			this.jointPositions.push(pv);
+			// this.jointPositions.push(pv);
 			var joint = new Joint(pv);
 			this.joints.push(joint);
 		}
@@ -144,9 +144,13 @@ Skeleton.prototype = {
 			cr = {};
 		}
 
-		var gd = $.extend({}, cr, data);
+		var gd = $.extend({}, cr, data, this.config);
 		localStorage.setItem('crops', JSON.stringify(gd));
 		return gd;
+	},
+
+	getContainer: function () {
+		return this.container;
 	},
 
 	scaleContainer: function () {

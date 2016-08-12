@@ -28,7 +28,7 @@ Preview.prototype = {
 		this.template = $(tm);
 
 		var el = this.template[0];
-		this.attachListener(el);
+		// this.attachListener(el);
 		this.previews[index] = el;
 
 		if (append) {
@@ -116,6 +116,7 @@ Preview.prototype = {
 
 		el.addEventListener('click', function (event) {
 			event.preventDefault();
+			$(Defaults.container)[0].dispatchEvent(Defaults.writeData);
 
 			self.setPreviewContainer();
 			var pc = self.container.find(self.previewContainer);
@@ -134,8 +135,48 @@ Preview.prototype = {
 			}*/
 
 			$(this).addClass('active');
+			self.showRelevantJointPreview($(this).data().preview.index);
 			Preview.Selected = this;
 		});
+	},
+
+	showRelevantJointPreview: function (index) {
+		var data = JSON.parse(localStorage.getItem('crops'));
+		var joints = data.joints;
+		var theId = '';
+		var foundJoint = false;
+
+		for (var joint in joints) {
+			if (joints[joint].previews.length > 0) {
+				var previews = joints[joint].previews;
+
+				for (var i = 0; i < previews.length; i++) {
+					var id = previews[i].id;
+					if (index == id) {
+						theId = id;
+						foundJoint = true;
+						break;
+					}
+				}
+
+				if (foundJoint) {
+					break;
+				}
+			}
+		}
+
+		if (theId !== '') {
+			var imgs = $('#svg-container').find('.img-preview');
+			for (var j = 0; j < imgs.length; j++) {
+				var img = imgs[i];
+				var dt = $(img).data();
+				if (dt.preview.index == theId) {
+					$(img).addClass('active');
+				}
+			}
+		}
+		
+
 	},
 
 	hidePreview: function (index) {
