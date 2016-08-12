@@ -156,7 +156,7 @@ Skeleton.prototype = {
 
 		var _ww = window.innerWidth;
 		var _wh = window.innerHeight;
-		_wh = 0.9 * _wh;
+		_wh = 0.85 * _wh;
 
 		var scaleWd = 1;
 		var scaleHt = 1;
