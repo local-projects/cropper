@@ -1,4 +1,4 @@
-function Joint (options) {
+PortraitMachine.Joint = function (options) {
 	this.options = options || {};
 	this.x = this.options.x;
 	this.y = this.options.y;
@@ -11,8 +11,8 @@ function Joint (options) {
 	this.attachedPreviews = [];
 }
 
-Joint.prototype = {
-	constructor: Joint,
+PortraitMachine.Joint.prototype = {
+	constructor: PortraitMachine.Joint,
 
 	init: function () {
 
@@ -33,8 +33,9 @@ Joint.prototype = {
 		var self = this;
 		this.$pivot.on('click', function (event) {
 			event.preventDefault();
-			if (Preview.Selected) {
-				var jp = new JointPreview({'pivot': self.$pivot});
+			if (PortraitMachine.Preview.Selected) {
+				var dt = $(PortraitMachine.Preview.Selected).data();
+				var jp = new PortraitMachine.JointPreview({'pivot': self.$pivot});
 				self.removePreview(jp, self.attachedPreviews.length);
 				self.attachedPreviews.push(jp);
 			}

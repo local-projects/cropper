@@ -1,7 +1,7 @@
-function Directions (options) {
+PortraitMachine.Directions = function (options) {
 	this.options = options || {};
 	var defaultDirections = this.options.directions || 
-						Directions.defaultDirections;
+						PortraitMachine.Directions.defaultDirections;
 
 	this.defaultDirections = defaultDirections;
 	this.currentDirections = [];
@@ -9,8 +9,8 @@ function Directions (options) {
 	this.init();
 }
 
-Directions.prototype = {
-	constructor: Directions,
+PortraitMachine.Directions.prototype = {
+	constructor: PortraitMachine.Directions,
 
 	init: function () {
 		this.container = this.getDirectionTemplate();
@@ -82,7 +82,7 @@ Directions.prototype = {
 	}
 }
 
-Directions.defaultDirections = 
+PortraitMachine.Directions.defaultDirections = 
 		[
 			'None',
 			'North', 

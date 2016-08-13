@@ -1,4 +1,4 @@
-function Skeleton(options) {
+PortraitMachine.Skeleton = function(options) {
 	this.options = options || {};
 	this.jointPositions = this.options.joints || [];
 	this.joints = [];
@@ -7,7 +7,7 @@ function Skeleton(options) {
 
 	this.scaleContainer();
 
-	var def = new Defaults(this.config);
+	var def = new PortraitMachine.Defaults(this.config);
 	
 	this.skeleton = def.skeleton;
 	this.pivots = def.pivots;
@@ -16,8 +16,8 @@ function Skeleton(options) {
 	this.init();
 }
 
-Skeleton.prototype = {
-	constructor: Skeleton,
+PortraitMachine.Skeleton.prototype = {
+	constructor: PortraitMachine.Skeleton,
 
 	init: function () {
 		this._initializeDefaultJoints();
@@ -28,7 +28,7 @@ Skeleton.prototype = {
 	_initializeJoints: function () {
 		var jnts = this.jointPositions;
 		for (var i = 0; i < jnts.length; i++) {
-			var joint = new Joint(this.jointPositions[i]);
+			var joint = new PortraitMachine.Joint(this.jointPositions[i]);
 			this.joints.push(joint);
 		}
 	},
@@ -38,7 +38,7 @@ Skeleton.prototype = {
 			var pv = this.pivots[pivot];
 			pv['container'] = this.container;
 			// this.jointPositions.push(pv);
-			var joint = new Joint(pv);
+			var joint = new PortraitMachine.Joint(pv);
 			this.joints.push(joint);
 		}
 	},
@@ -91,7 +91,7 @@ Skeleton.prototype = {
 		/*this._initializeJoints();*/
 
 		for (var i = 0; i < newJointPositions.length; i++) {
-			var joint = new Joint(newJointPositions[i]);
+			var joint = new PortraitMachine.Joint(newJointPositions[i]);
 			this.joints.push(joint);
 		}
 
@@ -186,7 +186,7 @@ Skeleton.prototype = {
 		var self = this;
 		$(this.container).on('mousemove', function (event) {
 			event.preventDefault();
-			var selectedJointPreview = JointPreview.Selected;
+			var selectedJointPreview = PortraitMachine.JointPreview.Selected;
 			if (selectedJointPreview) {
 				var $joint = $(selectedJointPreview);
 				
@@ -209,8 +209,8 @@ Skeleton.prototype = {
 		});
 
 		$(this.container).on('mouseup', function (event) {
-			if (JointPreview.Selected) {
-				JointPreview.Selected = null;
+			if (PortraitMachine.JointPreview.Selected) {
+				PortraitMachine.JointPreview.Selected = null;
 			}
 		});
 	},

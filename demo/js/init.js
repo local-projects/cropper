@@ -1,15 +1,16 @@
-function init (options) {
+PortraitMachine.Init = function (options) {
 	var optns = options || {};
 
 	var crops = localStorage.getItem('crops');
 	var data = JSON.parse(crops);
-	this.preview = new Preview({'url': this.image});
+	// this.preview = new PortraitMachine.Preview({'url': this.image});
+	this.preview = null;
 
-	this.image = Defaults.crops[0];
+	this.image = PortraitMachine.Defaults.crops[0];
 	this.combinedProps = null;
 
 	this.sk = null;
-	Defaults.writeData = new Event('writeData');
+	PortraitMachine.Defaults.writeData = new Event('writeData');
 	this.container = null;
 
 	var self = this;
@@ -19,23 +20,23 @@ function init (options) {
 			self.combinedProps = $.extend(json, optns, data);
 			console.log('combinedProps', self.combinedProps);
 
-			self.preview = new Preview({'url': self.image});
+			self.preview = new PortraitMachine.Preview({'url': self.image});
 
 			if (self.combinedProps.crops) {
-				self.renderPreviews();
+				self._renderPreviews();
 			}
-			self.sk = new Skeleton(self.combinedProps);
+			self.sk = new PortraitMachine.Skeleton(self.combinedProps);
 			self.container = self.sk.getContainer();
-			Defaults.container = self.container;
-			self.getData();
-			self.saveData();
-			self.attachListener();
+			PortraitMachine.Defaults.container = self.container;
+			self._getData();
+			self._saveData();
+			self._attachListener();
 		})
 		.error(function(req) {
 			console.error(req);
 		});
 
-	this.renderPreviews = function () {
+	this._renderPreviews = function () {
 		for (var crop in this.combinedProps.crops) {
 			var cr = this.combinedProps.crops[crop];
 			console.log(cr.preview.preview);
@@ -43,12 +44,12 @@ function init (options) {
 		}
 	}
 
-	this.getData = function () {
+	this._getData = function () {
 		var data = self.sk.getData();
 		console.log(data);
 	}
 
-	this.saveData = function () {
+	this._saveData = function () {
 		var self = this;
 		$('.save-json').on('click', function () {
 			var data = self.sk.getData();
@@ -56,7 +57,7 @@ function init (options) {
 		});
 	}
 
-	this.attachListener = function () {
+	this._attachListener = function () {
 		var self = this;
 		if (this.container) {
 			$(this.container)[0].addEventListener('writeData', function () {
@@ -79,6 +80,7 @@ function init (options) {
       },
 
     });*/
+
 }
 
-init();
+PortraitMachine.Init();

@@ -1,4 +1,4 @@
-function JointPreview (options) {
+PortraitMachine.JointPreview = function (options) {
 	this.options = options || {};
 	this.container = this.options.container || '#svg-container';
 	this.pivot = this.options.pivot || '.pivot';
@@ -15,10 +15,10 @@ function JointPreview (options) {
 	this.init();
 }
 
-JointPreview.Selected = null;
+PortraitMachine.JointPreview.Selected = null;
 
-JointPreview.prototype = {
-	constructor: JointPreview,
+PortraitMachine.JointPreview.prototype = {
+	constructor: PortraitMachine.JointPreview,
 
 	init: function () {
 		this.updateJoint();
@@ -43,7 +43,7 @@ JointPreview.prototype = {
 	updateJoint: function () {
 		var pivotSize = 20;
 
-		var selected = Preview.Selected;
+		var selected = PortraitMachine.Preview.Selected;
 
 		if (selected) {
 			var $selected = $(selected);
@@ -109,7 +109,7 @@ JointPreview.prototype = {
 
 
 			$selected.removeClass('active');
-			selected = Preview.Selected = null;
+			selected = PortraitMachine.Preview.Selected = null;
 			this.preview = $clone;
 			this.offsetListener();
 			this.previews.push($clone);
@@ -123,7 +123,7 @@ JointPreview.prototype = {
 		if (this.preview) {
 			this.preview.on('mousedown', function (event) {
 				event.preventDefault();
-				JointPreview.Selected = this;
+				PortraitMachine.JointPreview.Selected = this;
 			});
 		}
 	},

@@ -12,8 +12,7 @@ $(function () {
   var $dataRotate = $('#dataRotate');
   var $dataScaleX = $('#dataScaleX');
   var $dataScaleY = $('#dataScaleY');
-  // var directions = Directions();
-  var preview = new Preview();
+  var preview = new PortraitMachine.Preview();
   var options = {
         aspectRatio: NaN,
         preview: '.img-preview',

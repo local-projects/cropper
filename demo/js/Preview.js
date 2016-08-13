@@ -1,4 +1,4 @@
-function Preview (options) {
+PortraitMachine.Preview = function (options) {
 	this.options = options || {};
 	this.previews = {};
 	this.container = this.options.container || $('.docs-preview');
@@ -13,10 +13,10 @@ function Preview (options) {
 	this.url = this.options.url ? this.options.url : '';
 }
 
-Preview.Selected = null;
+PortraitMachine.Preview.Selected = null;
 
-Preview.prototype = {
-	constructor: Preview,
+PortraitMachine.Preview.prototype = {
+	constructor: PortraitMachine.Preview,
 
 	init: function () {
 		this.attachListener();
@@ -71,7 +71,7 @@ Preview.prototype = {
 	},
 
 	addDirection: function (index) {
-		this.direction = new Directions();
+		this.direction = new PortraitMachine.Directions();
 		this.directions[index] = this.direction;
 		this.addDirectionTemplate();
 	},
@@ -116,14 +116,14 @@ Preview.prototype = {
 
 		el.addEventListener('click', function (event) {
 			event.preventDefault();
-			$(Defaults.container)[0].dispatchEvent(Defaults.writeData);
+			$(PortraitMachine.Defaults.container)[0].dispatchEvent(PortraitMachine.Defaults.writeData);
 
 			self.setPreviewContainer();
 			var pc = self.container.find(self.previewContainer);
 
 			if ($(this).hasClass('active')) {
 				$(this).removeClass('active');
-				Preview.Selected = null;
+				PortraitMachine.Preview.Selected = null;
 				return;
 			}
 
@@ -136,7 +136,7 @@ Preview.prototype = {
 
 			$(this).addClass('active');
 			self.showRelevantJointPreview($(this).data().preview.index);
-			Preview.Selected = this;
+			PortraitMachine.Preview.Selected = this;
 		});
 	},
 

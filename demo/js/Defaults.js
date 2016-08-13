@@ -1,4 +1,4 @@
-	function Defaults(options) {
+	PortraitMachine.Defaults = function (options) {
 		this.options = options || {};
 		var containerWid = 375; 
 		var containerHt = 500;
@@ -307,6 +307,6 @@
 	};
 
 
-Defaults.crops = [
+PortraitMachine.Defaults.crops = [
 			'../../assets/img/dreyer_605.jpg'
 ]
