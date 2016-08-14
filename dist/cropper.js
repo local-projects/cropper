@@ -5,7 +5,7 @@
  * Copyright (c) 2014-2016 Fengyuan Chen and contributors
  * Released under the MIT license
  *
- * Date: 2016-08-12T19:34:35.579Z
+ * Date: 2016-08-14T19:00:08.845Z
  */
 
 (function (factory) {
@@ -722,6 +722,7 @@
       // Create cropper elements
       this.$container = $this.parent();
       this.$cropBoxes = {};
+
       /*this.$cropper = $cropper = $(Cropper.ORIGINAL_TEMPLATE);*/
       this.$cropper = $cropper = $(Cropper.TEMPLATE);
       this.$canvas = $cropper.find('.cropper-canvas').append($clone);
@@ -789,7 +790,7 @@
       this.setDragMode(options.dragMode);
       this.render();
       this.isBuilt = true;
-      this.setData(options.data);
+      // this.setData(options.data);
       $this.one(EVENT_BUILT, options.built);
 
       // Trigger the built event asynchronously to keep `data('cropper')` is defined
@@ -798,6 +799,11 @@
         this.trigger(EVENT_CROP, this.getData());
         this.isCompleted = true;
       }, this), 0);
+
+      if (options.data && Object.keys(options.data).length > 0) {
+        this.setNewData(options.data);
+        this.closeCrop(index);
+      }
     },
 
     buildNewCrop: function(cropOptions, newIndex) {
@@ -830,14 +836,12 @@
       // Hide the original image
       $cropper.append($cropBox);
 
-      this.closeCrop();
-
       // Show the clone image if is hidden
       if (!this.isImg) {
         $clone.removeClass(CLASS_HIDE);
       }
 
-      this.initPreview(index);
+      this.initPreview(index, cropOptions.direction);
       this.bind();
 
       /*if (options.cropBoxMovable) {
@@ -884,6 +888,7 @@
 
       this.setDragMode(options.dragMode);
       this.render(cropOptions);
+      this.closeCrop();
       /*$this.one(EVENT_BUILT, options.built);*/
 
       // Trigger the built event asynchronously to keep `data('cropper')` is defined
@@ -910,8 +915,8 @@
       else {
         var that = this;
         $('.close-icon').click(function(event) {
-          var closeIndex = $(this).parent().data('index');
-          that.close.call(that, closeIndex);
+          // var closeIndex = $(this).parent().data('index');
+          that.close.call(that, indexToClose);
           $(this).parent().remove();
           event.preventDefault();
         });
@@ -931,7 +936,7 @@
           this.cropBoxIndex = keys[0];
         }
         else {
-          this.cropBoxIndex = null;
+          this.cropBoxIndex = 0;
           this.cropBox = null;
           this.$cropBox = null;
         }
@@ -1526,7 +1531,7 @@
       }
     },
 
-    initPreview: function (position) {
+    initPreview: function (position, direction) {
       var crossOrigin = getCrossOrigin(this.crossOrigin);
       var url = crossOrigin ? this.crossOriginUrl : this.url;
       var $clone2;
@@ -1557,13 +1562,13 @@
       if (this.attachedPreview) {
         var template = this.attachedPreview.getTemplate(url, crossOrigin);
         this.$preview.html(template);
-        this.addPreview(position);
+        this.addPreview(position, direction);
       }
       
     },
 
-    addPreview: function (index) {
-      this.attachedPreview.addPreview(index);
+    addPreview: function (index, direction) {
+      this.attachedPreview.addPreview(index, direction);
       // this.attachedPreview.addDirectionTemplate();
     },
 
@@ -2780,6 +2785,8 @@
             y: value.top - canvas.top,
             width: value.width,
             height: value.height,
+            minWidth: value.minWidth,
+            minHeight: value.minHeight
           };
 
           ratio = image.width / image.naturalWidth;
@@ -2966,6 +2973,14 @@
           if (index in that.cropBoxes) {
             that.closeCrop(index);
           }
+
+          if (data.direction.length > 0) {
+            cropBoxData.direction = data.direction;
+          }
+          else {
+            cropBoxData.direction =[];
+          }
+
           cropBoxesData[index] = cropBoxData;
           that.buildNewCrop(cropBoxData, index);
           /*data.left = data.x;
@@ -3091,6 +3106,7 @@
      */
     setCropBoxData: function (data) {
       /*var cropBox = this.cropBox;*/
+
       var cropBoxes = this.cropBoxes;
       var aspectRatio = this.options.aspectRatio;
       var isWidthChanged;
