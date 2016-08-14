@@ -10,7 +10,6 @@ PortraitMachine.Init = function (options) {
 	this.combinedProps = null;
 
 	this.sk = null;
-	PortraitMachine.Defaults.writeData = new Event('writeData');
 	this.container = null;
 
 	var self = this;
@@ -44,6 +43,14 @@ PortraitMachine.Init = function (options) {
 		}
 	}
 
+	this._renderJointPreviews = function () {
+		for (var crop in this.combinedProps) {
+			var cr = this.combinedProps.crops[crop];
+			console.log(cr.preview.preview);
+			this.preview.addSavedPreview(crop, cr);
+		}
+	}
+
 	this._getData = function () {
 		var data = self.sk.getData();
 		console.log(data);
@@ -60,7 +67,7 @@ PortraitMachine.Init = function (options) {
 	this._attachListener = function () {
 		var self = this;
 		if (this.container) {
-			$(this.container)[0].addEventListener('writeData', function () {
+			PortraitMachine.pubsub.subscribe('writeData', function () {
 				var data = self.sk.getData();
 				console.log(data);
 			});
@@ -84,3 +91,36 @@ PortraitMachine.Init = function (options) {
 }
 
 PortraitMachine.Init();
+
+
+// https://davidwalsh.name/pubsub-javascript
+PortraitMachine.pubsub = (function(){
+  var topics = {};
+  var hOP = topics.hasOwnProperty;
+
+  return {
+    subscribe: function(topic, listener) {
+      // Create the topic's object if not yet created
+      if(!hOP.call(topics, topic)) topics[topic] = [];
+
+      // Add the listener to queue
+      var index = topics[topic].push(listener) -1;
+
+      // Provide handle back for removal of topic
+      return {
+        remove: function() {
+          delete topics[topic][index];
+        }
+      };
+    },
+    publish: function(topic, info) {
+      // If the topic doesn't exist, or there's no listeners in queue, just leave
+      if(!hOP.call(topics, topic)) return;
+
+      // Cycle through topics queue, fire!
+      topics[topic].forEach(function(item) {
+      		item(info != undefined ? info : {});
+      });
+    }
+  };
+})();

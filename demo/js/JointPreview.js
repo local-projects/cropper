@@ -1,11 +1,12 @@
 PortraitMachine.JointPreview = function (options) {
 	this.options = options || {};
-	this.container = this.options.container || '#svg-container';
+	this.container = this.options.container;
 	this.pivot = this.options.pivot || '.pivot';
 	this.$pivot = $(this.pivot);
-	this.previews = [];
+
 	this.preview = null;
 	this.relatedId = null;
+	this.selected = this.options.el;
 	
 	this.offsetX = 0.5;
 	this.offsetY = 0.5;
@@ -43,7 +44,7 @@ PortraitMachine.JointPreview.prototype = {
 	updateJoint: function () {
 		var pivotSize = 20;
 
-		var selected = PortraitMachine.Preview.Selected;
+		var selected = this.selected;
 
 		if (selected) {
 			var $selected = $(selected);
@@ -107,14 +108,16 @@ PortraitMachine.JointPreview.prototype = {
 			$this.removeClass('inactive').addClass('active');
 			$(this.container).append($clone);
 
+			// TODO remove dependency on data
+			PortraitMachine.pubsub.publish('removeActiveSelected', {
+				id: $(selected).data().preview.index,
+			});
 
-			$selected.removeClass('active');
-			selected = PortraitMachine.Preview.Selected = null;
 			this.preview = $clone;
 			this.offsetListener();
-			this.previews.push($clone);
+
 		}
-		/*return this.previews;*/
+
 		return this.preview;
 
 	},
@@ -128,13 +131,8 @@ PortraitMachine.JointPreview.prototype = {
 		}
 	},
 
-	getIndex: function () {
-		if (this.preview) {
-			return $(this.preview).data().preview.index;
-		}
-		else {
-			return '';
-		}
+	getId: function () {
+		return this.relatedId;
 	},
 
 	showPreview: function () {
@@ -158,8 +156,23 @@ PortraitMachine.JointPreview.prototype = {
 		}*/
 	},
 
+	showJointPreview: function () {
+		if (this.preview) {
+			$(this.preview).addClass('active');
+		}
+	},
+
+
+	hideJointPreview: function () {
+		if (this.preview) {
+			$(this.preview).removeClass('active');
+		}
+	},
+
 	remove: function () {
-		this.preview.remove();
-		this.preview = null;
+		if (this.preview) {
+			this.preview.remove();
+			this.preview = null;
+		}
 	},
 }

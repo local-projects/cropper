@@ -9,13 +9,14 @@ PortraitMachine.Joint = function (options) {
 	this.container = this.options.container;
 	this.$pivot = null;
 	this.attachedPreviews = [];
+	this.init();
 }
 
 PortraitMachine.Joint.prototype = {
 	constructor: PortraitMachine.Joint,
 
 	init: function () {
-
+		this._initSubscribers();
 	},
 
 	draw: function () {
@@ -26,84 +27,121 @@ PortraitMachine.Joint.prototype = {
 		// this.$pivot = $('#'+ this.id);
 		this.$pivot = $pivot;
 		this.attachListener();
-		this.showAll();
+	},
+
+	_initSubscribers: function () {
+		var self = this;
+		
+		PortraitMachine.pubsub.subscribe('selectedPreviewElement', function (obj) {
+
+			if (self.id === obj.name) {
+				if (obj.el) {
+
+					var jpData = {
+						pivot: self.$pivot,
+						container: self.container,
+						el: obj.el
+					}
+
+					// TODO check and return if attaching to same joint
+					self.publish('removeAttachedPreview', {
+						id: obj.id
+					});
+
+					var jp = new PortraitMachine.JointPreview(jpData);
+
+					self.removePreview(jp, self.attachedPreviews.length);
+					self.attachedPreviews.push(jp);
+				}
+			}
+
+		});
+
+
+		PortraitMachine.pubsub.subscribe('showOrHidePreviews', function (obj) {
+
+			if (self.id === obj.name) {
+
+				if (self.attachedPreviews.length < 1) {
+					return;
+				}
+
+				var indices = [];
+				for (var i = 0; i < self.attachedPreviews.length; i++) {
+					var at = self.attachedPreviews[i].showPreview();
+					
+					if (at == 'active') {
+						indices.push(self.attachedPreviews[i].getId());
+					}
+					
+				}
+
+				if (indices.length > 0) {
+					self.publish('showSelectPreviews', {
+						indices: indices,
+					});
+				}
+				else {
+					self.publish('showAllPreviews', {});
+				}
+
+			}
+
+		});
+	},
+
+	publish: function (name, context) {
+		PortraitMachine.pubsub.publish(name, context);
 	},
 
 	attachListener: function () {
 		var self = this;
 		this.$pivot.on('click', function (event) {
 			event.preventDefault();
-			if (PortraitMachine.Preview.Selected) {
-				var dt = $(PortraitMachine.Preview.Selected).data();
-				var jp = new PortraitMachine.JointPreview({'pivot': self.$pivot});
-				self.removePreview(jp, self.attachedPreviews.length);
-				self.attachedPreviews.push(jp);
-			}
-			else {
 
-				if (self.attachedPreviews.length < 1) {
-					return;
-				}
-				
-				var indices = [];
-				for (var i = 0; i < self.attachedPreviews.length; i++) {
-					var at = self.attachedPreviews[i].showPreview();
-					
-					if (at == 'active') {
-						indices.push(self.attachedPreviews[i].getIndex());
-					}
-					
-				}
-
-				if (indices.length > 0) {
-					self.filterPreviews(indices);
-				}
-				else {
-					self.showAllPreviews();
-				}
-				
-			}
+			self.publish('getSelectedPreview', {
+				name: this.id,
+			});
 
 		});
 	},
 
-	filterPreviews: function (indices) {
-		var prs = $('.docs-preview').find('.img-preview');
-		var count = 0;
-		
-		for (var i = 0; i < prs.length; i++) {
-			var pr = prs[i];
-			var currentIndex = $(pr).data().preview.index;
+	removeAttachedPreview: function (index) {
+		if (this.attachedPreviews.length < 1) {
+			return;
+		}
 
-			if ($.inArray(currentIndex, indices) >= 0) {
-				$(pr).show();
+		for (var i = 0; i < this.attachedPreviews.length; i++) {
+			var apr = this.attachedPreviews[i];
+			var id = apr.getId();
+			if (id === index) {
+				apr.remove();
+			}
+		}
+	},
+
+	checkAttachedPreviews: function (index, flag) {
+
+		if (this.attachedPreviews.length < 1) {
+			return;
+		}
+
+		for (var i = 0; i < this.attachedPreviews.length; i++) {
+			var apr = this.attachedPreviews[i];
+			var id = apr.getId();
+
+			if (index === id) {
+				if (flag === 'previewSelected') {
+					apr.showJointPreview();
+				}
+				else{
+					apr.hideJointPreview();
+				}
 			}
 			else {
-				$(pr).hide();
-				++count;
+				apr.hideJointPreview();
 			}
 		}
-
-		if (count > 0) {
-			$('.show-all').removeAttr('disabled');
-		}
-	},
-
-	showAll: function () {
-		$('.show-all').on('click', function () {
-			this.showAllPreviews();
-		}.bind(this));
-	},
-
-	showAllPreviews: function () {
-		var prs = $('.docs-preview').find('.img-preview');
-		
-		for (var i = 0; i < prs.length; i++) {
-			var pr = prs[i];
-			$(pr).show();
-		}
-
-		$('.show-all').attr('disabled', 'true');
 	},
 
 	getData: function () {

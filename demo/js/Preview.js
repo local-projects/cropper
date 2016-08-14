@@ -6,21 +6,81 @@ PortraitMachine.Preview = function (options) {
 	
 	this.direction = null;
 	this.directions = {};
-	// this.init();
 
 	this.template = null;
+	this.selected = null;
 
 	this.url = this.options.url ? this.options.url : '';
-}
 
-PortraitMachine.Preview.Selected = null;
+	this.init();
+}
 
 PortraitMachine.Preview.prototype = {
 	constructor: PortraitMachine.Preview,
 
 	init: function () {
-		this.attachListener();
-		this.previews[0] = this.previewContainer[0];
+		/*this.attachListener();
+		this.previews[0] = this.previewContainer[0];*/
+
+		this._initSubscribers();
+		this.showAll();
+	},
+
+	_initSubscribers: function () {
+		var self = this;
+		
+		PortraitMachine.pubsub.subscribe('getSelectedPreview', function (obj) {
+
+			if (self.selected) {
+				self.publish('selectedPreviewElement', {
+					el: self.selected,
+					id: $(self.selected).data().preview.index,
+					name: obj.name
+				});
+			}
+			else {
+				self.publish('showOrHidePreviews', {
+					name: obj.name
+				});
+			}
+			
+		});
+
+		PortraitMachine.pubsub.subscribe('removeActiveSelected', function (obj) {
+			self.selected = null
+
+			if (obj.id) {
+				self.previews[obj.id].removeClass('active');
+			}
+		});
+
+		PortraitMachine.pubsub.subscribe('showSelectPreviews', function (obj) {
+			if (obj.indices) {
+				if (obj.indices.length < 1) {
+					return
+				}
+
+				self.hideAllPreviews.call(self);
+
+				$('.show-all').removeAttr('disabled');
+
+				for (var i = 0; i < obj.indices.length; i++) {
+					var item = obj.indices[i];
+					if(item in self.previews) {
+						self.previews[item].show();
+					}
+				}
+			}
+		});
+
+
+		PortraitMachine.pubsub.subscribe('showAllPreviews', function (obj) {
+			self.showAllPreviews.call(self);
+		});
+	},
+
+	publish: function (name, context) {
+		PortraitMachine.pubsub.publish(name, context);
 	},
 
 	addPreview: function (index, append) {
@@ -116,14 +176,20 @@ PortraitMachine.Preview.prototype = {
 
 		el.addEventListener('click', function (event) {
 			event.preventDefault();
-			$(PortraitMachine.Defaults.container)[0].dispatchEvent(PortraitMachine.Defaults.writeData);
+			self.publish('writeData');
 
 			self.setPreviewContainer();
 			var pc = self.container.find(self.previewContainer);
+			var id = $(this).data().preview.index;
 
 			if ($(this).hasClass('active')) {
 				$(this).removeClass('active');
-				PortraitMachine.Preview.Selected = null;
+				
+				self.publish('previewUnselected', {
+					id: id,
+				});
+
+				self.selected = null;
 				return;
 			}
 
@@ -135,51 +201,34 @@ PortraitMachine.Preview.prototype = {
 			}*/
 
 			$(this).addClass('active');
-			self.showRelevantJointPreview($(this).data().preview.index);
-			PortraitMachine.Preview.Selected = this;
+
+			self.publish('previewSelected', {
+				id: id,
+			});
+
+			self.selected = this;
 		});
 	},
 
-	showRelevantJointPreview: function (index) {
-		var data = JSON.parse(localStorage.getItem('crops'));
-		var joints = data.joints;
-		var theId = '';
-		var foundJoint = false;
-
-		for (var joint in joints) {
-			if (joints[joint].previews.length > 0) {
-				var previews = joints[joint].previews;
-
-				for (var i = 0; i < previews.length; i++) {
-					var id = previews[i].id;
-					if (index == id) {
-						theId = id;
-						foundJoint = true;
-						break;
-					}
-				}
-
-				if (foundJoint) {
-					break;
-				}
-			}
-		}
-
-		if (theId !== '') {
-			var imgs = $('#svg-container').find('.img-preview');
-			$.each(imgs, function (index, img){
-				var dt = $(img).data();
-				if (dt.preview.index == theId) {
-					$(img).addClass('active');
-				}
-			});
-		}
-		
-
+	showAll: function () {
+		$('.show-all').on('click', function () {
+			this.showAllPreviews();
+		}.bind(this));
 	},
 
-	hidePreview: function (index) {
-		this.previews[index];
+	showAllPreviews: function () {
+		for (var pr in this.previews) {
+			this.previews[pr].show();
+		}
+
+		$('.show-all').attr('disabled', 'true');
+	},
+
+
+	hideAllPreviews: function () {
+		for (var pr in this.previews) {
+			this.previews[pr].hide();
+		}
 	},
 
 	removePreview: function (index) {

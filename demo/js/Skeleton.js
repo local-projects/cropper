@@ -22,6 +22,7 @@ PortraitMachine.Skeleton.prototype = {
 	init: function () {
 		this._initializeDefaultJoints();
 		this.draw();
+		this._initSubscribers();
 		this.mouseListener();
 	},
 
@@ -41,6 +42,28 @@ PortraitMachine.Skeleton.prototype = {
 			var joint = new PortraitMachine.Joint(pv);
 			this.joints.push(joint);
 		}
+	},
+
+	_initSubscribers: function () {
+		var self = this;
+		
+		PortraitMachine.pubsub.subscribe('previewSelected', function (obj) {
+			if (obj.id) {
+				self.showRelevantJointPreview.call(self, obj.id, 'previewSelected');
+			}
+		});
+
+		PortraitMachine.pubsub.subscribe('previewUnselected', function (obj) {
+			if (obj.id) {
+				self.showRelevantJointPreview.call(self, obj.id, 'previewUnselected');
+			}
+		});
+
+		PortraitMachine.pubsub.subscribe('removeAttachedPreview', function (obj) {
+			if (obj.id) {
+				self.removeAttachedPreview.call(self, obj.id);
+			}
+		});
 	},
 
 	draw: function () {
@@ -213,5 +236,21 @@ PortraitMachine.Skeleton.prototype = {
 				PortraitMachine.JointPreview.Selected = null;
 			}
 		});
+	},
+
+	removeAttachedPreview: function (index) {
+
+		for (var i = 0; i < this.joints.length; i++) {
+			this.joints[i].removeAttachedPreview(index);
+		}
+
+	},
+
+	showRelevantJointPreview: function (index, flag) {
+
+		for (var i = 0; i < this.joints.length; i++) {
+			this.joints[i].checkAttachedPreviews(index, flag);
+		}
+
 	},
 }
