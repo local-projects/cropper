@@ -17,8 +17,14 @@ PortraitMachine.Directions.prototype = {
 		// this.addListener();
 	},
 
-	setCurrentDirection: function (direction) {
-		this.currentDirections.push(direction);
+	setCurrentDirection: function (dir) {
+
+		var button = $(this.container).find('button');
+		var buttonChildren = button.children();
+		button.text(dir);
+		button.append(buttonChildren);
+
+		this.currentDirections.push(dir);
 	},
 
 	getCurrentDirections: function () {

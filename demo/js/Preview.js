@@ -83,7 +83,7 @@ PortraitMachine.Preview.prototype = {
 		PortraitMachine.pubsub.publish(name, context);
 	},
 
-	addPreview: function (index, append) {
+	addPreview: function (index, dir) {
 		var tm = this.getTemplate(this.url);
 		this.template = $(tm);
 
@@ -91,12 +91,18 @@ PortraitMachine.Preview.prototype = {
 		// this.attachListener(el);
 		this.previews[index] = el;
 
-		if (append) {
+		this.addDirection(index);
+
+		if (dir && dir.length > 0) {
+			this.setDirection(index, dir[0]);
+		}
+
+		/*if (append) {
 			this.appendPreview(el);
 		}
 		else {
 			this.addDirection(index);
-		}
+		}*/
 	},
 
 	addSavedPreview: function (key, crop) {
@@ -146,7 +152,15 @@ PortraitMachine.Preview.prototype = {
 	},
 
 	getDirection: function (index) {
-		return this.directions[index].getCurrentDirections();
+		if (index in this.directions) {
+			return this.directions[index].getCurrentDirections();
+		}
+		
+		return '';
+	},
+
+	setDirection: function (index, dir) {
+		this.directions[index].setCurrentDirection(dir);
 	},
 
 	getNewTemplateContainer: function (prev) {

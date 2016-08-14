@@ -375,6 +375,8 @@
             y: value.top - canvas.top,
             width: value.width,
             height: value.height,
+            minWidth: value.minWidth,
+            minHeight: value.minHeight
           };
 
           ratio = image.width / image.naturalWidth;
@@ -561,6 +563,14 @@
           if (index in that.cropBoxes) {
             that.closeCrop(index);
           }
+
+          if (data.direction.length > 0) {
+            cropBoxData.direction = data.direction;
+          }
+          else {
+            cropBoxData.direction =[];
+          }
+
           cropBoxesData[index] = cropBoxData;
           that.buildNewCrop(cropBoxData, index);
           /*data.left = data.x;
@@ -686,6 +696,7 @@
      */
     setCropBoxData: function (data) {
       /*var cropBox = this.cropBox;*/
+
       var cropBoxes = this.cropBoxes;
       var aspectRatio = this.options.aspectRatio;
       var isWidthChanged;

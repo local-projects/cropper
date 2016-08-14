@@ -19,6 +19,7 @@
       // Create cropper elements
       this.$container = $this.parent();
       this.$cropBoxes = {};
+
       /*this.$cropper = $cropper = $(Cropper.ORIGINAL_TEMPLATE);*/
       this.$cropper = $cropper = $(Cropper.TEMPLATE);
       this.$canvas = $cropper.find('.cropper-canvas').append($clone);
@@ -86,7 +87,7 @@
       this.setDragMode(options.dragMode);
       this.render();
       this.isBuilt = true;
-      this.setData(options.data);
+      // this.setData(options.data);
       $this.one(EVENT_BUILT, options.built);
 
       // Trigger the built event asynchronously to keep `data('cropper')` is defined
@@ -95,6 +96,11 @@
         this.trigger(EVENT_CROP, this.getData());
         this.isCompleted = true;
       }, this), 0);
+
+      if (options.data && Object.keys(options.data).length > 0) {
+        this.setNewData(options.data);
+        this.closeCrop(index);
+      }
     },
 
     buildNewCrop: function(cropOptions, newIndex) {
@@ -127,14 +133,12 @@
       // Hide the original image
       $cropper.append($cropBox);
 
-      this.closeCrop();
-
       // Show the clone image if is hidden
       if (!this.isImg) {
         $clone.removeClass(CLASS_HIDE);
       }
 
-      this.initPreview(index);
+      this.initPreview(index, cropOptions.direction);
       this.bind();
 
       /*if (options.cropBoxMovable) {
@@ -181,6 +185,7 @@
 
       this.setDragMode(options.dragMode);
       this.render(cropOptions);
+      this.closeCrop();
       /*$this.one(EVENT_BUILT, options.built);*/
 
       // Trigger the built event asynchronously to keep `data('cropper')` is defined
@@ -207,8 +212,8 @@
       else {
         var that = this;
         $('.close-icon').click(function(event) {
-          var closeIndex = $(this).parent().data('index');
-          that.close.call(that, closeIndex);
+          // var closeIndex = $(this).parent().data('index');
+          that.close.call(that, indexToClose);
           $(this).parent().remove();
           event.preventDefault();
         });
@@ -219,6 +224,7 @@
       delete this.cropBoxes[closeIndex];
       delete this.$cropBoxes[closeIndex];
       delete this.previews[closeIndex];
+      delete this.previewsData[closeIndex];
       this.deletePreview(closeIndex);
       var keys = Object.keys(this.cropBoxes);
       
@@ -227,7 +233,7 @@
           this.cropBoxIndex = keys[0];
         }
         else {
-          this.cropBoxIndex = null;
+          this.cropBoxIndex = 0;
           this.cropBox = null;
           this.$cropBox = null;
         }
@@ -254,6 +260,7 @@
       this.cropBox = null;
       this.cropBoxes = null;
       this.previews = null;
+      this.previewsData = null;
       this.unbind();
 
       this.resetPreview();

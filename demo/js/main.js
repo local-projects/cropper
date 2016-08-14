@@ -13,10 +13,19 @@ $(function () {
   var $dataScaleX = $('#dataScaleX');
   var $dataScaleY = $('#dataScaleY');
   var preview = new PortraitMachine.Preview();
+
+  var data = localStorage.getItem('crops');
+  var json, crops;
+  if (data) {
+    json = JSON.parse(data);
+    crops = json.crops || {};
+  }
+
   var options = {
         aspectRatio: NaN,
         preview: '.img-preview',
         previewContainer: '.docs-preview',
+        data: crops,
         cropstart: function (e) {
           console.log('cropstart');
         },

@@ -1,4 +1,4 @@
-    initPreview: function (position) {
+    initPreview: function (position, direction) {
       var crossOrigin = getCrossOrigin(this.crossOrigin);
       var url = crossOrigin ? this.crossOriginUrl : this.url;
       var $clone2;
@@ -24,16 +24,18 @@
           index: this.cropBoxIndex
         });
 
+      this.previewsData[position] = this.$preview.data();
+
       if (this.attachedPreview) {
         var template = this.attachedPreview.getTemplate(url, crossOrigin);
         this.$preview.html(template);
-        this.addPreview(position);
+        this.addPreview(position, direction);
       }
       
     },
 
-    addPreview: function (index) {
-      this.attachedPreview.addPreview(index);
+    addPreview: function (index, direction) {
+      this.attachedPreview.addPreview(index, direction);
       // this.attachedPreview.addDirectionTemplate();
     },
 
