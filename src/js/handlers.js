@@ -110,6 +110,8 @@
         e = touches[0];
       }
 
+      $(e.target).parent().addClass('active');
+
       action = action || $(e.target).data(DATA_ACTION);
 
       if (REGEXP_ACTIONS.test(action)) {
@@ -129,10 +131,10 @@
         // IE10 has `event.originalEvent.pageX/Y`, but not `event.pageX/Y`
         this.startX = e.pageX || originalEvent && originalEvent.pageX;
         this.startY = e.pageY || originalEvent && originalEvent.pageY;
-
+ 
         if (action === ACTION_CROP) {
           this.cropping = true;
-          this.$dragBox.addClass(CLASS_MODAL);
+          this.$dragBox.addClass(CLASS_MODAL);  
         }
       }
     },
@@ -145,16 +147,16 @@
       var action = this.action;
       var touchesLength;
       var target = '';
-
-      if ($(e.target).hasClass('cropper-crop-box')){
+ 
+      if ($(e.target).hasClass('cropper-crop-box') && $(e.target).hasClass('active')){
         target = $(e.target)[0];
       }
-      else if ($(e.target).parent().hasClass('cropper-crop-box')) {
+      else if ($(e.target).parent().hasClass('cropper-crop-box') && $(e.target).parent().hasClass('active')) {
         target = $(e.target).parent()[0];
-      }
-
+      }  
+ 
       if (this.isDisabled) {
-        return;
+        return; 
       }
 
       if (touches) {
@@ -193,7 +195,7 @@
     cropEnd: function (event) {
       var originalEvent = event.originalEvent;
       var action = this.action;
-
+      
       if (this.isDisabled) {
         return;
       }
@@ -205,6 +207,8 @@
           this.cropping = false;
           this.$dragBox.toggleClass(CLASS_MODAL, this.isCropped && this.options.modal);
         }
+
+        $(event.target).parent().removeClass("active");
 
         this.action = '';
 

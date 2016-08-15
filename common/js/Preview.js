@@ -97,6 +97,8 @@ PortraitMachine.Preview.prototype = {
 			this.setDirection(index, dir[dir.length - 1]);
 		}
 
+		this.container.append("<div class='clearfix'></div>");
+
 		/*if (append) {
 			this.appendPreview(el);
 		}
