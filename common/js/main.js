@@ -53,29 +53,30 @@ $(function () {
   // Cropper
   $image.on({
     'build.cropper': function (e) {
-      console.log('build.cropper');
+      /*console.log('build.cropper');*/
     },
     'built.cropper': function (e) {
-      console.log('built.cropper');
+      /*console.log('built.cropper');*/
     },
     'cropstart.cropper': function (e) {
-      console.log('cropstart.cropper');
+      /*console.log('cropstart.cropper');*/
     },
     'cropmove.cropper': function (e) {
-      console.log('cropmove.cropper');
+      /*console.log('cropmove.cropper');*/
     },
     'cropend.cropper': function (e) {
-      console.log('cropend.cropper');
+      /*console.log('cropend.cropper');*/
     },
     'crop.cropper': function (e) {
-      console.log('crop.cropper');
+      /*console.log('crop.cropper');*/
     },
     'zoom.cropper': function (e) {
-      console.log('zoom.cropper');
+      /*console.log('zoom.cropper');*/
     }
   }).cropper(options);
 
   /*$image.cropper(options);*/
+  
 
 
   // Buttons
