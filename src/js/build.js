@@ -110,6 +110,12 @@
       var $cropBox;
       var $face;
       var index;
+      var dir;
+
+      if (cropOptions) {
+        dir = cropOptions.direction || [];
+      }
+       
 
       if (!this.isLoaded) {
         return;
@@ -138,7 +144,7 @@
         $clone.removeClass(CLASS_HIDE);
       }
 
-      this.initPreview(index, cropOptions.direction);
+      this.initPreview(index, dir);
       this.bind();
 
       /*if (options.cropBoxMovable) {
@@ -212,8 +218,15 @@
       else {
         var that = this;
         $('.close-icon').click(function(event) {
+          var closeIndex;
+          if (indexToClose) {
+            closeIndex = indexToClose;
+          }
+          else{
+            closeIndex = $(this).parent().data('index');
+          }
           // var closeIndex = $(this).parent().data('index');
-          that.close.call(that, indexToClose);
+          that.close.call(that, closeIndex);
           $(this).parent().remove();
           event.preventDefault();
         });

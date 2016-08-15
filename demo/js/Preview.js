@@ -94,7 +94,7 @@ PortraitMachine.Preview.prototype = {
 		this.addDirection(index);
 
 		if (dir && dir.length > 0) {
-			this.setDirection(index, dir[0]);
+			this.setDirection(index, dir[dir.length - 1]);
 		}
 
 		/*if (append) {
