@@ -16,10 +16,5 @@
     this.cropBox = null;
     /*this.cropBoxes = options.cropBoxes;*/
     /*this.cropBoxes = [];*/
-    this.cropBoxes = {};
-    this.cropBoxIndex = 0;
-    this.previews = {};
-    this.previewObjs = {};
-    this.attachedPreview = options.attachedPreview;
     this.init();
   }

@@ -5,7 +5,7 @@
  * Copyright (c) 2014-2016 Fengyuan Chen and contributors
  * Released under the MIT license
  *
- * Date: 2016-08-15T15:23:21.755Z
+ * Date: 2016-08-15T19:45:26.175Z
  */
 
 (function (factory) {
@@ -474,12 +474,6 @@
     this.cropBox = null;
     /*this.cropBoxes = options.cropBoxes;*/
     /*this.cropBoxes = [];*/
-    this.cropBoxes = {};
-    this.cropBoxIndex = 0;
-    this.previews = {};
-    this.previewObjs = {};
-    this.previewsData = {};
-    this.attachedPreview = options.attachedPreview;
     this.init();
   }
 
@@ -701,7 +695,7 @@
       this.$clone = null;
     },
 
-    build: function () {
+    build: function (useData) {
       var options = this.options;
       var $this = this.$element;
       var $clone = this.$clone;
@@ -718,6 +712,13 @@
       if (this.isBuilt) {
         this.unbuild();
       }
+
+      this.previews = {};
+      this.previewObjs = {};
+      this.previewsData = {};
+      this.cropBoxes = {};
+      this.cropBoxIndex = null;
+      this.attachedPreview = options.attachedPreview;
 
       // Create cropper elements
       this.$container = $this.parent();
@@ -800,9 +801,11 @@
         this.isCompleted = true;
       }, this), 0);
 
-      if (options.data && Object.keys(options.data).length > 0) {
-        this.setNewData(options.data);
-        this.closeCrop(index);
+      if (!useData) {
+        if (options.data && Object.keys(options.data).length > 0) {
+          this.setNewData(options.data);
+          this.closeCrop(index);
+        }
       }
     },
 
@@ -917,10 +920,12 @@
         this.close(closeIndex);
         closeEl.remove();
         event.preventDefault();
+
+        this.newBuild();
       }
       else {
         var that = this;
-        $('.close-icon').click(function(event) {
+        $('.close-icon').off().on('click', function(event) {
           var closeIndex;
           if (indexToClose) {
             closeIndex = indexToClose;
@@ -932,7 +937,16 @@
           that.close.call(that, closeIndex);
           $(this).parent().remove();
           event.preventDefault();
+
+          that.newBuild();
         });
+      }
+    },
+
+    newBuild: function () {
+      var keys = Object.keys(this.cropBoxes);
+      if (keys.length === 0) {
+        this.build(true);
       }
     },
 
@@ -949,7 +963,7 @@
           this.cropBoxIndex = keys[0];
         }
         else {
-          this.cropBoxIndex = 0;
+          this.cropBoxIndex = null;
           this.cropBox = null;
           this.$cropBox = null;
         }
@@ -979,8 +993,8 @@
       this.previewsData = null;
       this.unbind();
 
-      this.resetPreview();
       this.$preview = null;
+      this.resetPreview();
 
       this.$viewBox = null;
       this.$cropBox = null;
@@ -1553,13 +1567,16 @@
         this.$clone2 = $clone2 = $('<img' + crossOrigin + ' src="' + url + '">');
         this.$viewBox.html($clone2);
         this.$preview = $(this.options.preview);
+        if (this.$preview.length === 0) {
+          this.setPreview();
+        }
       }
       else {
-        var prev = this.options.preview.replace('.', '');
-        this.$preview = $('<div class="' + prev + ' preview-lg"></div>')
-        var previewContainer = $(this.options.previewContainer);
-        previewContainer.append(this.$preview);
+        this.setPreview();
       }
+
+      var previewContainer = $(this.options.previewContainer);
+      previewContainer.append(this.$preview);
       
       this.previews[position] = this.$preview;
       
@@ -1580,6 +1597,11 @@
       
     },
 
+    setPreview: function () {
+      var prev = this.options.preview.replace('.', '');
+      this.$preview = $('<div class="' + prev + ' preview-lg"></div>')
+    },
+
     addPreview: function (index, direction) {
       this.attachedPreview.addPreview(index, direction);
       // this.attachedPreview.addDirectionTemplate();
@@ -1597,6 +1619,10 @@
     },
 
     resetPreview: function () {
+      if (!this.$preview) {
+        return;
+      }
+
       this.$preview.each(function () {
         var $this = $(this);
         var data = $this.data(DATA_PREVIEW);

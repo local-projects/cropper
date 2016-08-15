@@ -7,13 +7,16 @@
         this.$clone2 = $clone2 = $('<img' + crossOrigin + ' src="' + url + '">');
         this.$viewBox.html($clone2);
         this.$preview = $(this.options.preview);
+        if (this.$preview.length === 0) {
+          this.setPreview();
+        }
       }
       else {
-        var prev = this.options.preview.replace('.', '');
-        this.$preview = $('<div class="' + prev + ' preview-lg"></div>')
-        var previewContainer = $(this.options.previewContainer);
-        previewContainer.append(this.$preview);
+        this.setPreview();
       }
+
+      var previewContainer = $(this.options.previewContainer);
+      previewContainer.append(this.$preview);
       
       this.previews[position] = this.$preview;
       
@@ -34,6 +37,11 @@
       
     },
 
+    setPreview: function () {
+      var prev = this.options.preview.replace('.', '');
+      this.$preview = $('<div class="' + prev + ' preview-lg"></div>')
+    },
+
     addPreview: function (index, direction) {
       this.attachedPreview.addPreview(index, direction);
       // this.attachedPreview.addDirectionTemplate();
@@ -51,6 +59,10 @@
     },
 
     resetPreview: function () {
+      if (!this.$preview) {
+        return;
+      }
+
       this.$preview.each(function () {
         var $this = $(this);
         var data = $this.data(DATA_PREVIEW);
