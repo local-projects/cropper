@@ -33,11 +33,14 @@ PortraitMachine.Preview.prototype = {
 		PortraitMachine.pubsub.subscribe('getSelectedPreview', function (obj) {
 
 			if (self.selected) {
+				var index = $(self.selected).data().preview.index;
 				self.publish('selectedPreviewElement', {
 					el: self.selected,
-					id: $(self.selected).data().preview.index,
+					id: index,
 					name: obj.name
 				});
+ 
+				$( self.previews[index] ).addClass('is-used');
 			}
 			else {
 				self.publish('showOrHidePreviews', {
@@ -51,7 +54,7 @@ PortraitMachine.Preview.prototype = {
 			self.selected = null
 
 			if (obj.id) {
-				self.previews[obj.id].removeClass('active');
+				self.previews[obj.id].removeClass('active').removeClass('is-used');
 			}
 		});
 

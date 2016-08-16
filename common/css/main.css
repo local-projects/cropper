@@ -76,6 +76,11 @@ body {
   max-width: 100%;
 }
 
+
+.img-preview.is-used {
+  opacity: 0.25;
+}
+
 .preview-lg {
   width: 263px;
   height: 148px;
