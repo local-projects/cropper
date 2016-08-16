@@ -235,6 +235,7 @@ PortraitMachine.Preview.prototype = {
 		}
 
 		$('.show-all').attr('disabled', 'true');
+		$("hr").show();
 	},
 
 
@@ -242,6 +243,7 @@ PortraitMachine.Preview.prototype = {
 		for (var pr in this.previews) {
 			this.previews[pr].hide();
 		}
+		$("hr").hide();
 	},
 
 	removePreview: function (index) {
