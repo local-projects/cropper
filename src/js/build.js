@@ -223,8 +223,6 @@
         this.close(closeIndex);
         closeEl.remove();
         event.preventDefault();
-
-        this.newBuild();
       }
       else {
         var that = this;
@@ -240,16 +238,7 @@
           that.close.call(that, closeIndex);
           $(this).parent().remove();
           event.preventDefault();
-
-          that.newBuild();
         });
-      }
-    },
-
-    newBuild: function () {
-      var keys = Object.keys(this.cropBoxes);
-      if (keys.length === 0) {
-        this.build(true);
       }
     },
 

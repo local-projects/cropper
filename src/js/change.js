@@ -11,14 +11,22 @@
       }
 
       var cropBox;
-      
-      if (getObjSize(this.cropBoxes) > 0) {
-        cropBox = this.cropBoxes[this.cropBoxIndex];
+
+      cropBox = this.cropBoxes[this.cropBoxIndex];
+        
+      if (!cropBox) {
+        if (action === ACTION_CROP) {
+          cropBox = {
+            x: 0,
+            y: 0,
+            width: 100,
+            height: 100,
+            minTop: 0,
+            minLeft: 0,
+          }
+        }
       }
-      else {
-        this.buildNewCrop();
-        return;
-      }
+
       
       var width = cropBox.width;
       var height = cropBox.height;

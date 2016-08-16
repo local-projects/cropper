@@ -1,11 +1,11 @@
 /*!
- * Cropper v@VERSION
+ * Cropper v2.3.2
  * https://github.com/fengyuanchen/cropper
  *
- * Copyright (c) 2014-@YEAR Fengyuan Chen and contributors
+ * Copyright (c) 2014-2016 Fengyuan Chen and contributors
  * Released under the MIT license
  *
- * Date: @DATE
+ * Date: 2016-08-16T17:01:17.582Z
  */
 
 (function (factory) {
@@ -920,8 +920,6 @@
         this.close(closeIndex);
         closeEl.remove();
         event.preventDefault();
-
-        this.newBuild();
       }
       else {
         var that = this;
@@ -937,16 +935,7 @@
           that.close.call(that, closeIndex);
           $(this).parent().remove();
           event.preventDefault();
-
-          that.newBuild();
         });
-      }
-    },
-
-    newBuild: function () {
-      var keys = Object.keys(this.cropBoxes);
-      if (keys.length === 0) {
-        this.build(true);
       }
     },
 
@@ -2033,14 +2022,22 @@
       }
 
       var cropBox;
-      
-      if (getObjSize(this.cropBoxes) > 0) {
-        cropBox = this.cropBoxes[this.cropBoxIndex];
+
+      cropBox = this.cropBoxes[this.cropBoxIndex];
+        
+      if (!cropBox) {
+        if (action === ACTION_CROP) {
+          cropBox = {
+            x: 0,
+            y: 0,
+            width: 100,
+            height: 100,
+            minTop: 0,
+            minLeft: 0,
+          }
+        }
       }
-      else {
-        this.buildNewCrop();
-        return;
-      }
+
       
       var width = cropBox.width;
       var height = cropBox.height;
@@ -3625,5 +3622,3 @@
   };
 
 });
-
-//# sourceMappingURL=cropper.js.map
