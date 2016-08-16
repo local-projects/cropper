@@ -116,6 +116,9 @@ PortraitMachine.Preview.prototype = {
 		this.previews[key] = con;
 		this.attachListener(con[0]);
 		this.appendPreview(con);
+
+		var horizontal = $("<hr class='clearfix'>"); 
+		this.container.append(horizontal); 
 	},
 
 	appendPreview: function (el) {
