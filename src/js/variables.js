@@ -18,7 +18,7 @@
   var CLASS_INVISIBLE = 'cropper-invisible';
   var CLASS_MOVE = 'cropper-move';
   var CLASS_CROP = 'cropper-crop';
-  var CLASS_DISABLED = 'cropper-disabled';
+  var CLASS_DISABLED = 'cropper-disabled';  
   var CLASS_BG = 'cropper-bg';
 
   // Events
@@ -35,6 +35,7 @@
   var EVENT_CROP_START = 'cropstart.' + NAMESPACE;
   var EVENT_CROP_MOVE = 'cropmove.' + NAMESPACE;
   var EVENT_CROP_END = 'cropend.' + NAMESPACE;
+  var EVENT_CLOSE = 'close.' + NAMESPACE;
   var EVENT_CROP = 'crop.' + NAMESPACE;
   var EVENT_ZOOM = 'zoom.' + NAMESPACE;
 

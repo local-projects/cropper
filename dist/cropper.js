@@ -1,11 +1,11 @@
 /*!
- * Cropper v2.3.2
+ * Cropper v@VERSION
  * https://github.com/fengyuanchen/cropper
  *
- * Copyright (c) 2014-2016 Fengyuan Chen and contributors
+ * Copyright (c) 2014-@YEAR Fengyuan Chen and contributors
  * Released under the MIT license
  *
- * Date: 2016-08-16T17:01:17.582Z
+ * Date: @DATE
  */
 
 (function (factory) {
@@ -43,7 +43,7 @@
   var CLASS_INVISIBLE = 'cropper-invisible';
   var CLASS_MOVE = 'cropper-move';
   var CLASS_CROP = 'cropper-crop';
-  var CLASS_DISABLED = 'cropper-disabled';
+  var CLASS_DISABLED = 'cropper-disabled';  
   var CLASS_BG = 'cropper-bg';
 
   // Events
@@ -60,6 +60,7 @@
   var EVENT_CROP_START = 'cropstart.' + NAMESPACE;
   var EVENT_CROP_MOVE = 'cropmove.' + NAMESPACE;
   var EVENT_CROP_END = 'cropend.' + NAMESPACE;
+  var EVENT_CLOSE = 'close.' + NAMESPACE;
   var EVENT_CROP = 'crop.' + NAMESPACE;
   var EVENT_ZOOM = 'zoom.' + NAMESPACE;
 
@@ -933,6 +934,7 @@
           }
           // var closeIndex = $(this).parent().data('index');
           that.close.call(that, closeIndex);
+          that.trigger(EVENT_CLOSE)
           $(this).parent().remove();
           event.preventDefault();
         });
@@ -3622,3 +3624,5 @@
   };
 
 });
+
+//# sourceMappingURL=cropper.js.map

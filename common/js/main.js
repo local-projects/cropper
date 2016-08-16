@@ -12,6 +12,7 @@ $(function () {
   var $dataRotate = $('#dataRotate');
   var $dataScaleX = $('#dataScaleX');
   var $dataScaleY = $('#dataScaleY');
+  var $btnSave = $('.btn.save');
   var preview = new PortraitMachine.Preview();
 
   var data = localStorage.getItem('crops');
@@ -40,6 +41,7 @@ $(function () {
         },
         cropend: function (e) {
           console.log('cropend');
+          enableSave();
         },
         attachedPreview: preview,
         cropBoxes : ['crop1', 'crop2'],
@@ -57,6 +59,10 @@ $(function () {
     },
     'built.cropper': function (e) {
       /*console.log('built.cropper');*/
+    },
+    'close.cropper': function (e) {
+      console.log("close");
+      enableSave();
     },
     'cropstart.cropper': function (e) {
       /*console.log('cropstart.cropper');*/
@@ -77,6 +83,17 @@ $(function () {
 
   /*$image.cropper(options);*/
   
+  function saveData(){
+    var crops = $image.cropper('getData');
+    var data = {'crops': crops}
+    localStorage.setItem('crops', JSON.stringify(data));
+
+    $btnSave.attr('disabled', true)
+  }
+
+  function enableSave(){
+    $btnSave.removeAttr('disabled')
+  }
 
 
   // Buttons
@@ -89,6 +106,7 @@ $(function () {
     $('button[data-method="scale"]').prop('disabled', true);
   }
 
+  $btnSave.on("click", saveData)
 
   $('.get-data').on('click', function (event) {
     event.preventDefault();
@@ -97,11 +115,7 @@ $(function () {
 
   $('.next-step').on('click', function (event) {
     var $this = $(this);
-    var crops = $image.cropper('getData');
-    var data = {'crops': crops}
-    localStorage.setItem('crops', JSON.stringify(data));
-
-
+    
   });
 
   $('.get-json').on('click', function (event) {

@@ -236,6 +236,7 @@
           }
           // var closeIndex = $(this).parent().data('index');
           that.close.call(that, closeIndex);
+          that.trigger(EVENT_CLOSE)
           $(this).parent().remove();
           event.preventDefault();
         });
