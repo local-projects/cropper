@@ -1,11 +1,11 @@
 /*!
- * Cropper v2.3.2
+ * Cropper v@VERSION
  * https://github.com/fengyuanchen/cropper
  *
- * Copyright (c) 2014-2016 Fengyuan Chen and contributors
+ * Copyright (c) 2014-@YEAR Fengyuan Chen and contributors
  * Released under the MIT license
  *
- * Date: 2016-08-15T19:45:26.175Z
+ * Date: @DATE
  */
 
 (function (factory) {
@@ -1908,6 +1908,9 @@
         e = touches[0];
       }
 
+      var $target = $(e.target).parent();
+      $target.addClass('active');
+ 
       action = action || $(e.target).data(DATA_ACTION);
 
       if (REGEXP_ACTIONS.test(action)) {
@@ -1923,6 +1926,8 @@
         this.action = action;
         this.cropping = false;
 
+        $target.appendTo( $target.parent() );
+
         // IE8  has `event.pageX/Y`, but not `event.originalEvent.pageX/Y`
         // IE10 has `event.originalEvent.pageX/Y`, but not `event.pageX/Y`
         this.startX = e.pageX || originalEvent && originalEvent.pageX;
@@ -1930,7 +1935,7 @@
 
         if (action === ACTION_CROP) {
           this.cropping = true;
-          this.$dragBox.addClass(CLASS_MODAL);
+          this.$dragBox.addClass(CLASS_MODAL);  
         }
       }
     },
@@ -1943,16 +1948,16 @@
       var action = this.action;
       var touchesLength;
       var target = '';
-
-      if ($(e.target).hasClass('cropper-crop-box')){
+ 
+      if ($(e.target).hasClass('cropper-crop-box') && $(e.target).hasClass('active')){
         target = $(e.target)[0];
       }
-      else if ($(e.target).parent().hasClass('cropper-crop-box')) {
+      else if ($(e.target).parent().hasClass('cropper-crop-box') && $(e.target).parent().hasClass('active')) {
         target = $(e.target).parent()[0];
-      }
-
+      }  
+ 
       if (this.isDisabled) {
-        return;
+        return; 
       }
 
       if (touches) {
@@ -1985,14 +1990,13 @@
         this.endY = e.pageY || originalEvent && originalEvent.pageY;
 
         this.change(e.shiftKey, action === ACTION_ZOOM ? event : null, target);
-        /*this.change(e.shiftKey, event, target);*/
       }
     },
 
     cropEnd: function (event) {
       var originalEvent = event.originalEvent;
       var action = this.action;
-
+      
       if (this.isDisabled) {
         return;
       }
@@ -2004,6 +2008,8 @@
           this.cropping = false;
           this.$dragBox.toggleClass(CLASS_MODAL, this.isCropped && this.options.modal);
         }
+
+        $('.cropper-crop-box').removeClass("active");
 
         this.action = '';
 
@@ -2073,7 +2079,6 @@
         range.Y = range.x / aspectRatio;
       }
 
-      console.log(action);
       switch (action) {
         // Move crop box
         case ACTION_ALL:
@@ -3155,8 +3160,6 @@
         data = data.call(this.$element);
       }
 
-      /*this.cropBoxes = $.extend({}, this.cropBoxes, data);*/
-
       if (this.isBuilt && this.isCropped && !this.isDisabled && $.isPlainObject(data)) {
 
         $.each(cropBoxes, function (index, cropBox) {
@@ -3622,3 +3625,5 @@
   };
 
 });
+
+//# sourceMappingURL=cropper.js.map
