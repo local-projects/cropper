@@ -6,6 +6,7 @@ PortraitMachine.Preview = function (options) {
 	
 	this.direction = null;
 	this.directions = {};
+	this.horizontal = {};
 
 	this.template = null;
 	this.selected = null;
@@ -87,24 +88,14 @@ PortraitMachine.Preview.prototype = {
 		var tm = this.getTemplate(this.url);
 		this.template = $(tm);
 
-		var el = this.template[0];
-		// this.attachListener(el);
+		var el = this.template[0]; 
 		this.previews[index] = el;
 
 		this.addDirection(index);
 
 		if (dir && dir.length > 0) {
 			this.setDirection(index, dir[dir.length - 1]);
-		}
-
-		this.container.append("<hr class='clearfix'>");
-
-		/*if (append) {
-			this.appendPreview(el);
-		}
-		else {
-			this.addDirection(index);
-		}*/
+		}  
 	},
 
 	addSavedPreview: function (key, crop) {
@@ -139,9 +130,12 @@ PortraitMachine.Preview.prototype = {
 	},
 
 	addDirection: function (index) {
+		var horizontal = $("<hr class='clearfix'>");
+		this.horizontal[index] = horizontal;
 		this.direction = new PortraitMachine.Directions();
 		this.directions[index] = this.direction;
 		this.addDirectionTemplate();
+		this.container.append(horizontal);
 	},
 
 	addDirectionTemplate: function () {
@@ -248,8 +242,10 @@ PortraitMachine.Preview.prototype = {
 	},
 
 	removePreview: function (index) {
-		delete this.previews[index];
+		delete this.previews[index]; 
 		this.directions[index].remove();
+		this.horizontal[index].remove();
 		delete this.directions[index];
+		delete this.horizontal[index];
 	}
 }
