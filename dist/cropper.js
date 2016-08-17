@@ -1,11 +1,11 @@
 /*!
- * Cropper v@VERSION
+ * Cropper v2.3.2
  * https://github.com/fengyuanchen/cropper
  *
- * Copyright (c) 2014-@YEAR Fengyuan Chen and contributors
+ * Copyright (c) 2014-2016 Fengyuan Chen and contributors
  * Released under the MIT license
  *
- * Date: @DATE
+ * Date: 2016-08-17T15:08:28.050Z
  */
 
 (function (factory) {
@@ -2030,12 +2030,14 @@
       if (!cropBox) {
         if (action === ACTION_CROP) {
           cropBox = {
-            x: 0,
-            y: 0,
+            left: 0,
+            top: 0,
             width: 100,
             height: 100,
             minTop: 0,
             minLeft: 0,
+            minWidth: 10,
+            minHeight: 10,
           }
         }
       }
@@ -2429,8 +2431,8 @@
         var tempCropBox = $.extend({}, cropBox);
         tempCropBox.left = left;
         tempCropBox.top = top;
-        tempCropBox.width = 0;
-        tempCropBox.height = 0;
+        tempCropBox.width = width;
+        tempCropBox.height = height;
         this.buildNewCrop(tempCropBox);
         this.action = action;
         newCrop = false;
@@ -3624,5 +3626,3 @@
   };
 
 });
-
-//# sourceMappingURL=cropper.js.map
