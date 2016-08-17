@@ -72,7 +72,7 @@ PortraitMachine.Preview.prototype = {
 				for (var i = 0; i < obj.indices.length; i++) {
 					var item = obj.indices[i];
 					if(item in self.previews) {
-						self.previews[item].show();
+						$(self.previews[item]).show();
 					}
 				}
 			}
@@ -235,7 +235,7 @@ PortraitMachine.Preview.prototype = {
 
 	showAllPreviews: function () {
 		for (var pr in this.previews) {
-			this.previews[pr].show();
+			$(this.previews[pr]).show();
 		}
 
 		$('.show-all').attr('disabled', 'true');
@@ -245,7 +245,7 @@ PortraitMachine.Preview.prototype = {
 
 	hideAllPreviews: function () {
 		for (var pr in this.previews) {
-			this.previews[pr].hide();
+			$(this.previews[pr]).hide();
 		}
 		$("hr").hide();
 	},

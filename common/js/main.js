@@ -6,6 +6,7 @@ $(function () {
   var $image = $('#image');
   var $btnSave = $('.btn.save');
   var $nextBtn = $('.next-step');
+  var $saveJson = $('.save-json');
   var preview = new PortraitMachine.Preview();
 
   var data = localStorage.getItem('crops');
@@ -132,6 +133,10 @@ $(function () {
   });
 
   $nextBtn.on('click', goToNext);
+
+  $saveJson.on('click', function () {
+    PortraitMachine._getData();
+  });
 
 
   // Keyboard
