@@ -17,12 +17,14 @@
       if (!cropBox) {
         if (action === ACTION_CROP) {
           cropBox = {
-            x: 0,
-            y: 0,
+            left: 0,
+            top: 0,
             width: 100,
             height: 100,
             minTop: 0,
             minLeft: 0,
+            minWidth: 10,
+            minHeight: 10,
           }
         }
       }
@@ -416,8 +418,8 @@
         var tempCropBox = $.extend({}, cropBox);
         tempCropBox.left = left;
         tempCropBox.top = top;
-        tempCropBox.width = 0;
-        tempCropBox.height = 0;
+        tempCropBox.width = width;
+        tempCropBox.height = height;
         this.buildNewCrop(tempCropBox);
         this.action = action;
         newCrop = false;
