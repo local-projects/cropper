@@ -13,6 +13,7 @@ $(function () {
   var $dataScaleX = $('#dataScaleX');
   var $dataScaleY = $('#dataScaleY');
   var $btnSave = $('.btn.save');
+  var $nextBtn = $('.next-step');
   var preview = new PortraitMachine.Preview();
 
   var data = localStorage.getItem('crops');
@@ -60,10 +61,8 @@ $(function () {
     'built.cropper': function (e) {
       /*console.log('built.cropper');*/
     },
-    'close.cropper': function (e) {
-      console.log("close");
-      enableSave();
-    },
+    'close.cropper': onClose
+    ,
     'cropstart.cropper': function (e) {
       /*console.log('cropstart.cropper');*/
     },
@@ -83,6 +82,15 @@ $(function () {
 
   /*$image.cropper(options);*/
 
+  function onClose(e){
+    var crops = $image.cropper('getData');
+    if (Object.keys(crops).length){
+      enableSave();
+    }else{
+      disableSave();
+    }
+  }
+
   function saveData(){
     var crops = $image.cropper('getData');
     var data = {'crops': crops}
@@ -93,14 +101,18 @@ $(function () {
   
   function goToNext(){
     saveData();
-    window.location.href = "/skeleton"
+    window.location.href = "/skeleton";
   }
 
   function enableSave(){
-    $btnSave.removeAttr('disabled')
+    $nextBtn.removeAttr('disabled');
+    $btnSave.removeAttr('disabled');
   }
 
-
+  function disableSave(){
+    $nextBtn.attr('disabled',true);
+    $btnSave.attr('disabled',true);
+  } 
 
   // Buttons
   if (!$.isFunction(document.createElement('canvas').getContext)) {
@@ -120,7 +132,7 @@ $(function () {
     console.log($image.cropper('getData'));
   });
 
-  $('.next-step').on('click', goToNext);
+  $nextBtn.on('click', goToNext);
 
   $('.get-json').on('click', function (event) {
     event.preventDefault();

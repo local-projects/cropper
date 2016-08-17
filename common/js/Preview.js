@@ -34,13 +34,14 @@ PortraitMachine.Preview.prototype = {
 
 			if (self.selected) {
 				var index = $(self.selected).data().preview.index;
+
+				$( self.previews[index] ).addClass('is-used');
+
 				self.publish('selectedPreviewElement', {
 					el: self.selected,
 					id: index,
 					name: obj.name
-				});
- 
-				$( self.previews[index] ).addClass('is-used');
+				});				
 			}
 			else {
 				self.publish('showOrHidePreviews', {
