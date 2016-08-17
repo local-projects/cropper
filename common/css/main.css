@@ -223,6 +223,16 @@ body {
     background-color: white;
   }
 
+
+  .scale-icon{
+    background-image: url("../../assets/img/resize-handler.png");
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    right: 0px;
+    bottom: 0px; 
+  }
+
   .close-icon-preview:hover{
     cursor: pointer;
   }
