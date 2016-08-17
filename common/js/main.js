@@ -82,7 +82,7 @@ $(function () {
   }).cropper(options);
 
   /*$image.cropper(options);*/
-  
+
   function saveData(){
     var crops = $image.cropper('getData');
     var data = {'crops': crops}
@@ -90,10 +90,16 @@ $(function () {
 
     $btnSave.attr('disabled', true)
   }
+  
+  function goToNext(){
+    saveData();
+    window.location.href = "/skeleton"
+  }
 
   function enableSave(){
     $btnSave.removeAttr('disabled')
   }
+
 
 
   // Buttons
@@ -106,17 +112,15 @@ $(function () {
     $('button[data-method="scale"]').prop('disabled', true);
   }
 
-  $btnSave.on("click", saveData)
+  $btnSave.on("click", saveData);
+
 
   $('.get-data').on('click', function (event) {
     event.preventDefault();
     console.log($image.cropper('getData'));
   });
 
-  $('.next-step').on('click', function (event) {
-    var $this = $(this);
-    
-  });
+  $('.next-step').on('click', goToNext);
 
   $('.get-json').on('click', function (event) {
     event.preventDefault();
