@@ -4,14 +4,6 @@ $(function () {
 
   var console = window.console || { log: function () {} };
   var $image = $('#image');
-  var $download = $('#download');
-  var $dataX = $('#dataX');
-  var $dataY = $('#dataY');
-  var $dataHeight = $('#dataHeight');
-  var $dataWidth = $('#dataWidth');
-  var $dataRotate = $('#dataRotate');
-  var $dataScaleX = $('#dataScaleX');
-  var $dataScaleY = $('#dataScaleY');
   var $btnSave = $('.btn.save');
   var $nextBtn = $('.next-step');
   var preview = new PortraitMachine.Preview();
@@ -31,15 +23,7 @@ $(function () {
         cropstart: function (e) {
           console.log('cropstart');
         },
-        crop: function (e) {
-          $dataX.val(Math.round(e.x));
-          $dataY.val(Math.round(e.y));
-          $dataHeight.val(Math.round(e.height));
-          $dataWidth.val(Math.round(e.width));
-          $dataRotate.val(e.rotate);
-          $dataScaleX.val(e.scaleX);
-          $dataScaleY.val(e.scaleY);
-        },
+        crop: function (e) {},
         cropend: function (e) {
           console.log('cropend');
           enableSave();
@@ -101,7 +85,8 @@ $(function () {
   
   function goToNext(){
     saveData();
-    window.location.href = "/skeleton";
+    hideCropper();
+    InitializeCropper();
   }
 
   function enableSave(){
@@ -113,6 +98,20 @@ $(function () {
     $nextBtn.attr('disabled',true);
     $btnSave.attr('disabled',true);
   } 
+
+  function hideCropper() {
+    $('.img-container').removeClass('active');
+    $nextBtn.removeClass('active');
+    $('#svg-container').addClass('active');
+    $('.btns-container').addClass('active');
+    $('.left-col').addClass('active');
+    $('.docs-preview').empty();
+  }
+
+  function InitializeCropper() {
+    preview = null;
+    PortraitMachine.Init();
+  }
 
   // Buttons
   if (!$.isFunction(document.createElement('canvas').getContext)) {
@@ -133,19 +132,6 @@ $(function () {
   });
 
   $nextBtn.on('click', goToNext);
-
-  $('.get-json').on('click', function (event) {
-    event.preventDefault();
-    /*var data = $image.cropper('getData');*/
-    window.sk.getData();
-    var data = localStorage.getItem('crops');
-    if (data) {
-      $('#putJson').val(data);
-    }
-    else {
-      $('#putJson').val('Error getting data');
-    }
-  });
 
 
   // Keyboard

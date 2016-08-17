@@ -55,7 +55,7 @@ PortraitMachine.Preview.prototype = {
 			self.selected = null
 
 			if (obj.id) {
-				self.previews[obj.id].removeClass('active').removeClass('is-used');
+				$(self.previews[obj.id]).removeClass('active').removeClass('is-used');
 			}
 		});
 
