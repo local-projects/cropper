@@ -78,6 +78,25 @@ $(function () {
 
   function saveData(){
     var crops = $image.cropper('getData');
+
+    var oldCrops = localStorage.getItem('crops');
+    var oldCropsCuts;
+    
+    // Keep previous previews
+    if (oldCrops) {
+      oldCrops = JSON.parse(oldCrops);
+      oldCropsCuts = oldCrops.crops ? oldCrops.crops : {};
+    }
+
+    if (oldCropsCuts) {
+      for (var occ in oldCropsCuts) {
+        if (occ in crops) {
+          crops[occ]['skeletonPreview'] = oldCropsCuts[occ]['skeletonPreview'];
+        }
+      }
+    }
+    
+
     var data = {'crops': crops}
     localStorage.setItem('crops', JSON.stringify(data));
 
