@@ -110,6 +110,7 @@ $(function () {
   }
 
   function InitializeCropper() {
+    preview.removeSubscribers();
     preview = null;
     PortraitMachine.Init();
   }

@@ -10,6 +10,7 @@ PortraitMachine.Preview = function (options) {
 
 	this.template = null;
 	this.selected = null;
+	this.subscribers = [];
 
 	this.url = this.options.url ? this.options.url : '';
 
@@ -30,7 +31,7 @@ PortraitMachine.Preview.prototype = {
 	_initSubscribers: function () {
 		var self = this;
 		
-		PortraitMachine.pubsub.subscribe('getSelectedPreview', function (obj) {
+		var gsp = PortraitMachine.pubsub.subscribe('getSelectedPreview', function (obj) {
 
 			if (self.selected) {
 				var index = $(self.selected).data().preview.index;
@@ -51,7 +52,7 @@ PortraitMachine.Preview.prototype = {
 			
 		});
 
-		PortraitMachine.pubsub.subscribe('removeActiveSelected', function (obj) {
+		var ras = PortraitMachine.pubsub.subscribe('removeActiveSelected', function (obj) {
 			self.selected = null
 
 			if (obj.id) {
@@ -59,7 +60,7 @@ PortraitMachine.Preview.prototype = {
 			}
 		});
 
-		PortraitMachine.pubsub.subscribe('showSelectPreviews', function (obj) {
+		var ssp = PortraitMachine.pubsub.subscribe('showSelectPreviews', function (obj) {
 			if (obj.indices) {
 				if (obj.indices.length < 1) {
 					return
@@ -79,9 +80,11 @@ PortraitMachine.Preview.prototype = {
 		});
 
 
-		PortraitMachine.pubsub.subscribe('showAllPreviews', function (obj) {
+		var sap = PortraitMachine.pubsub.subscribe('showAllPreviews', function (obj) {
 			self.showAllPreviews.call(self);
 		});
+
+		this.subscribers.push(gsp, ras, ssp, sap);
 	},
 
 	publish: function (name, context) {
@@ -118,7 +121,7 @@ PortraitMachine.Preview.prototype = {
 		var dt = $.extend(vals, {'index': key})
 		con.data('preview', dt);
 		this.previews[key] = con;
-		this.attachListener(con[0]);
+		this.attachListener(con);
 		this.appendPreview(con);
 
 		var horizontal = $("<hr class='clearfix'>"); 
@@ -185,13 +188,13 @@ PortraitMachine.Preview.prototype = {
 		var self = this;
 
 		/*var el = initEl || $('.docs-preview').find('.img-preview')[0];*/
-		var el = initEl || this.previewContainer[0];
+		var el = initEl || this.previewContainer;
 
 		/*var dragStarted = false;
 	    var draggingElem = null;
 	    var attachedElem = null;*/
 
-		el.addEventListener('click', function (event) {
+		el.off().on('click', function (event) {
 			event.preventDefault();
 			self.publish('writeData');
 
@@ -244,9 +247,9 @@ PortraitMachine.Preview.prototype = {
 
 
 	hideAllPreviews: function () {
-		for (var pr in this.previews) {
-			$(this.previews[pr]).hide();
-		}
+		var pc = this.container.find('.img-preview');
+		pc.hide();
+	
 		$("hr").hide();
 	},
 
@@ -256,5 +259,12 @@ PortraitMachine.Preview.prototype = {
 		this.horizontal[index].remove();
 		delete this.directions[index];
 		delete this.horizontal[index];
+	},
+
+	removeSubscribers: function () {
+		for (var i = 0; i < this.subscribers.length; i++) {
+			var sub = this.subscribers[i];
+			sub.remove();
+		}
 	}
 }
