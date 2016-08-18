@@ -134,6 +134,10 @@ $(function () {
     PortraitMachine.Init();
   }
 
+  function saveSkeletonData() {
+    PortraitMachine._getData();
+  }
+
   // Buttons
   if (!$.isFunction(document.createElement('canvas').getContext)) {
     $('button[data-method="getCroppedCanvas"]').prop('disabled', true);
@@ -144,8 +148,6 @@ $(function () {
     $('button[data-method="scale"]').prop('disabled', true);
   }
 
-  $btnSave.on("click", saveData);
-
 
   $('.get-data').on('click', function (event) {
     event.preventDefault();
@@ -154,9 +156,9 @@ $(function () {
 
   $nextBtn.on('click', goToNext);
 
-  $saveJson.on('click', function () {
-    PortraitMachine._getData();
-  });
+  $btnSave.on("click", saveSkeletonData);
+
+  $saveJson.on('click', saveSkeletonData);
 
 
   // Keyboard
