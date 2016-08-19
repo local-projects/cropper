@@ -163,6 +163,7 @@ PortraitMachine.Joint.prototype = {
 		data['y'] = this.y;
 		data['id'] = this.id;
 		data['class'] = this.class;
+		data['tag'] = this.tag;
 
 		for (var i = 0; i < this.attachedPreviews.length; i++) {
 			var pr = this.attachedPreviews[i];
