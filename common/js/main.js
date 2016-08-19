@@ -6,66 +6,72 @@ $(function () {
   var $image = $('#image');
   var $btnSave = $('.btn.save');
   var $nextBtn = $('.next-step');
+  var $cropBtn = $('.crop-step');
   var $saveJson = $('.save-json');
-  var preview = new PortraitMachine.Preview();
+  var preview, pMachine;
 
-  var data = localStorage.getItem('crops');
-  var json, crops;
-  if (data) {
-    json = JSON.parse(data);
-    crops = json.crops || {};
+  function init(){
+    var data, json, crops, options;
+
+    preview = new PortraitMachine.Preview();
+    data = localStorage.getItem('crops');
+
+    if (data) {
+      json = JSON.parse(data);
+      crops = json.crops || {};
+    }
+
+    options = {
+      aspectRatio: NaN,
+      preview: '.img-preview',
+      previewContainer: '.docs-preview',
+      data: crops,
+      minCropBoxWidth: 50,
+      minCropBoxHeight: 50,
+      cropstart: function (e) {
+        console.log('cropstart');
+      },
+      crop: function (e) {},
+      cropend: function (e) {
+        console.log('cropend');
+        enableSave();
+      },
+      attachedPreview: preview,
+      cropBoxes : ['crop1', 'crop2'],
+    };
+
+    // Tooltip
+    $('[data-toggle="tooltip"]').tooltip();
+
+    // Cropper
+    $image.on({
+      'build.cropper': function (e) {
+        /*console.log('build.cropper');*/
+      },
+      'built.cropper': function (e) {
+        /*console.log('built.cropper');*/
+      },
+      'close.cropper': onClose
+      ,
+      'cropstart.cropper': function (e) {
+        /*console.log('cropstart.cropper');*/
+      },
+      'cropmove.cropper': function (e) {
+        /*console.log('cropmove.cropper');*/
+      },
+      'cropend.cropper': function (e) {
+        /*console.log('cropend.cropper');*/
+      },
+      'crop.cropper': function (e) {
+        /*console.log('crop.cropper');*/
+      },
+      'zoom.cropper': function (e) {
+        /*console.log('zoom.cropper');*/
+      }
+    }).cropper(options);
   }
 
-  var options = {
-        aspectRatio: NaN,
-        preview: '.img-preview',
-        previewContainer: '.docs-preview',
-        data: crops,
-        minCropBoxWidth: 50,
-        minCropBoxHeight: 50,
-        cropstart: function (e) {
-          console.log('cropstart');
-        },
-        crop: function (e) {},
-        cropend: function (e) {
-          console.log('cropend');
-          enableSave();
-        },
-        attachedPreview: preview,
-        cropBoxes : ['crop1', 'crop2'],
-      };
-
-
-  // Tooltip
-  $('[data-toggle="tooltip"]').tooltip();
-
-
-  // Cropper
-  $image.on({
-    'build.cropper': function (e) {
-      /*console.log('build.cropper');*/
-    },
-    'built.cropper': function (e) {
-      /*console.log('built.cropper');*/
-    },
-    'close.cropper': onClose
-    ,
-    'cropstart.cropper': function (e) {
-      /*console.log('cropstart.cropper');*/
-    },
-    'cropmove.cropper': function (e) {
-      /*console.log('cropmove.cropper');*/
-    },
-    'cropend.cropper': function (e) {
-      /*console.log('cropend.cropper');*/
-    },
-    'crop.cropper': function (e) {
-      /*console.log('crop.cropper');*/
-    },
-    'zoom.cropper': function (e) {
-      /*console.log('zoom.cropper');*/
-    }
-  }).cropper(options);
+  
 
   /*$image.cropper(options);*/
 
@@ -111,6 +117,13 @@ $(function () {
     InitializeCropper();
   }
 
+  function goToCrop(){
+    window.location.reload();
+    // saveData();
+    // showCropper();
+    // InitializePreview();
+  }
+
   function enableSave(){
     $nextBtn.removeAttr('disabled');
     $btnSave.removeAttr('disabled');
@@ -124,16 +137,39 @@ $(function () {
   function hideCropper() {
     $('.img-container').removeClass('active');
     $nextBtn.removeClass('active');
+    $cropBtn.addClass('active');
     $('#svg-container').addClass('active');
     $('.btns-container').addClass('active');
     $('.left-col').addClass('active');
     $('.docs-preview').empty();
   }
 
+  function showCropper() {
+    $('.img-container').addClass('active');
+    $nextBtn.addClass('active');
+    $cropBtn.removeClass('active');
+    $('#svg-container').removeClass('active');
+    $('.btns-container').removeClass('active');
+    $('.left-col').removeClass('active');
+    // $('.docs-preview').empty();
+  }
+
   function InitializeCropper() {
-    preview.removeSubscribers();
-    preview = null;
-    PortraitMachine.Init();
+    if(preview){
+      preview.removeSubscribers();
+      preview = null;
+    }
+    
+    pMachine = new PortraitMachine.Init();
+  }
+
+  function InitializePreview() { 
+    if(pMachine){
+      pMachine.destroy();
+      pMachine = null;
+    }
+   
+    init(); 
   }
 
   function saveSkeletonData() {
@@ -157,9 +193,8 @@ $(function () {
   });
 
   $nextBtn.on('click', goToNext);
-
+  $cropBtn.on('click', goToCrop);
   $btnSave.on("click", saveSkeletonData);
-
   $saveJson.on('click', saveSkeletonData);
 
 
@@ -229,4 +264,5 @@ $(function () {
     $inputImage.prop('disabled', true).parent().addClass('disabled');
   }
 
+  init();
 });

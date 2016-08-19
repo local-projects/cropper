@@ -1,11 +1,11 @@
 /*!
- * Cropper v2.3.2
+ * Cropper v@VERSION
  * https://github.com/fengyuanchen/cropper
  *
- * Copyright (c) 2014-2016 Fengyuan Chen and contributors
+ * Copyright (c) 2014-@YEAR Fengyuan Chen and contributors
  * Released under the MIT license
  *
- * Date: 2016-08-17T15:08:28.050Z
+ * Date: @DATE
  */
 
 (function (factory) {
@@ -1651,8 +1651,8 @@
 
       if (prev) {
         var data = prev.data(DATA_PREVIEW);
-        var originalWidth = data.width;
-        var originalHeight = data.height;
+        var originalWidth = data? data.width : 0; 
+        var originalHeight = data? data.height : 0;
         var newWidth = originalWidth;
         var newHeight = originalHeight;
         var ratio = 1;
@@ -3626,3 +3626,5 @@
   };
 
 });
+
+//# sourceMappingURL=cropper.js.map

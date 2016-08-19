@@ -100,8 +100,8 @@
 
       if (prev) {
         var data = prev.data(DATA_PREVIEW);
-        var originalWidth = data.width;
-        var originalHeight = data.height;
+        var originalWidth = data? data.width : 0; 
+        var originalHeight = data? data.height : 0;
         var newWidth = originalWidth;
         var newHeight = originalHeight;
         var ratio = 1;

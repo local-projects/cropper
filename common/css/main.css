@@ -194,13 +194,15 @@ body {
 
 /* Additions */
 
-.next-step{
+.next-step,
+.crop-step{
   margin-top: 20px;
   margin-bottom: 20px;
   display: none;
 }
 
-.next-step.active{
+.next-step.active,
+.crop-step.active{
   display: inline-block;
 }
 
