@@ -21,6 +21,8 @@ $(function () {
         preview: '.img-preview',
         previewContainer: '.docs-preview',
         data: crops,
+        minCropBoxWidth: 50,
+        minCropBoxHeight: 50,
         cropstart: function (e) {
           console.log('cropstart');
         },
