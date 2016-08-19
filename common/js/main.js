@@ -36,6 +36,7 @@ $(function () {
         console.log('cropend');
         enableSave();
       },
+      viewMode: 1,
       attachedPreview: preview,
       cropBoxes : ['crop1', 'crop2'],
     };
