@@ -8,7 +8,7 @@ $(function () {
   var $nextBtn = $('.next-step');
   var $cropBtn = $('.crop-step');
   var $saveJson = $('.save-json');
-  var preview, pMachine;
+  var preview, portraitMachineInit;
 
   function init(){
     var data, json, crops, options;
@@ -119,7 +119,9 @@ $(function () {
 
   function goToCrop(){
     window.location.reload();
-    // saveData();
+    
+    // should probably save Skeleton data
+
     // showCropper();
     // InitializePreview();
   }
@@ -160,13 +162,13 @@ $(function () {
       preview = null;
     }
     
-    pMachine = new PortraitMachine.Init();
+    portraitMachineInit = new PortraitMachine.Init();
   }
 
   function InitializePreview() { 
-    if(pMachine){
-      pMachine.destroy();
-      pMachine = null;
+    if(portraitMachineInit){
+      portraitMachineInit.destroy();
+      portraitMachineInit = null;
     }
    
     init(); 
