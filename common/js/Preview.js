@@ -261,10 +261,16 @@ PortraitMachine.Preview.prototype = {
 		delete this.horizontal[index];
 	},
 
+	addSubscribers: function () {
+		this._initSubscribers();
+	},
+
 	removeSubscribers: function () {
 		for (var i = 0; i < this.subscribers.length; i++) {
 			var sub = this.subscribers[i];
 			sub.remove();
 		}
+
+		this.subscribers = [];
 	}
 }
