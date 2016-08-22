@@ -77,8 +77,6 @@
         // $face.data('index', this.cropBoxIndex);
       }
 
-      this.closeCrop();
-
       if (!options.highlight) {
         $face.addClass(CLASS_INVISIBLE);
       }
@@ -104,10 +102,11 @@
         this.isCompleted = true;
       }, this), 0);
 
+      this.closeCrop(index);
+
       if (!useData) {
         if (options.data && Object.keys(options.data).length > 0) {
           this.setNewData(options.data);
-          this.closeCrop(index);
         }
       }
     },
