@@ -112,19 +112,23 @@ $(function () {
     $btnSave.attr('disabled', true)
   }
   
-  function goToNext(){
+  function goToNext(event){
     saveData();
     hideCropper();
     InitializeCropper();
+
+    event.preventDefault();
   }
 
-  function goToCrop(){
+  function goToCrop(event){
     window.location.reload();
     
     // should probably save Skeleton data
 
     // showCropper();
     // InitializePreview();
+
+    event.preventDefault();
   }
 
   function enableSave(){
@@ -139,8 +143,8 @@ $(function () {
 
   function hideCropper() {
     $('.img-container').removeClass('active');
-    $nextBtn.removeClass('active');
-    $cropBtn.addClass('active');
+    $nextBtn.addClass('active');
+    $cropBtn.removeClass('active');
     $('#svg-container').addClass('active');
     $('.btns-container').addClass('active');
     $('.left-col').addClass('active');
@@ -149,8 +153,8 @@ $(function () {
 
   function showCropper() {
     $('.img-container').addClass('active');
-    $nextBtn.addClass('active');
-    $cropBtn.removeClass('active');
+    $nextBtn.removeClass('active');
+    $cropBtn.addClass('active');
     $('#svg-container').removeClass('active');
     $('.btns-container').removeClass('active');
     $('.left-col').removeClass('active');
