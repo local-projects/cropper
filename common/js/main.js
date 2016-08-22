@@ -148,7 +148,9 @@ $(function () {
     $('#svg-container').addClass('active');
     $('.btns-container').addClass('active');
     $('.left-col').addClass('active');
-    $('.docs-preview').empty();
+    // $('.docs-preview').empty();
+    $('.docs-preview').removeClass('active');
+    $('.skeleton-preview').addClass('active');
   }
 
   function showCropper() {
@@ -158,7 +160,9 @@ $(function () {
     $('#svg-container').removeClass('active');
     $('.btns-container').removeClass('active');
     $('.left-col').removeClass('active');
-    $('.docs-preview').empty();
+    // $('.docs-preview').empty();
+    $('.docs-preview').addClass('active');
+    $('.skeleton-preview').removeClass('active');
   }
 
   function InitializeCropper() {
