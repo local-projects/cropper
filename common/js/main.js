@@ -167,14 +167,16 @@ $(function () {
       preview = null;
     }
     
-    portraitMachineInit = new PortraitMachine.Init();
+    if (!portraitMachineInit) {
+      portraitMachineInit = new PortraitMachine.Init();
+    }
   }
 
   function InitializePreview() { 
-    if(portraitMachineInit){
+    /*if(portraitMachineInit){
       portraitMachineInit.destroy();
       portraitMachineInit = null;
-    }
+    }*/
    
     init(); 
   }
