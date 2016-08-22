@@ -194,18 +194,6 @@ body {
 
 /* Additions */
 
-.next-step,
-.crop-step{
-  margin-top: 20px;
-  margin-bottom: 20px;
-  display: none;
-}
-
-.next-step.active,
-.crop-step.active{
-  display: inline-block;
-}
-
 .close-icon{
   background-image: url("../../assets/img/close-icon.png");
   position: absolute;
