@@ -24,7 +24,7 @@ $(function () {
     options = {
       aspectRatio: NaN,
       preview: '.img-preview',
-      previewContainer: '.docs-preview',
+      previewContainer: '.skeleton-preview',
       data: crops,
       minCropBoxWidth: 50,
       minCropBoxHeight: 50,

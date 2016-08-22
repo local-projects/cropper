@@ -1,7 +1,7 @@
 PortraitMachine.Preview = function (options) {
 	this.options = options || {};
 	this.previews = {};
-	this.container = this.options.container || $('.docs-preview');
+	this.container = this.options.container || $('.skeleton-preview');
 	this.previewContainer = this.options.previewContainer || $('.img-preview');
 	
 	this.direction = null;
@@ -187,7 +187,7 @@ PortraitMachine.Preview.prototype = {
 	attachListener: function (initEl) {
 		var self = this;
 
-		/*var el = initEl || $('.docs-preview').find('.img-preview')[0];*/
+		/*var el = initEl || $('.skeleton-preview').find('.img-preview')[0];*/
 		var el = initEl || this.previewContainer;
 
 		/*var dragStarted = false;
