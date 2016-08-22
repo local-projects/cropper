@@ -121,12 +121,12 @@ $(function () {
   }
 
   function goToCrop(event){
-    window.location.reload();
+    // window.location.reload();
     
     // should probably save Skeleton data
 
-    // showCropper();
-    // InitializePreview();
+    showCropper();
+    InitializePreview();
 
     event.preventDefault();
   }
