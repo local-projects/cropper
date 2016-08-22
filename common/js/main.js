@@ -176,7 +176,7 @@ $(function () {
   }
 
   function saveSkeletonData() {
-    PortraitMachine._getData();
+    portraitMachineInit.getData();
   }
 
   // Buttons
