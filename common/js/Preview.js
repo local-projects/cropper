@@ -1,7 +1,7 @@
 PortraitMachine.Preview = function (options) {
 	this.options = options || {};
 	this.previews = {};
-	this.container = this.options.container || $('.skeleton-preview');
+	this.container = this.options.container;
 	this.previewContainer = this.options.previewContainer || $('.img-preview');
 	
 	this.direction = null;

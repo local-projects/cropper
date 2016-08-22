@@ -12,8 +12,8 @@ $(function () {
 
   function init(){
     var data, json, crops, options;
-
-    preview = new PortraitMachine.Preview();
+    var docsContainer = $('.docs-container');
+    preview = new PortraitMachine.Preview({container: docsContainer});
     data = localStorage.getItem('crops');
 
     if (data) {
