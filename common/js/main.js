@@ -158,7 +158,7 @@ $(function () {
     $('#svg-container').removeClass('active');
     $('.btns-container').removeClass('active');
     $('.left-col').removeClass('active');
-    // $('.docs-preview').empty();
+    $('.docs-preview').empty();
   }
 
   function InitializeCropper() {
