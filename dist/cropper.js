@@ -5,7 +5,7 @@
  * Copyright (c) 2014-2016 Fengyuan Chen and contributors
  * Released under the MIT license
  *
- * Date: 2016-08-19T15:41:48.073Z
+ * Date: 2016-08-22T18:30:54.562Z
  */
 
 (function (factory) {
@@ -775,8 +775,6 @@
         // $face.data('index', this.cropBoxIndex);
       }
 
-      this.closeCrop();
-
       if (!options.highlight) {
         $face.addClass(CLASS_INVISIBLE);
       }
@@ -802,10 +800,11 @@
         this.isCompleted = true;
       }, this), 0);
 
+      this.closeCrop(index);
+
       if (!useData) {
         if (options.data && Object.keys(options.data).length > 0) {
           this.setNewData(options.data);
-          this.closeCrop(index);
         }
       }
     },
