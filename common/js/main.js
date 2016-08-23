@@ -175,6 +175,7 @@ $(function () {
     $('.left-col').removeClass('active');
     $('.docs-preview').addClass('active');
     $('.skeleton-preview').removeClass('active');
+    $('.skeleton-preview').empty();
     $('#preview-tags').hide();
   }
 
