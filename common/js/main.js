@@ -151,6 +151,7 @@ $(function () {
     // $('.docs-preview').empty();
     $('.docs-preview').removeClass('active');
     $('.skeleton-preview').addClass('active');
+    $('#preview-tags').show();
   }
 
   function showCropper() {
@@ -163,6 +164,7 @@ $(function () {
     // $('.docs-preview').empty();
     $('.docs-preview').addClass('active');
     $('.skeleton-preview').removeClass('active');
+    $('#preview-tags').hide();
   }
 
   function InitializeCropper() {
