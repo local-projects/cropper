@@ -122,7 +122,7 @@ $(function () {
     var data = {'crops': crops}
     localStorage.setItem('crops', JSON.stringify(data));
 
-    $btnSave.attr('disabled', true)
+    // $btnSave.attr('disabled', true)
   }
   
   function goToNext(event){
