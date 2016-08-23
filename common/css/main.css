@@ -349,3 +349,7 @@ body {
 .btns-container.active {
   display: block;
 }
+
+label{
+  cursor: pointer;
+}
