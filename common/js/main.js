@@ -15,6 +15,7 @@ $(function () {
     var docsPreview = $('.docs-preview');
     preview = new PortraitMachine.Preview({container: docsPreview});
     data = localStorage.getItem('crops');
+    var initW = $image.width();    
 
     if (data) {
       json = JSON.parse(data);
@@ -26,8 +27,8 @@ $(function () {
       preview: '.img-preview',
       previewContainer: '.docs-preview',
       data: crops,
-      minCropBoxWidth: 50,
-      minCropBoxHeight: 50,
+      // minCropBoxWidth: 50,
+      // minCropBoxHeight: 50,
       cropstart: function (e) {
         console.log('cropstart');
       },
@@ -47,9 +48,17 @@ $(function () {
     // Cropper
     $image.on({
       'build.cropper': function (e) {
+        
         /*console.log('build.cropper');*/
       },
       'built.cropper': function (e) {
+        var cropper = $image.data('cropper'),
+            resizeW = $(".cropper-canvas").width(),
+            scale = resizeW/initW;
+
+        cropper.options.minCropBoxWidth = 50*scale;
+        cropper.options.minCropBoxHeight = 50*scale;
+        //$.fn.cropper.setDefaults(options);
         /*console.log('built.cropper');*/
       },
       'close.cropper': onClose
@@ -69,8 +78,12 @@ $(function () {
       'zoom.cropper': function (e) {
         /*console.log('zoom.cropper');*/
       }
-    }).cropper(options);
+    }).cropper(options); 
+
   }
+
+
+
 
   
 
