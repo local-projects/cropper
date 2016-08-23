@@ -37,7 +37,6 @@ body {
   background-color: #f7f7f7;
   width: 100%;
   text-align: center;
-  cursor: move;
 }
 
 .img-container {
@@ -68,6 +67,10 @@ body {
   .docs-preview.active,
   .skeleton-preview.active {
     display: block;
+  }
+
+  .skeleton-preview .img-preview {
+    cursor: move;
   }
 
 .img-preview {
