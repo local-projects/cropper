@@ -190,10 +190,10 @@ $(function () {
   }
 
   function InitializePreview() { 
-    /*if(portraitMachineInit){
+    if(portraitMachineInit){
       portraitMachineInit.destroy();
       portraitMachineInit = null;
-    }*/
+    }
    
     init(); 
   }
