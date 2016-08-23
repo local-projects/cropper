@@ -150,8 +150,8 @@ $(function () {
   }
 
   function disableSave(){
-    $nextBtn.attr('disabled',true);
-    $btnSave.attr('disabled',true);
+    // $nextBtn.attr('disabled',true);
+    // $btnSave.attr('disabled',true);
   } 
 
   function hideCropper() {
@@ -200,7 +200,7 @@ $(function () {
   }
 
   function saveSkeletonData() {
-    portraitMachineInit.getData();
+    portraitMachineInit.saveData();
   }
 
   // Buttons

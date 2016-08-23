@@ -13,7 +13,7 @@ PortraitMachine.Preview = function (options) {
 	this.subscribers = [];
 
 	this.url = this.options.url ? this.options.url : '';
-
+	// console.log('PortraitMachine.Preview options',options);
 	this.init();
 }
 
@@ -118,8 +118,13 @@ PortraitMachine.Preview.prototype = {
 		con.append(el);
 		con.css({width: vals.containerWidth, height: vals.containerHeight});
 
-		var dt = $.extend(vals, {'index': key})
+		var scaleX = crop.skeletonPreview? crop.skeletonPreview.scaleX : 1;
+		var scaleY = crop.skeletonPreview? crop.skeletonPreview.scaleY : 1;
+
+		var dt = $.extend(vals, {'index': key, 'scaleX': scaleX, 'scaleX': scaleY});
+		var skeletonPreview = {'scaleX': scaleX, 'scaleY': scaleY};
 		con.data('preview', dt);
+		con.data('skeletonPreview', skeletonPreview);
 		this.previews[key] = con;
 		this.attachListener(con);
 		this.appendPreview(con);
