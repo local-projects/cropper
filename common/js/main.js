@@ -186,7 +186,12 @@ $(function () {
     }
     
     if (!portraitMachineInit) {
-      portraitMachineInit = new PortraitMachine.Init();
+      try {
+        portraitMachineInit = new PortraitMachine.Init();
+      }
+      catch(err) {
+        console.error(err);
+      }
     }
   }
 
