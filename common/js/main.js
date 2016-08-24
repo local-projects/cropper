@@ -15,8 +15,7 @@ $(function () {
     var docsPreview = $('.docs-preview');
     preview = new PortraitMachine.Preview({container: docsPreview});
     data = localStorage.getItem('crops');
-    var initW = $image.width();    
-
+     
     if (data) {
       json = JSON.parse(data);
       crops = json.crops || {};
@@ -44,39 +43,43 @@ $(function () {
     $('[data-toggle="tooltip"]').tooltip();
 
     // Cropper
-    $image.on({
-      'build.cropper': function (e) {
-        
-        /*console.log('build.cropper');*/
-      },
-      'built.cropper': function (e) {
+    $image.load(function(){
+      var initW = $image.width();    
 
-        var cropper = $image.data('cropper'),
-            resizeW = $(".cropper-canvas").width(),
-            scale = resizeW/initW;
- 
-        cropper.options.minCropBoxWidth = 50*scale;
-        cropper.options.minCropBoxHeight = 50*scale; 
-      },
-      'close.cropper': onClose
-      ,
-      'cropstart.cropper': function (e) {
-        /*console.log('cropstart.cropper');*/
-      },
-      'cropmove.cropper': function (e) {
-        /*console.log('cropmove.cropper');*/
-      },
-      'cropend.cropper': function (e) {
-        /*console.log('cropend.cropper');*/
-      },
-      'crop.cropper': function (e) {
-        /*console.log('crop.cropper');*/
-      },
-      'zoom.cropper': function (e) {
-        /*console.log('zoom.cropper');*/
-      }
-    }).cropper(options); 
+      $image.on({
+        'build.cropper': function (e) {
+          
+          /*console.log('build.cropper');*/
+        },
+        'built.cropper': function (e) {
 
+          var cropper = $image.data('cropper'),
+              resizeW = $(".cropper-canvas").width(),
+              scale = resizeW/initW;
+   
+          cropper.options.minCropBoxWidth = 50*scale;
+          cropper.options.minCropBoxHeight = 50*scale; 
+        },
+        'close.cropper': onClose
+        ,
+        'cropstart.cropper': function (e) {
+          /*console.log('cropstart.cropper');*/
+        },
+        'cropmove.cropper': function (e) {
+          /*console.log('cropmove.cropper');*/
+        },
+        'cropend.cropper': function (e) {
+          /*console.log('cropend.cropper');*/
+        },
+        'crop.cropper': function (e) {
+          /*console.log('crop.cropper');*/
+        },
+        'zoom.cropper': function (e) {
+          /*console.log('zoom.cropper');*/
+        }
+      }).cropper(options); 
+
+    }); 
   }
 
 
