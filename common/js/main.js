@@ -145,7 +145,7 @@ $(function () {
     // window.location.reload();
     
     // should probably save Skeleton data
-
+    saveSkeletonDataLocally();
     showCropper();
     InitializePreview();
 
@@ -194,7 +194,12 @@ $(function () {
     }
     
     if (!portraitMachineInit) {
-      portraitMachineInit = new PortraitMachine.Init();
+      try {
+        portraitMachineInit = new PortraitMachine.Init();
+      }
+      catch(err) {
+        console.error(err);
+      }
     }
   }
 
@@ -209,6 +214,10 @@ $(function () {
 
   function saveSkeletonData() {
     portraitMachineInit.saveData();
+  }
+
+  function saveSkeletonDataLocally() {
+    portraitMachineInit.getData();
   }
 
   // Buttons
