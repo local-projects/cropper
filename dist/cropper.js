@@ -5,7 +5,7 @@
  * Copyright (c) 2014-2016 Fengyuan Chen and contributors
  * Released under the MIT license
  *
- * Date: 2016-08-22T18:30:54.562Z
+ * Date: 2016-08-24T20:25:41.003Z
  */
 
 (function (factory) {
@@ -720,6 +720,7 @@
       this.cropBoxes = {};
       this.cropBoxIndex = null;
       this.attachedPreview = options.attachedPreview;
+      this.closeCropIndex = null;
 
       // Create cropper elements
       this.$container = $this.parent();
@@ -801,6 +802,7 @@
       }, this), 0);
 
       this.closeCrop(index);
+      this.confirmModal();
 
       if (!useData) {
         if (options.data && Object.keys(options.data).length > 0) {
@@ -932,12 +934,38 @@
             closeIndex = $(this).parent().data('index');
           }
           // var closeIndex = $(this).parent().data('index');
-          that.close.call(that, closeIndex);
-          that.trigger(EVENT_CLOSE)
-          $(this).parent().remove();
+
+          that.closeCropIndex = {parent: $(this).parent(), index: closeIndex};
           event.preventDefault();
         });
       }
+    },
+
+    confirmModal: function () {
+      var that = this;
+      
+      $('#crop-delete').on('show.bs.modal', function (e) {
+        console.log(e);
+      });
+
+      $('#crop-delete-confirm').on('click', function (e) {
+        var closeIndex = that.closeCropIndex;
+
+        if (closeIndex && closeIndex.index) {
+          that.close.call(that, closeIndex.index);
+          that.trigger(EVENT_CLOSE)
+          closeIndex.parent.remove();
+          $('#crop-delete').modal('hide');
+        }
+
+        that.closeCropIndex = null;
+        
+      });
+
+      $('.crop-delete-cancel').on('click', function (e) {
+        that.closeCropIndex = null;
+      });
+
     },
 
     close: function (closeIndex) {
@@ -3506,30 +3534,7 @@
         '<span class="cropper-point point-nw" data-action="nw"></span>' +
         '<span class="cropper-point point-sw" data-action="sw"></span>' +
         '<span class="cropper-point point-se" data-action="se"></span>' +
-        '<div class="close-icon"></div>' +
-      '</div>'
-  );
-
-  Cropper.CROP_TEMPLATE2 = (
-      '<div class="cropper-crop-box" id="crop2">' +
-        '<span class="cropper-view-box"></span>' +
-        '<span class="cropper-dashed dashed-h"></span>' +
-        '<span class="cropper-dashed dashed-v"></span>' +
-        '<span class="cropper-center"></span>' +
-        '<span class="cropper-face"></span>' +
-        '<span class="cropper-line line-e" data-action="e"></span>' +
-        '<span class="cropper-line line-n" data-action="n"></span>' +
-        '<span class="cropper-line line-w" data-action="w"></span>' +
-        '<span class="cropper-line line-s" data-action="s"></span>' +
-        '<span class="cropper-point point-e" data-action="e"></span>' +
-        '<span class="cropper-point point-n" data-action="n"></span>' +
-        '<span class="cropper-point point-w" data-action="w"></span>' +
-        '<span class="cropper-point point-s" data-action="s"></span>' +
-        '<span class="cropper-point point-ne" data-action="ne"></span>' +
-        '<span class="cropper-point point-nw" data-action="nw"></span>' +
-        '<span class="cropper-point point-sw" data-action="sw"></span>' +
-        '<span class="cropper-point point-se" data-action="se"></span>' +
-        '<div class="close-icon"></div>' +
+        '<div class="close-icon" data-toggle="modal" data-target="#crop-delete"></div>' +
       '</div>'
   );
 
@@ -3552,7 +3557,7 @@
       '<span class="cropper-point point-nw" data-action="nw"></span>' +
       '<span class="cropper-point point-sw" data-action="sw"></span>' +
       '<span class="cropper-point point-se" data-action="se"></span>' +
-      '<div class="close-icon"></div>' +
+      '<div class="close-icon" data-toggle="modal" data-target="#crop-delete"></div>' +
     '</div>'
   );
 
