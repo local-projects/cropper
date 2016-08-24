@@ -11,6 +11,7 @@ $(function () {
   var preview, portraitMachineInit;
 
   function init(){
+
     var data, json, crops, options;
     var docsPreview = $('.docs-preview');
     preview = new PortraitMachine.Preview({container: docsPreview});
@@ -43,7 +44,14 @@ $(function () {
     $('[data-toggle="tooltip"]').tooltip();
 
     // Cropper
-    $image.load(function(){
+    if ($image.prop('complete')) {
+        onImageLoad();
+      } else {
+        $image.load(onImageLoad);
+      }
+    
+
+    function onImageLoad(){ 
       var initW = $image.width();    
 
       $image.on({
@@ -79,7 +87,7 @@ $(function () {
         }
       }).cropper(options); 
 
-    }); 
+    }
   }
 
 
