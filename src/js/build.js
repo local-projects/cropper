@@ -22,6 +22,7 @@
       this.cropBoxes = {};
       this.cropBoxIndex = null;
       this.attachedPreview = options.attachedPreview;
+      this.closeCropIndex = null;
 
       // Create cropper elements
       this.$container = $this.parent();
@@ -103,6 +104,7 @@
       }, this), 0);
 
       this.closeCrop(index);
+      this.confirmModal();
 
       if (!useData) {
         if (options.data && Object.keys(options.data).length > 0) {
@@ -234,12 +236,38 @@
             closeIndex = $(this).parent().data('index');
           }
           // var closeIndex = $(this).parent().data('index');
-          that.close.call(that, closeIndex);
-          that.trigger(EVENT_CLOSE)
-          $(this).parent().remove();
+
+          that.closeCropIndex = {parent: $(this).parent(), index: closeIndex};
           event.preventDefault();
         });
       }
+    },
+
+    confirmModal: function () {
+      var that = this;
+      
+      $('#crop-delete').on('show.bs.modal', function (e) {
+        console.log(e);
+      });
+
+      $('#crop-delete-confirm').on('click', function (e) {
+        var closeIndex = that.closeCropIndex;
+
+        if (closeIndex && closeIndex.index) {
+          that.close.call(that, closeIndex.index);
+          that.trigger(EVENT_CLOSE)
+          closeIndex.parent.remove();
+          $('#crop-delete').modal('hide');
+        }
+
+        that.closeCropIndex = null;
+        
+      });
+
+      $('.crop-delete-cancel').on('click', function (e) {
+        that.closeCropIndex = null;
+      });
+
     },
 
     close: function (closeIndex) {
