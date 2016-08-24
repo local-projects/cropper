@@ -26,9 +26,7 @@ $(function () {
       aspectRatio: NaN,
       preview: '.img-preview',
       previewContainer: '.docs-preview',
-      data: crops,
-      // minCropBoxWidth: 50,
-      // minCropBoxHeight: 50,
+      data: crops, 
       cropstart: function (e) {
         console.log('cropstart');
       },
@@ -52,14 +50,13 @@ $(function () {
         /*console.log('build.cropper');*/
       },
       'built.cropper': function (e) {
+
         var cropper = $image.data('cropper'),
             resizeW = $(".cropper-canvas").width(),
             scale = resizeW/initW;
-
+ 
         cropper.options.minCropBoxWidth = 50*scale;
-        cropper.options.minCropBoxHeight = 50*scale;
-        //$.fn.cropper.setDefaults(options);
-        /*console.log('built.cropper');*/
+        cropper.options.minCropBoxHeight = 50*scale; 
       },
       'close.cropper': onClose
       ,
