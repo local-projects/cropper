@@ -18,7 +18,7 @@ $(function () {
 
     // TODO fetch initially from API instead of fetching using localStorage
 
-    console.log('artWorkId', window.artWorkId);
+    console.log('artworkId', window.artworkId);
 
     /*$.ajax({
       type: 'GET',
@@ -112,7 +112,9 @@ $(function () {
 
 
 
-
+  function getArtworkId() {
+    return window.artWorkId;
+  }
   
 
   /*$image.cropper(options);*/
