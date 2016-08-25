@@ -9,44 +9,38 @@ $(function () {
   var $cropBtn = $('.crop-step');
   var $saveJson = $('.save-json');
   var preview, portraitMachineInit;
+  var existingCrops;
 
   function init(){
 
-    var data, json, crops, options;
+    var data, json, options;
     var docsPreview = $('.docs-preview');
     preview = new PortraitMachine.Preview({container: docsPreview});
 
     // TODO fetch initially from API instead of fetching using localStorage
 
-    if (window.artworkID) {
+    if (!window.artworkID) {
 
-      $.ajax({
-        type: 'GET',
-        url: "/admin/crop/" + window.artworkID,
-        dataType: 'jsonp',
-        success: function (json) {
-          console.log('fetched', json);
-        },
-        error: function (err) {
-          console.error(err);
-          throw new Error('ajax artworkID unavailable');
-        }
-
-      });
-    }
-    else {
       throw new Error('artworkID unavailable');
+      return;
     }
 
-
-    data = localStorage.getItem('crops');
+    data = window.savedCrops;
+    // data = localStorage.getItem('crops');
      
-    if (data) {
-      json = JSON.parse(data);
-      crops = json.crops || {};
+    if (data && data.length > 0) {
+      try {
+        json = JSON.parse(data);
+        existingCrops = json.crops || {};
+      }
+      catch (err) {
+        console.error("Unable to parse JSON");
+      }
+
     }
-    else {
-      crops = {};
+    
+    if (!existingCrops) {
+      existingCrops = {};
     }
 
 
@@ -54,7 +48,7 @@ $(function () {
       aspectRatio: NaN,
       preview: '.img-preview',
       previewContainer: '.docs-preview',
-      data: crops, 
+      data: existingCrops, 
       cropstart: function (e) {
         console.log('cropstart');
       },
@@ -142,26 +136,20 @@ $(function () {
     // TODO Use initial fetched data (from above) instead of using localStorage
     // for getting old crops and skeleton previews.
 
-    var oldCrops = localStorage.getItem('crops');
-    var oldCropsCuts;
-    
-    // Keep previous previews
-    if (oldCrops) {
-      oldCrops = JSON.parse(oldCrops);
-      oldCropsCuts = oldCrops.crops ? oldCrops.crops : {};
-    }
+    // var oldCrops = localStorage.getItem('crops');
+    var oldCrops = existingCrops;
 
-    if (oldCropsCuts) {
-      for (var occ in oldCropsCuts) {
+    if (oldCrops) {
+      for (var occ in oldCrops) {
         if (occ in crops) {
-          crops[occ]['skeletonPreview'] = oldCropsCuts[occ]['skeletonPreview'];
+          crops[occ]['skeletonPreview'] = oldCrops[occ]['skeletonPreview'];
         }
       }
     }
     
 
     var data = {'crops': crops}
-    localStorage.setItem('crops', JSON.stringify(data));
+    // localStorage.setItem('crops', JSON.stringify(data));
 
     return data;
 
@@ -169,9 +157,9 @@ $(function () {
   }
   
   function goToNext(event){
-    saveData();
+    var newCrops = saveData();
     hideCropper();
-    InitializeCropper();
+    InitializeCropper(newCrops);
 
     event.preventDefault();
   }
@@ -222,7 +210,7 @@ $(function () {
     $('#preview-tags').hide();
   }
 
-  function InitializeCropper() {
+  function InitializeCropper(newCrops) {
     if(preview){
       preview.removeSubscribers();
       preview = null;
@@ -230,10 +218,10 @@ $(function () {
     
     if (!portraitMachineInit) {
       try {
-        portraitMachineInit = new PortraitMachine.Init();
+        portraitMachineInit = new PortraitMachine.Init(newCrops);
       }
       catch(err) {
-        console.error(err);
+        console.error('Unable to initialize portraitMachineInit');
       }
     }
   }
