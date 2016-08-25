@@ -240,7 +240,10 @@ $(function () {
   }
 
   function saveSkeletonDataLocally() {
-    if(portraitMachineInit) portraitMachineInit.getData();
+    if(portraitMachineInit) {
+      var skeletonData = portraitMachineInit.getData();
+      existingCrops = skeletonData;
+    }
   }
 
   // Buttons
