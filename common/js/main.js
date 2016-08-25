@@ -18,7 +18,7 @@ $(function () {
 
     // TODO fetch initially from API instead of fetching using localStorage
 
-    console.log('artworkId', window.artworkId);
+    console.log('artworkID', window.artworkID);
 
     /*$.ajax({
       type: 'GET',
