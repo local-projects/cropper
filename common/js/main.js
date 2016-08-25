@@ -213,11 +213,11 @@ $(function () {
   }
 
   function saveSkeletonData() {
-    portraitMachineInit.saveData();
+    if(portraitMachineInit) portraitMachineInit.saveData();
   }
 
   function saveSkeletonDataLocally() {
-    portraitMachineInit.getData();
+    if(portraitMachineInit) portraitMachineInit.getData();
   }
 
   // Buttons
