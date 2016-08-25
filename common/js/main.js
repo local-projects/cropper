@@ -18,17 +18,25 @@ $(function () {
 
     // TODO fetch initially from API instead of fetching using localStorage
 
-    console.log('artworkID', window.artworkID);
+    if (window.artworkID) {
 
-    /*$.ajax({
-      type: 'GET',
-      url: "/admin/crop/" + window.artWorkId,
-      dataType: 'jsonp',
-      success: function (json) {
-        console.log('fetched', json);
-      },
+      $.ajax({
+        type: 'GET',
+        url: "/admin/crop/" + window.artWorkId,
+        dataType: 'jsonp',
+        success: function (json) {
+          console.log('fetched', json);
+        },
+        error: function (err) {
+          console.error(err);
+          throw new Error('ajax artworkID unavailable');
+        }
 
-    });*/
+      });
+    }
+    else {
+      throw new Error('artworkID unavailable');
+    }
 
 
     data = localStorage.getItem('crops');
