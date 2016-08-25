@@ -14,7 +14,5 @@
     this.originalUrl = '';
     this.canvas = null;
     this.cropBox = null;
-    /*this.cropBoxes = options.cropBoxes;*/
-    /*this.cropBoxes = [];*/
     this.init();
   }

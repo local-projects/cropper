@@ -175,7 +175,7 @@ $(function () {
     $('.left-col').removeClass('active');
     $('.docs-preview').addClass('active');
     $('.skeleton-preview').removeClass('active');
-    $('.skeleton-preview').empty();
+    // $('.skeleton-preview').empty();
     $('#preview-tags').hide();
   }
 
@@ -193,12 +193,16 @@ $(function () {
         console.error(err);
       }
     }
+    else {
+      portraitMachineInit.softInit();
+    }
   }
 
   function InitializePreview() { 
     if(portraitMachineInit){
-      portraitMachineInit.destroy();
-      portraitMachineInit = null;
+      // portraitMachineInit.destroy();
+      // portraitMachineInit = null;
+      portraitMachineInit.softDestroy();
     }
    
     init(); 
