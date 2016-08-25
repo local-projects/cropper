@@ -17,7 +17,9 @@ $(function () {
 
     // TODO fetch initially from API instead of fetching using localStorage
 
-    $.ajax({
+    console.log('artWorkId', window.artWorkId);
+
+    /*$.ajax({
       type: 'GET',
       url: "/admin/crop/" + window.artWorkId,
       dataType: 'jsonp',
@@ -25,7 +27,7 @@ $(function () {
         console.log('fetched', json);
       },
 
-    });
+    });*/
 
     data = localStorage.getItem('crops');
      
