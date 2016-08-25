@@ -20,7 +20,7 @@ $(function () {
     $.ajax({
       type: 'GET',
       url: "/admin/crop/" + window.artWorkId,
-      dataType: jsonp,
+      dataType: 'jsonp',
       success: function (json) {
         console.log('fetched', json);
       },
