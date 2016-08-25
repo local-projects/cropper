@@ -17,8 +17,6 @@ $(function () {
     var docsPreview = $('.docs-preview');
     preview = new PortraitMachine.Preview({container: docsPreview});
 
-    // TODO fetch initially from API instead of fetching using localStorage
-
     if (!window.artworkID) {
 
       throw new Error('artworkID unavailable');
@@ -26,7 +24,6 @@ $(function () {
     }
 
     data = window.savedCrops;
-    // data = localStorage.getItem('crops');
      
     if (data && data.length > 0) {
       try {
@@ -133,10 +130,6 @@ $(function () {
   function saveData(){
     var crops = $image.cropper('getData');
 
-    // TODO Use initial fetched data (from above) instead of using localStorage
-    // for getting old crops and skeleton previews.
-
-    // var oldCrops = localStorage.getItem('crops');
     var oldCrops = existingCrops;
 
     if (oldCrops) {
@@ -149,7 +142,6 @@ $(function () {
     
 
     var data = {'crops': crops}
-    // localStorage.setItem('crops', JSON.stringify(data));
 
     return data;
 
