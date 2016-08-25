@@ -15,12 +15,32 @@ $(function () {
     var data, json, crops, options;
     var docsPreview = $('.docs-preview');
     preview = new PortraitMachine.Preview({container: docsPreview});
+
+    // TODO fetch initially from API instead of fetching using localStorage
+
+    console.log('artWorkId', window.artWorkId);
+
+    /*$.ajax({
+      type: 'GET',
+      url: "/admin/crop/" + window.artWorkId,
+      dataType: 'jsonp',
+      success: function (json) {
+        console.log('fetched', json);
+      },
+
+    });*/
+
+
     data = localStorage.getItem('crops');
      
     if (data) {
       json = JSON.parse(data);
       crops = json.crops || {};
     }
+    else {
+      crops = {};
+    }
+
 
     options = {
       aspectRatio: NaN,
@@ -109,6 +129,9 @@ $(function () {
   function saveData(){
     var crops = $image.cropper('getData');
 
+    // TODO Use initial fetched data (from above) instead of using localStorage
+    // for getting old crops and skeleton previews.
+
     var oldCrops = localStorage.getItem('crops');
     var oldCropsCuts;
     
@@ -129,6 +152,8 @@ $(function () {
 
     var data = {'crops': crops}
     localStorage.setItem('crops', JSON.stringify(data));
+
+    return data;
 
     // $btnSave.attr('disabled', true)
   }
