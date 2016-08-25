@@ -22,7 +22,7 @@ $(function () {
 
       $.ajax({
         type: 'GET',
-        url: "/admin/crop/" + window.artWorkId,
+        url: "/admin/crop/" + window.artworkID,
         dataType: 'jsonp',
         success: function (json) {
           console.log('fetched', json);
