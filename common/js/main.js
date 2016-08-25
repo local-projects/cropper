@@ -242,7 +242,7 @@ $(function () {
   function saveSkeletonDataLocally() {
     if(portraitMachineInit) {
       var skeletonData = portraitMachineInit.getData();
-      existingCrops = skeletonData;
+      existingCrops = skeletonData.crops;
     }
   }
 
