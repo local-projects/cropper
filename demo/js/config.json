@@ -1,9 +1,0 @@
-{
-  "config": {
-    "container": {
-      "width": 1080,
-      "height": 1920
-    },
-    "skeletonContainer": "#svg-container"
-  }
-}
