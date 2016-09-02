@@ -20,4 +20,4 @@
 
 ### How to crop an square area in free ratio mode?
 
-> Just hold the `shift` key when you crop on the image.
+> Just hold the `shift` key when you crop on the image. 
